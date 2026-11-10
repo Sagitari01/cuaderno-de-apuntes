@@ -215,3 +215,48 @@ Primero se identifica el problema y se define una mejora comprobable; después s
 | ¿Qué evidencia utiliza? | Observación, entrevistas, tiempos y registros | Objetivos, reglas, pruebas y comparación |
 | ¿Qué lugar ocupa la IA? | No es necesaria para describirlo | Puede ser útil si aporta valor al caso |
 
+---
+
+## 4. Autoevaluación
+
+Estas preguntas permiten comprobar la comprensión de los conceptos después de revisar todo el apunte. No forman parte de una evaluación calificada.
+
+```quiz
+? ¿Cuál es el objetivo principal de un modelo AS-IS?
++ Representar cómo funciona realmente el proceso actual, con sus decisiones y problemas.
+- Describir únicamente cómo debería funcionar el proceso después de automatizarlo.
+- Elegir de inmediato una herramienta de inteligencia artificial.
+> AS-IS documenta la situación presente antes de diseñar mejoras.
+```
+
+```quiz
+? ¿Qué figura se utiliza normalmente para representar una decisión en un diagrama de flujo tradicional?
+- Rectángulo.
++ Rombo.
+- Paralelogramo.
+> El rombo representa una condición con caminos alternativos, como «Sí» y «No».
+```
+
+```quiz
+? Si una solicitud tarda 5 minutos en revisarse, pero espera otros 15 minutos antes de ser atendida, ¿qué dato ayuda a detectar una posible acumulación?
+- Solo el tiempo de ejecución de la revisión.
++ El tiempo de espera y la cantidad de solicitudes pendientes.
+- Únicamente la cantidad de correos enviados.
+> Separar tiempo activo y espera permite identificar dónde se forman colas.
+```
+
+```quiz
+? ¿Cuál de estas propuestas corresponde a un modelo TO-BE?
+- Dibujar únicamente el recorrido que se ejecuta hoy.
++ Proponer un flujo mejorado, con controles y criterios para medir resultados.
+- Omitir las excepciones y los responsables.
+> TO-BE representa la situación futura propuesta, no solo una descripción del estado actual.
+```
+
+```quiz
+? En el TO-BE del caso, ¿qué componente debe verificar que un equipo esté realmente disponible?
+- El modelo de IA basándose únicamente en el texto del mensaje.
++ El sistema que consulta el registro de disponibilidad autorizado.
+- La persona solicitante, sin comprobación.
+> La IA puede interpretar solicitudes, pero la disponibilidad real debe comprobarse con una fuente confiable.
+```
