@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagrama BPMN</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bpmn-js@17.11.1/dist/assets/diagram-js.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bpmn-js@17.11.1/dist/assets/bpmn-js.css">
+<style>
+html,body{margin:0;height:100%;background:#fff;font-family:Arial,sans-serif}
+#lienzo{position:absolute;inset:0}
+#msg{position:absolute;top:12px;left:12px;color:#b00020;font-size:14px}
+.bjs-powered-by{display:none}
+</style>
+</head>
+<body>
+<div id="lienzo"></div>
+<div id="msg"></div>
+<script src="https://cdn.jsdelivr.net/npm/bpmn-js@17.11.1/dist/bpmn-navigated-viewer.production.min.js"></script>
+<script>
+(function () {
+  var src = new URLSearchParams(location.search).get('src') || '';
+  var msg = document.getElementById('msg');
+  if (!/^[\w-]+\.bpmn$/.test(src)) { msg.textContent = 'Falta el diagrama a mostrar.'; return; }
+  var viewer = new BpmnJS({ container: '#lienzo' });
+  function ajustar() {
+    var c = document.getElementById('lienzo');
+    if (c.clientWidth > 0 && c.clientHeight > 0) { var cv = viewer.get('canvas'); cv.resized(); cv.zoom('fit-viewport', 'auto'); }
+  }
+  fetch(src).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+    .then(function (xml) { return viewer.importXML(xml); })
+    .then(function () { ajustar(); new ResizeObserver(ajustar).observe(document.getElementById('lienzo')); })
+    .catch(function () { msg.textContent = 'No se pudo cargar el diagrama.'; });
+})();
+</script>
+</body>
+</html>

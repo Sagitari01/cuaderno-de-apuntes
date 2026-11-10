@@ -90,9 +90,9 @@ Una persona solicita por correo un proyector o una cámara. Una encargada revisa
 
 **Representación resumida:**
 
-<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/as-is-solicitudes.html?embed=1&theme=light" title="Diagrama AS-IS del proceso de reserva de equipos" loading="lazy" style="width:100%;height:410px;border:1px solid var(--color-divider)"></iframe>
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn" title="Diagrama BPMN AS-IS del proceso de reserva de equipos" loading="lazy" style="width:100%;height:340px;border:1px solid var(--color-divider)"></iframe>
 
-<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/as-is-solicitudes.html" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn" target="_blank" rel="noopener">Abrir en pantalla completa</a>
 
 Las respuestas negativas y los datos incompletos generan ramas y posibles esperas, y el diagrama las muestra explícitamente.
 
@@ -175,9 +175,9 @@ El centro comunitario propone recibir las solicitudes a través de un formulario
 
 **Representación resumida:**
 
-<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/to-be-solicitudes.html?embed=1&theme=light" title="Diagrama TO-BE del proceso de reserva de equipos con IA" loading="lazy" style="width:100%;height:650px;border:1px solid var(--color-divider)"></iframe>
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn" title="Diagrama BPMN TO-BE del proceso de reserva de equipos con IA" loading="lazy" style="width:100%;height:420px;border:1px solid var(--color-divider)"></iframe>
 
-<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/to-be-solicitudes.html" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn" target="_blank" rel="noopener">Abrir en pantalla completa</a>
 
 Las ramas de información incompleta, indisponibilidad y revisión humana se mantienen visibles en el diagrama.
 
