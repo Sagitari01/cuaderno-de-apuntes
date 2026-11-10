@@ -40,6 +40,12 @@ Para dibujar un proceso AS-IS podemos utilizar un **diagrama de flujo**. Cada fo
 | **Rectángulo con doble borde lateral** | Subproceso predefinido | Una actividad cuyo detalle se explica en otro diagrama | «Gestionar devolución» |
 | **Documento** (base ondulada) | Documento o registro | Un documento que participa en el proceso | «Correo de solicitud» o «Comprobante» |
 
+**Representación visual de los ocho símbolos:**
+
+<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-diagrama-flujo.svg" alt="Lámina de simbología de diagrama de flujo: óvalo de inicio y fin, rectángulo de actividad, rombo de decisión, paralelogramo de entrada y salida, flecha, círculo conector, subproceso y documento." style="display:block;width:100%;height:auto;max-width:100%;margin:16px auto;border-radius:10px" loading="lazy">
+
+[Ver la simbología en tamaño completo](contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-diagrama-flujo.svg)
+
 **Cómo leerlos:** el óvalo marca el comienzo; las flechas indican hacia dónde avanzar; los rectángulos son actividades; y cada rombo hace una pregunta cuyas salidas deben estar identificadas, normalmente «Sí» y «No». Un flujo puede terminar en distintos resultados.
 
 #### Identifiquemos los símbolos en el ejemplo
