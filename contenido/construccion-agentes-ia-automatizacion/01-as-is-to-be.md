@@ -25,55 +25,35 @@ En un levantamiento AS-IS conviene identificar:
 - **Esperas y traspasos:** cuándo una solicitud queda detenida o cambia de responsable.
 - **Excepciones:** información incompleta, equipos no disponibles o solicitudes duplicadas.
 
-### Simbología para representar el proceso AS-IS
+### Simbología para modelar procesos (BPMN)
 
-Para dibujar un proceso AS-IS podemos utilizar un **diagrama de flujo**. Cada forma tiene un significado; así se distinguen las acciones, las decisiones y el recorrido de la información. **AS-IS no es una notación gráfica por sí misma**: es una forma de describir el estado actual y puede documentarse con distintas notaciones.
+Para representar un proceso AS-IS podemos utilizar la notación **BPMN**, que permite distinguir eventos, actividades, decisiones y responsables. **AS-IS** describe el estado actual; **BPMN** aporta la simbología con la que podemos dibujarlo.
 
-| Símbolo o forma | Nombre | ¿Qué representa? | Ejemplo en nuestro caso |
-|---|---|---|---|
-| **Óvalo** o rectángulo de extremos redondeados | Inicio / fin (terminal) | Dónde comienza o termina el proceso | «Solicitud recibida» / «Respuesta enviada» |
-| **Rectángulo** | Actividad o proceso | Una tarea que se ejecuta | «Revisar correo» |
-| **Rombo** | Decisión | Una condición que abre caminos alternativos | «¿Datos completos?» con salidas «Sí» y «No» |
-| **Paralelogramo** | Entrada / salida | Datos que ingresan al proceso o se entregan como resultado | «Recibir datos de la solicitud» |
-| **Flecha** | Línea de flujo | Orden y dirección de las actividades | De «Revisar datos» a «Consultar planilla» |
-| **Círculo pequeño** | Conector | Continuidad del flujo en otro punto del mismo diagrama, cuando una línea sería extensa o confusa | Conectar dos partes del recorrido con la misma letra |
-| **Rectángulo con doble borde lateral** | Subproceso predefinido | Una actividad cuyo detalle se explica en otro diagrama | «Gestionar devolución» |
-| **Documento** (base ondulada) | Documento o registro | Un documento que participa en el proceso | «Correo de solicitud» o «Comprobante» |
+#### Reconoce primero los símbolos
 
-**Representación visual de los ocho símbolos:**
+<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" alt="Cuatro elementos básicos BPMN: eventos como círculos de inicio y fin, actividad como rectángulo redondeado, compuerta en rombo y carriles que separan responsabilidades." style="display:block;width:100%;max-width:100%;height:auto;margin:16px auto;border-radius:10px" loading="lazy">
 
-<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-diagrama-flujo.svg" alt="Lámina de simbología de diagrama de flujo: óvalo de inicio y fin, rectángulo de actividad, rombo de decisión, paralelogramo de entrada y salida, flecha, círculo conector, subproceso y documento." style="display:block;width:100%;height:auto;max-width:100%;margin:16px auto;border-radius:10px" loading="lazy">
+[Ver la simbología en tamaño completo](contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg)
 
-[Ver la simbología en tamaño completo](contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-diagrama-flujo.svg)
+#### Leyenda: ¿qué representa cada símbolo?
 
-**Cómo leerlos:** el óvalo marca el comienzo; las flechas indican hacia dónde avanzar; los rectángulos son actividades; y cada rombo hace una pregunta cuyas salidas deben estar identificadas, normalmente «Sí» y «No». Un flujo puede terminar en distintos resultados.
+| Elemento | Significado | Ejemplo del caso hipotético |
+|---|---|---|
+| **Evento de inicio** (círculo de borde fino) | Señala qué desencadena el proceso | Se recibe una solicitud de reserva |
+| **Evento de fin** (círculo de borde grueso) | Señala que termina un recorrido del proceso | Se envía la confirmación o rechazo |
+| **Actividad** (rectángulo de esquinas redondeadas) | Acción realizada por una persona o sistema | Revisar los datos de la solicitud |
+| **Compuerta exclusiva** (rombo con una X) | Selecciona un camino según una condición | ¿El equipo está disponible? |
+| **Carril** (franja de un participante) | Agrupa las actividades según quién las realiza | Solicitante / Encargada de reservas |
 
-#### Identifiquemos los símbolos en el ejemplo
+Las **flechas de secuencia** conectan los elementos e indican el orden en que se ejecutan las actividades. Las salidas de una compuerta deben etiquetarse con condiciones claras, como «Sí» y «No».
 
-- **Inicio (óvalo):** «Persona necesita reservar un equipo».
-- **Entrada (paralelogramo):** «Recibir correo con datos de reserva».
-- **Actividad (rectángulo):** «Revisar los datos del correo».
-- **Decisión (rombo):** «¿La solicitud está completa?».
-  - **No →** «Pedir información faltante» y esperar la respuesta; después, volver a revisar.
-  - **Sí →** «Consultar disponibilidad en la planilla».
-- **Decisión (rombo):** «¿Hay equipo disponible?».
-  - **No →** «Comunicar indisponibilidad» y finalizar.
-  - **Sí →** «Registrar reserva y enviar confirmación» y finalizar.
+#### Cómo utilizarla en nuestro caso
 
-Este esquema **describe lo que sucede**, incluso la vuelta atrás y la espera: todavía no propone ninguna automatización.
+El proceso comienza cuando llega una solicitud (**evento de inicio**). La encargada revisa los datos (**actividad**); si falta información, se solicita una aclaración y se vuelve a comprobar. Después se consulta la disponibilidad (**actividad**) y se utiliza una **compuerta** para decidir si se registra la reserva o se comunica la indisponibilidad. Los **carriles** permiten distinguir las acciones de la persona solicitante y de la encargada. Cada recorrido concluye con su **evento de fin**.
 
 ```nota
-Estos símbolos pertenecen a la convención habitual de diagramas de flujo. **BPMN** es otra notación para modelar procesos: utiliza eventos (círculos), actividades (rectángulos redondeados), compuertas (rombos), flujos y, cuando corresponde, carriles para identificar responsables. No conviene mezclar símbolos de ambas notaciones sin explicarlo.
+La lámina representa una selección introductoria de símbolos BPMN, no el catálogo completo. En BPMN existen varios tipos de eventos, actividades, compuertas y conexiones, cada uno con reglas específicas. En este apunte utilizamos solo los necesarios para comprender el caso.
 ```
-
-#### Buenas prácticas al dibujar
-
-1. Asigna a cada actividad un nombre que comience con un verbo, como «Verificar disponibilidad».
-2. Escribe preguntas concretas en los rombos y etiqueta todas sus salidas.
-3. Representa los ciclos de corrección y las esperas: ocultarlos impediría detectar problemas reales.
-4. Señala quién realiza cada tarea si participan varias personas.
-5. Usa la misma simbología en todo el diagrama y evita flechas que se crucen innecesariamente.
-6. No uses un rombo para cada actividad; resérvalo para decisiones que realmente cambian el recorrido.
 
 ### Caso hipotético: préstamo de equipos
 
