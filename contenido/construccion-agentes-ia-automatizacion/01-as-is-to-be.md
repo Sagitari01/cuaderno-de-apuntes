@@ -69,10 +69,6 @@ Estos símbolos pertenecen a la convención habitual de diagramas de flujo. **BP
 5. Usa la misma simbología en todo el diagrama y evita flechas que se crucen innecesariamente.
 6. No uses un rombo para cada actividad; resérvalo para decisiones que realmente cambian el recorrido.
 
-```ejercicio
-Antes de continuar, clasifica estas acciones según el símbolo que corresponde: «Iniciar solicitud», «Revisar datos», «¿Está disponible el equipo?», «Enviar confirmación» y «Cerrar caso». Luego identifica cuál necesita dos flechas de salida.
-```
-
 ### Caso hipotético: préstamo de equipos
 
 Una persona solicita por correo un proyector o una cámara. Una encargada revisa su mensaje, busca la disponibilidad en una planilla, solicita datos faltantes, confirma la reserva y actualiza el registro.
@@ -137,10 +133,6 @@ La capacidad de una etapa orienta el diagnóstico, pero para confirmarlo deben o
 
 ```nota
 En la etapa AS-IS el objetivo es comprender y medir, no proponer automatizaciones de inmediato. Un diagnóstico equivocado puede llevar a automatizar la parte incorrecta.
-```
-
-```ejercicio
-Sin diseñar todavía una solución, observa el caso de préstamo de equipos. Identifica: (1) el inicio y el final, (2) dos decisiones, (3) un posible cuello de botella, (4) una excepción y (5) tres datos que medirías para comprobar tu diagnóstico.
 ```
 
 ---
@@ -217,22 +209,3 @@ Primero se identifica el problema y se define una mejora comprobable; después s
 | ¿Qué evidencia utiliza? | Observación, entrevistas, tiempos y registros | Objetivos, reglas, pruebas y comparación |
 | ¿Qué lugar ocupa la IA? | No es necesaria para describirlo | Puede ser útil si aporta valor al caso |
 
-```quiz
-? ¿Qué harías primero si observas que muchas solicitudes quedan pendientes en la revisión?
-+ Medir la llegada de solicitudes, la capacidad de revisión y los tiempos de espera.
-- Agregar un modelo de IA sin analizar la etapa.
-- Eliminar todas las revisiones humanas.
-> El diagnóstico AS-IS necesita evidencia antes de decidir una mejora TO-BE.
-```
-
-```quiz
-? En el TO-BE del ejemplo, ¿quién debería confirmar la disponibilidad real?
-- El modelo de IA, basándose solo en el texto recibido.
-+ El sistema que consulta el registro de disponibilidad autorizado.
-- La persona solicitante, sin comprobación.
-> La IA puede interpretar texto, pero la disponibilidad debe verificarse en una fuente confiable.
-```
-
-```ejercicio
-Diseña el TO-BE del caso después de terminar su diagnóstico AS-IS. Explica qué tarea podría apoyar la IA, qué validaciones serían deterministas, dónde mantendrías revisión humana y qué indicadores usarías para comprobar la mejora.
-```
