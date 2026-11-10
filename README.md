@@ -1,8 +1,8 @@
 # Cuaderno de apuntes
 
-Sitio web estático para publicar material de apoyo de clases: lecturas, ejercicios, código, enlaces y autoevaluaciones. Se escribe todo en archivos `.md`; el sitio los ordena por curso y semana, y cada alumno puede buscar, marcar lo que ya vio y llevar su avance.
+Sitio web estático para publicar material de apoyo de clases: lecturas, ejercicios, código, enlaces y autoevaluaciones. Se escribe todo en archivos `.md`; el sitio los ordena por curso y semana, y cada alumno puede navegar los documentos y buscar en ellos.
 
-No necesita servidor ni base de datos. Funciona en GitHub Pages, y el progreso y el tema (claro/oscuro) se guardan en el navegador de cada persona.
+No necesita servidor ni base de datos. Funciona en GitHub Pages. No hay seguimiento de avance: lo único que el navegador recuerda es el tema (claro/oscuro).
 
 ## Para qué sirve
 

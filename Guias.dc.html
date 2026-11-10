@@ -127,12 +127,7 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
             <span style="font-family:var(--font-heading); font-weight:600; font-size:28px; line-height:1.1">{{ c.titulo }}</span>
             <span style="font-size:14px; line-height:1.55; color:var(--color-neutral-700); flex:1; text-wrap:pretty">{{ c.descripcion }}</span>
             <span style="font-size:12.5px; color:var(--color-neutral-700)">Último: <strong style="font-weight:500; color:var(--color-text)">{{ c.ultimo }}</strong></span>
-            <sc-if value="{{ showProg }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex; flex-direction:column; gap:6px">
-                <div style="height:3px; background:var(--color-divider)"><div style="height:3px; width:{{ c.pctW }}; background:var(--color-accent)"></div></div>
-                <span style="display:flex; justify-content:space-between; font-size:12px; color:var(--color-neutral-700)"><span>{{ c.semanasTxt }} · {{ c.matsTxt }}</span><span>{{ c.progTxt }}</span></span>
-              </div>
-            </sc-if>
+            <span style="font-size:12.5px; color:var(--color-neutral-700)">{{ c.semanasTxt }} · {{ c.matsTxt }}</span>
           </a>
         </sc-for>
       </div>
@@ -156,13 +151,6 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
               <span style="font-family:var(--font-heading); font-weight:600; font-size:32px; line-height:1.1">{{ c.titulo }}</span>
               <span style="font-size:14.5px; color:var(--color-neutral-700); max-width:560px; text-wrap:pretty">{{ c.descripcion }}</span>
             </div>
-            <sc-if value="{{ showProgCol }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px; width:150px">
-                <span style="font-family:var(--font-heading); font-weight:600; font-size:30px; line-height:1">{{ c.pct }}<span style="font-size:16px; color:var(--color-neutral-600)">%</span></span>
-                <div style="width:150px; height:3px; background:var(--color-divider)"><div style="height:3px; width:{{ c.pctW }}; background:var(--color-accent)"></div></div>
-                <span style="font-size:12px; color:var(--color-neutral-700)">{{ c.progTxt }}</span>
-              </div>
-            </sc-if>
           </a>
         </sc-for>
       </div>
@@ -180,7 +168,6 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
           <p style="margin:0; font-size:16.5px; color:var(--color-neutral-700); max-width:520px; text-wrap:pretty">{{ destacado.descripcion }}</p>
           <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:8px">
             <a href="{{ destacado.href }}" class="btn btn-primary blueprint" style="padding:10px 20px; font-size:16px; color:var(--color-bg)"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>Entrar al curso</a>
-            <sc-if value="{{ showProg }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px; color:var(--color-neutral-700)">{{ destacado.progTxt }}</span></sc-if>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; padding:28px; border-left:{{ heroSplit }}; border-top:{{ heroSplitTop }}; min-width:0">
@@ -218,12 +205,6 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
             <span class="card-kicker">{{ cursoCodigo }} · Vista general</span>
             <span style="font-family:var(--font-heading); font-weight:600; font-size:25px; line-height:1.1">{{ cursoTitulo }}</span>
           </a>
-          <sc-if value="{{ showProg }}" hint-placeholder-val="{{ true }}">
-            <div style="display:flex; flex-direction:column; gap:6px">
-              <div style="height:3px; background:var(--color-divider)"><div style="height:3px; width:{{ cursoProg.pctW }}; background:var(--color-accent)"></div></div>
-              <span style="font-size:12px; color:var(--color-neutral-700)">{{ cursoProg.progTxt }}</span>
-            </div>
-          </sc-if>
         </div>
 
         <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
@@ -235,13 +216,11 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
                     <span style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent-700); font-weight:500">{{ s.titulo }}</span>
                     <span style="font-family:var(--font-heading); font-weight:600; font-size:16px">{{ s.tema }}</span>
                   </span>
-                  <span style="font-size:11px; color:var(--color-neutral-700)">{{ s.doneTxt }}</span>
+                  <span style="font-size:11px; color:var(--color-neutral-700)">{{ s.countTxt }}</span>
                 </div>
                 <sc-for list="{{ s.materiales }}" as="m" hint-placeholder-count="2">
                   <a href="{{ m.href }}" style="display:flex; align-items:center; gap:10px; padding:8px; text-decoration:none; font-size:14px; line-height:1.3; color:{{ m.fg }}; background:{{ m.bg }}; font-weight:{{ m.peso }}" style-hover="background:color-mix(in srgb, var(--color-accent) 10%, transparent)">
-                    <span style="width:15px; height:15px; flex:none; box-sizing:border-box; border:1px solid {{ m.ckBorder }}; background:{{ m.ckBg }}; display:grid; place-items:center; color:var(--color-bg)">
-                      <sc-if value="{{ m.visto }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></sc-if>
-                    </span>
+                    <span style="width:7px; height:7px; flex:none; border:1px solid var(--color-accent)"></span>
                     <span style="flex:1; min-width:0">{{ m.titulo }}</span>
                     <sc-if value="{{ m.nuevo }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="padding:1px 6px; font-size:10px">Nuevo</span></sc-if>
                   </a>
@@ -256,15 +235,15 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
             <sc-for list="{{ semanas }}" as="s" hint-placeholder-count="2">
               <div style="position:relative; padding-left:42px; padding-bottom:24px">
                 <span style="position:absolute; left:13px; top:30px; bottom:2px; width:1px; background:var(--color-divider)"></span>
-                <span style="position:absolute; left:0; top:0; width:27px; height:27px; box-sizing:border-box; display:grid; place-items:center; border:1px solid var(--color-accent); background:{{ s.nodeBg }}; color:{{ s.nodeFg }}; font-family:var(--font-heading); font-weight:600; font-size:13px">{{ s.num }}</span>
+                <span style="position:absolute; left:0; top:0; width:27px; height:27px; box-sizing:border-box; display:grid; place-items:center; border:1px solid var(--color-accent); background:var(--color-bg); color:var(--color-accent-700); font-family:var(--font-heading); font-weight:600; font-size:13px">{{ s.num }}</span>
                 <div style="min-height:27px; display:flex; flex-direction:column; justify-content:center; gap:1px">
                   <span style="font-family:var(--font-heading); font-weight:600; font-size:17px; line-height:1.15">{{ s.tema }}</span>
-                  <span style="font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-neutral-700)">{{ s.titulo }} · {{ s.doneTxt }}</span>
+                  <span style="font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--color-neutral-700)">{{ s.titulo }} · {{ s.countTxt }}</span>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:1px; margin-top:8px; margin-left:-8px">
                   <sc-for list="{{ s.materiales }}" as="m" hint-placeholder-count="2">
                     <a href="{{ m.href }}" style="display:flex; align-items:center; gap:10px; padding:7px 8px; text-decoration:none; font-size:14px; line-height:1.3; color:{{ m.fg }}; background:{{ m.bg }}; font-weight:{{ m.peso }}" style-hover="background:color-mix(in srgb, var(--color-accent) 10%, transparent)">
-                      <span style="width:7px; height:7px; flex:none; border:1px solid var(--color-accent); background:{{ m.dot }}"></span>
+                      <span style="width:7px; height:7px; flex:none; border:1px solid var(--color-accent); background:transparent"></span>
                       <span style="flex:1; min-width:0">{{ m.titulo }}</span>
                       <span style="font-size:10.5px; color:var(--color-neutral-600)">{{ m.tipoLabel }}</span>
                     </a>
@@ -283,7 +262,7 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
               </sc-for>
             </div>
             <div style="display:flex; flex-direction:column; gap:1px">
-              <span style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent-700); font-weight:500">{{ semanaActual.titulo }} · {{ semanaActual.doneTxt }}</span>
+              <span style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-accent-700); font-weight:500">{{ semanaActual.titulo }} · {{ semanaActual.countTxt }}</span>
               <span style="font-family:var(--font-heading); font-weight:600; font-size:20px">{{ semanaActual.tema }}</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:16px; padding:4px 6px">
@@ -292,7 +271,6 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
                   <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
                   <span style="display:flex; align-items:center; justify-content:space-between; gap:8px">
                     <span style="display:flex; gap:6px; align-items:center"><span class="card-kicker">{{ m.tipoLabel }}</span><sc-if value="{{ m.nuevo }}" hint-placeholder-val="{{ false }}"><span class="tag tag-accent" style="padding:1px 6px; font-size:10px">Nuevo</span></sc-if></span>
-                    <sc-if value="{{ m.visto }}" hint-placeholder-val="{{ false }}"><span style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--color-accent-700)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>Visto</span></sc-if>
                   </span>
                   <span style="font-family:var(--font-heading); font-weight:600; font-size:18px; line-height:1.2">{{ m.titulo }}</span>
                 </a>
@@ -311,17 +289,19 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
                 <h1 style="font-size:56px; margin:0; line-height:1">{{ cursoTitulo }}</h1>
                 <p style="margin:0; font-size:17.5px; color:var(--color-neutral-700); text-wrap:pretty">{{ cursoDesc }}</p>
               </div>
+              <sc-if value="{{ hasCont }}" hint-placeholder-val="{{ true }}">
               <div class="blueprint" style="display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; padding:22px 24px">
                 <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
                 <div style="display:flex; flex-direction:column; gap:3px; min-width:0">
-                  <span class="card-kicker">{{ contKicker }}</span>
+                  <span class="card-kicker">Para empezar</span>
                   <span style="font-family:var(--font-heading); font-weight:600; font-size:22px; line-height:1.15">{{ cont.titulo }}</span>
                   <span style="font-size:13px; color:var(--color-neutral-700)">{{ cont.semanaTxt }}</span>
                 </div>
-                <a href="{{ cont.href }}" class="btn btn-primary" style="padding:10px 18px; font-size:16px; color:var(--color-bg)">{{ contTxt }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+                <a href="{{ cont.href }}" class="btn btn-primary" style="padding:10px 18px; font-size:16px; color:var(--color-bg)">Empezar<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
               </div>
+              </sc-if>
               <div style="display:flex; flex-direction:column">
-                <h2 style="font-size:28px; margin:0 0 12px">Contenido por semana</h2>
+                <h2 style="font-size:28px; margin:0 0 12px">Documentos por semana</h2>
                 <sc-for list="{{ semanas }}" as="s" hint-placeholder-count="2">
                   <a href="{{ s.href }}" style="display:grid; grid-template-columns:56px minmax(0,1fr) auto; gap:16px; align-items:center; padding:18px 8px; border-top:1px solid var(--color-divider); text-decoration:none; color:var(--color-text)" style-hover="background:color-mix(in srgb, var(--color-accent) 6%, transparent)">
                     <span style="font-family:var(--font-heading); font-size:40px; line-height:1; color:var(--color-accent)">{{ s.num }}</span>
@@ -329,7 +309,7 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
                       <span style="font-family:var(--font-heading); font-weight:600; font-size:20px">{{ s.tema }}</span>
                       <span style="font-size:13px; color:var(--color-neutral-700)">{{ s.lista }}</span>
                     </span>
-                    <span style="font-size:13px; color:var(--color-neutral-700)">{{ s.doneTxt }}</span>
+                    <span style="font-size:13px; color:var(--color-neutral-700)">{{ s.countTxt }}</span>
                   </a>
                 </sc-for>
               </div>
@@ -347,12 +327,6 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
               </div>
               <sc-if value="{{ mdCargando }}" hint-placeholder-val="{{ false }}"><p style="color:var(--color-neutral-700)">Cargando material…</p></sc-if>
               <div ref="{{ mdRef }}" class="md"></div>
-              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding-top:24px; border-top:1px solid var(--color-divider)">
-                <span style="font-size:14px; color:var(--color-neutral-700)">{{ vistoAyuda }}</span>
-                <button class="{{ vistoClass }}" onClick="{{ toggleVisto }}" style="padding:9px 16px; font-size:15px">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>{{ vistoTxt }}
-                </button>
-              </div>
               <div style="display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:20px; margin-top:8px">
                 <sc-if value="{{ hasPrev }}" hint-placeholder-val="{{ false }}">
                   <a href="{{ prev.href }}" class="blueprint" style="display:flex; flex-direction:column; gap:4px; padding:16px; text-decoration:none; color:var(--color-text)" style-hover="background:color-mix(in srgb, var(--color-accent) 6%, transparent)">
@@ -386,17 +360,14 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;variante&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;indice&quot;,&quot;bitacora&quot;,&quot;panel&quot;],&quot;default&quot;:&quot;indice&quot;,&quot;tsType&quot;:&quot;'indice'|'bitacora'|'panel'&quot;,&quot;section&quot;:&quot;Diseño&quot;},&quot;mostrarProgreso&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Diseño&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;variante&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;indice&quot;,&quot;bitacora&quot;,&quot;panel&quot;],&quot;default&quot;:&quot;indice&quot;,&quot;tsType&quot;:&quot;'indice'|'bitacora'|'panel'&quot;,&quot;section&quot;:&quot;Diseño&quot;}}">
 class Component extends DCLogic {
-  state = { data: null, error: null, md: {}, route: this.leer(), q: '', visto: this.cargarVisto(), dark: localStorage.getItem('guias:tema') === 'oscuro', w: window.innerWidth, menu: false, semanaSel: null };
+  state = { data: null, error: null, md: {}, route: this.leer(), q: '', dark: localStorage.getItem('guias:tema') === 'oscuro', w: window.innerWidth, menu: false, semanaSel: null };
   mdRef = React.createRef();
 
   leer() {
     const p = (location.hash || '').replace(/^#\/?/, '').split('/').map(decodeURIComponent);
     return p[0] === 'c' ? { curso: p[1] || null, mat: p[2] || null } : { curso: null, mat: null };
-  }
-  cargarVisto() {
-    try { return new Set(JSON.parse(localStorage.getItem('guias:visto') || '[]')); } catch (e) { return new Set(); }
   }
   componentDidMount() {
     this.onHash = () => { this.setState({ route: this.leer(), menu: false, q: '', semanaSel: null }); window.scrollTo(0, 0); };
@@ -512,28 +483,20 @@ class Component extends DCLogic {
     marc.append(txtM, reset); box.appendChild(marc); upd();
     return box;
   }
-  guardarVisto(set) { localStorage.setItem('guias:visto', JSON.stringify([...set])); }
 
   renderVals() {
-    const { data, error, route, md, visto, q, dark, w, menu } = this.state;
+    const { data, error, route, md, q, dark, w, menu } = this.state;
     const v = this.props.variante ?? 'indice';
-    const showProg = this.props.mostrarProgreso ?? true;
     const narrow = w < 860;
     const cursos = data ? data.cursos : [];
     const pad = n => String(n).padStart(2, '0');
     const tipos = { lectura: 'Lectura', codigo: 'Código', ejercicio: 'Ejercicio', enlaces: 'Enlaces', quiz: 'Quiz' };
-    const k = (c, m) => c + '/' + m;
     const href = (c, m) => '#/c/' + c + (m ? '/' + m : '');
     const plano = c => c.semanas.flatMap((s, si) => s.materiales.map(m => ({ ...m, si, semanaTxt: s.titulo + ' · ' + s.tema, href: href(c.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo })));
-    const prog = c => {
-      const f = plano(c); const n = f.filter(m => visto.has(k(c.id, m.id))).length;
-      const pct = f.length ? Math.round(n / f.length * 100) : 0;
-      return { total: f.length, vistos: n, pct, pctW: pct + '%', progTxt: n + ' de ' + f.length + ' vistos' };
-    };
     const cards = cursos.map((c, i) => {
       const f = plano(c); const ult = f[f.length - 1];
       return {
-        ...c, ...prog(c), num: pad(i + 1), href: href(c.id),
+        ...c, num: pad(i + 1), href: href(c.id),
         semanasTxt: c.semanas.length + (c.semanas.length === 1 ? ' semana' : ' semanas'),
         matsTxt: f.length + (f.length === 1 ? ' material' : ' materiales'),
         ultimo: ult ? ult.titulo : '—',
@@ -548,31 +511,25 @@ class Component extends DCLogic {
 
     const semanas = curso ? curso.semanas.map((s, si) => {
       const ms = s.materiales.map(m => {
-        const act = !!(mat && mat.id === m.id); const vi = visto.has(k(curso.id, m.id));
+        const act = !!(mat && mat.id === m.id);
         return {
-          ...m, href: href(curso.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo, activo: act, visto: vi, nuevo: !!m.nuevo,
+          ...m, href: href(curso.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo, activo: act, nuevo: !!m.nuevo,
           bg: act ? 'var(--color-accent-100)' : 'transparent',
           fg: act ? 'var(--color-accent-800)' : 'var(--color-text)',
-          peso: act ? '500' : '400',
-          ckBg: vi ? 'var(--color-accent)' : 'transparent',
-          ckBorder: vi ? 'var(--color-accent)' : 'var(--color-neutral-500)',
-          dot: vi ? 'var(--color-accent)' : 'transparent'
+          peso: act ? '500' : '400'
         };
       });
-      const done = ms.filter(m => m.visto).length; const full = ms.length > 0 && done === ms.length; const sel = si === semSel;
+      const sel = si === semSel;
       return {
-        titulo: s.titulo, tema: s.tema, num: pad(si + 1), materiales: ms, doneTxt: done + '/' + ms.length,
+        titulo: s.titulo, tema: s.tema, num: pad(si + 1), materiales: ms, countTxt: ms.length + (ms.length === 1 ? ' documento' : ' documentos'),
         href: ms[0] ? ms[0].href : href(curso.id),
         lista: ms.map(m => m.titulo).join(' · '),
-        nodeBg: full ? 'var(--color-accent)' : 'var(--color-bg)', nodeFg: full ? 'var(--color-bg)' : 'var(--color-accent-700)',
         tabBg: sel ? 'var(--color-accent)' : 'var(--color-bg)', tabFg: sel ? 'var(--color-bg)' : 'var(--color-text)',
         elegir: () => this.setState({ semanaSel: si })
       };
     }) : [];
 
-    const contM = flat.find(m => !visto.has(k(curso.id, m.id))) || flat[0] || {};
-    const nVistos = curso ? prog(curso).vistos : 0;
-    const esVisto = !!(mat && visto.has(k(curso.id, mat.id)));
+    const contM = flat[0] || {};
 
     const norm = s => s.toLowerCase().replace(/[áàäâ]/g, 'a').replace(/[éèëê]/g, 'e').replace(/[íìïî]/g, 'i').replace(/[óòöô]/g, 'o').replace(/[úùüû]/g, 'u');
     const limpiar = s => s.replace(/```\w*/g, ' ').replace(/[#*_`>|]/g, ' ').replace(/^\s*[?+-]\s/gm, ' ').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\s+/g, ' ').trim();
@@ -601,10 +558,9 @@ class Component extends DCLogic {
       toggleDark: () => { const d = !dark; localStorage.setItem('guias:tema', d ? 'oscuro' : 'claro'); this.setState({ dark: d }); },
       showMenuBtn: isCurso && narrow, toggleMenu: () => this.setState({ menu: !menu }),
       showMiga: isCurso && !narrow,
-      showProg, showProgCol: showProg && !narrow,
       homeA: home && v === 'indice', homeB: home && v === 'bitacora', homeC: home && v === 'panel',
       homePad: narrow ? '36px 18px 64px' : '64px 40px 96px',
-      rowCols: narrow ? 'auto minmax(0,1fr)' : 'auto minmax(0,1fr) auto',
+      rowCols: 'auto minmax(0,1fr)',
       heroCols: narrow ? 'minmax(0,1fr)' : 'minmax(0,1.5fr) minmax(0,1fr)',
       heroSplit: narrow ? 'none' : '1px solid var(--color-divider)',
       heroSplitTop: narrow ? '1px solid var(--color-divider)' : 'none',
@@ -612,7 +568,6 @@ class Component extends DCLogic {
       isCurso, isA: v === 'indice', isB: v === 'bitacora', isC: v === 'panel',
       cursoHref: curso ? href(curso.id) : '#/', cursoTitulo: curso?.titulo || '', cursoCodigo: curso?.codigo || '', cursoDesc: curso?.descripcion || '',
       cursoResumen: curso ? curso.semanas.length + (curso.semanas.length === 1 ? ' semana' : ' semanas') + ' · ' + flat.length + ' materiales' : '',
-      cursoProg: curso ? prog(curso) : { pctW: '0%', progTxt: '' },
       semanas, semanaActual: semanas[semSel] || { materiales: [] },
       layoutDir: narrow ? 'column' : 'row',
       sbDisplay: narrow && !menu ? 'none' : 'flex',
@@ -622,19 +577,9 @@ class Component extends DCLogic {
       sbBorderB: narrow ? '1px solid var(--color-divider)' : 'none',
       mainPad: narrow ? '28px 18px 72px' : '48px 56px 96px',
       isOverview: isCurso && !route.mat, isMaterial: !!mat, noEncontrado: isCurso && !!route.mat && !mat,
-      cont: contM, contKicker: nVistos === 0 ? 'Para empezar' : 'Sigue donde quedaste', contTxt: nVistos === 0 ? 'Empezar' : 'Continuar',
+      cont: contM, hasCont: !!contM.href,
       mat: mat || {}, mdRef: this.mdRef, mdCargando: !!mat && md[mat.archivo] === undefined,
-      prev: flat[idx - 1] || {}, next: flat[idx + 1] || {}, hasPrev: idx > 0, noPrev: idx <= 0 && !!mat, hasNext: idx >= 0 && idx < flat.length - 1,
-      vistoTxt: esVisto ? 'Visto' : 'Marcar como visto',
-      vistoClass: esVisto ? 'btn btn-secondary' : 'btn btn-primary',
-      vistoAyuda: esVisto ? 'Listo. Puedes desmarcarlo si quieres repasar.' : '¿Terminaste? Márcalo para llevar tu avance.',
-      toggleVisto: () => {
-        if (!mat) return;
-        const s = new Set(visto); const key = k(curso.id, mat.id);
-        s.has(key) ? s.delete(key) : s.add(key);
-        this.guardarVisto(s); this.setState({ visto: s });
-      }
-    };
+      prev: flat[idx - 1] || {}, next: flat[idx + 1] || {}, hasPrev: idx > 0, noPrev: idx <= 0 && !!mat, hasNext: idx >= 0 && idx < flat.length - 1,    };
   }
 }
 </script>
