@@ -27,32 +27,50 @@ En un levantamiento AS-IS conviene identificar:
 
 ### Simbología para modelar procesos (BPMN)
 
-Para representar un proceso AS-IS podemos utilizar la notación **BPMN**, que permite distinguir eventos, actividades, decisiones y responsables. **AS-IS** describe el estado actual; **BPMN** aporta la simbología con la que podemos dibujarlo.
+Para representar el estado **AS-IS** de un proceso podemos utilizar la notación **BPMN**. AS-IS describe lo que ocurre actualmente; BPMN proporciona elementos visuales para representar sus participantes, actividades, decisiones e intercambios de información.
 
-#### Reconoce primero los símbolos
+#### Primero, observa la simbología
 
-<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" alt="Cuatro elementos básicos BPMN: eventos como círculos de inicio y fin, actividad como rectángulo redondeado, compuerta en rombo y carriles que separan responsabilidades." style="display:block;width:100%;max-width:100%;height:auto;margin:16px auto;border-radius:10px" loading="lazy">
+La lámina está dividida en tres grupos: **contenedores**, **elementos del proceso** y **conexiones**. Observa las formas y los trazos antes de revisar sus significados.
+
+<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" alt="Simbología BPMN organizada en tres secciones: pool y carriles; eventos de inicio y fin, actividad y compuerta; flujo de secuencia, flujo de mensaje y asociación." style="display:block;width:100%;max-width:100%;height:auto;margin:22px auto 26px;border-radius:12px" loading="lazy">
 
 [Ver la simbología en tamaño completo](contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg)
 
-#### Leyenda: ¿qué representa cada símbolo?
+#### Después, interpreta la leyenda
 
-| Elemento | Significado | Ejemplo del caso hipotético |
+**Contenedores y responsables**
+
+| Elemento | ¿Para qué sirve? | Ejemplo en el caso |
 |---|---|---|
-| **Evento de inicio** (círculo de borde fino) | Señala qué desencadena el proceso | Se recibe una solicitud de reserva |
-| **Evento de fin** (círculo de borde grueso) | Señala que termina un recorrido del proceso | Se envía la confirmación o rechazo |
-| **Actividad** (rectángulo de esquinas redondeadas) | Acción realizada por una persona o sistema | Revisar los datos de la solicitud |
-| **Compuerta exclusiva** (rombo con una X) | Selecciona un camino según una condición | ¿El equipo está disponible? |
-| **Carril** (franja de un participante) | Agrupa las actividades según quién las realiza | Solicitante / Encargada de reservas |
+| **Pool** | Representa a un participante del proceso y delimita su espacio. | Centro comunitario. |
+| **Carril** | Divide el trabajo del participante según sus roles o responsables. | Encargada de reservas. |
 
-Las **flechas de secuencia** conectan los elementos e indican el orden en que se ejecutan las actividades. Las salidas de una compuerta deben etiquetarse con condiciones claras, como «Sí» y «No».
+**Elementos del proceso**
 
-#### Cómo utilizarla en nuestro caso
+| Elemento | ¿Para qué sirve? | Ejemplo en el caso |
+|---|---|---|
+| **Evento de inicio** (círculo de borde fino) | Indica qué desencadena el proceso. | Llega una solicitud de reserva. |
+| **Evento de fin** (círculo de borde grueso) | Indica la conclusión de una ruta. | Se confirma o rechaza la reserva. |
+| **Actividad** (rectángulo redondeado) | Representa una tarea realizada por alguien. | Revisar solicitud o consultar disponibilidad. |
+| **Compuerta exclusiva** (rombo con X) | Dirige el recorrido hacia una alternativa según una condición. | ¿El equipo está disponible? |
 
-El proceso comienza cuando llega una solicitud (**evento de inicio**). La encargada revisa los datos (**actividad**); si falta información, se solicita una aclaración y se vuelve a comprobar. Después se consulta la disponibilidad (**actividad**) y se utiliza una **compuerta** para decidir si se registra la reserva o se comunica la indisponibilidad. Los **carriles** permiten distinguir las acciones de la persona solicitante y de la encargada. Cada recorrido concluye con su **evento de fin**.
+**Conexiones**
+
+| Elemento | Representación y uso |
+|---|---|
+| **Flujo de secuencia** | Línea continua con flecha sólida. Indica el orden en que se ejecutan actividades y eventos. |
+| **Flujo de mensaje** | Línea discontinua con punta de flecha abierta. Representa mensajes entre participantes distintos; **no se utiliza para conectar actividades dentro del mismo pool**. |
+| **Asociación** | Línea punteada. Relaciona anotaciones o información con elementos sin alterar el orden de ejecución. |
+
+#### Cómo aplicar la simbología al AS-IS
+
+En nuestro caso, el **centro comunitario** puede modelarse como participante con un pool, y la **encargada de reservas** como responsable dentro de un carril. La persona solicitante puede representarse como otro participante si necesitamos mostrar explícitamente el intercambio entre ambos.
+
+Al llegar una solicitud ocurre un **evento de inicio**. Luego se ejecutan **actividades** para revisar datos y consultar disponibilidad. Una **compuerta exclusiva** decide si se registra una reserva o se comunica que el equipo no está disponible. Las actividades del mismo participante se enlazan con **flujos de secuencia**, mientras que las comunicaciones con otro participante se pueden mostrar mediante **flujos de mensaje**. Una ruta termina con su correspondiente **evento de fin**.
 
 ```nota
-La lámina representa una selección introductoria de símbolos BPMN, no el catálogo completo. En BPMN existen varios tipos de eventos, actividades, compuertas y conexiones, cada uno con reglas específicas. En este apunte utilizamos solo los necesarios para comprender el caso.
+Esta es una selección introductoria de BPMN. Existen otros tipos de eventos, compuertas, actividades y conexiones. Para evitar confusiones, no hay que tratar el flujo de mensaje como una flecha de secuencia ni dibujar mensajes entre carriles del mismo participante.
 ```
 
 ### Caso hipotético: préstamo de equipos
