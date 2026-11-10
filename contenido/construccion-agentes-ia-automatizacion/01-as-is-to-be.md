@@ -25,6 +25,54 @@ En un levantamiento AS-IS conviene identificar:
 - **Esperas y traspasos:** cuándo una solicitud queda detenida o cambia de responsable.
 - **Excepciones:** información incompleta, equipos no disponibles o solicitudes duplicadas.
 
+### Simbología para representar el proceso AS-IS
+
+Para dibujar un proceso AS-IS podemos utilizar un **diagrama de flujo**. Cada forma tiene un significado; así se distinguen las acciones, las decisiones y el recorrido de la información. **AS-IS no es una notación gráfica por sí misma**: es una forma de describir el estado actual y puede documentarse con distintas notaciones.
+
+| Símbolo o forma | Nombre | ¿Qué representa? | Ejemplo en nuestro caso |
+|---|---|---|---|
+| **Óvalo** o rectángulo de extremos redondeados | Inicio / fin (terminal) | Dónde comienza o termina el proceso | «Solicitud recibida» / «Respuesta enviada» |
+| **Rectángulo** | Actividad o proceso | Una tarea que se ejecuta | «Revisar correo» |
+| **Rombo** | Decisión | Una condición que abre caminos alternativos | «¿Datos completos?» con salidas «Sí» y «No» |
+| **Paralelogramo** | Entrada / salida | Datos que ingresan al proceso o se entregan como resultado | «Recibir datos de la solicitud» |
+| **Flecha** | Línea de flujo | Orden y dirección de las actividades | De «Revisar datos» a «Consultar planilla» |
+| **Círculo pequeño** | Conector | Continuidad del flujo en otro punto del mismo diagrama, cuando una línea sería extensa o confusa | Conectar dos partes del recorrido con la misma letra |
+| **Rectángulo con doble borde lateral** | Subproceso predefinido | Una actividad cuyo detalle se explica en otro diagrama | «Gestionar devolución» |
+| **Documento** (base ondulada) | Documento o registro | Un documento que participa en el proceso | «Correo de solicitud» o «Comprobante» |
+
+**Cómo leerlos:** el óvalo marca el comienzo; las flechas indican hacia dónde avanzar; los rectángulos son actividades; y cada rombo hace una pregunta cuyas salidas deben estar identificadas, normalmente «Sí» y «No». Un flujo puede terminar en distintos resultados.
+
+#### Identifiquemos los símbolos en el ejemplo
+
+- **Inicio (óvalo):** «Persona necesita reservar un equipo».
+- **Entrada (paralelogramo):** «Recibir correo con datos de reserva».
+- **Actividad (rectángulo):** «Revisar los datos del correo».
+- **Decisión (rombo):** «¿La solicitud está completa?».
+  - **No →** «Pedir información faltante» y esperar la respuesta; después, volver a revisar.
+  - **Sí →** «Consultar disponibilidad en la planilla».
+- **Decisión (rombo):** «¿Hay equipo disponible?».
+  - **No →** «Comunicar indisponibilidad» y finalizar.
+  - **Sí →** «Registrar reserva y enviar confirmación» y finalizar.
+
+Este esquema **describe lo que sucede**, incluso la vuelta atrás y la espera: todavía no propone ninguna automatización.
+
+```nota
+Estos símbolos pertenecen a la convención habitual de diagramas de flujo. **BPMN** es otra notación para modelar procesos: utiliza eventos (círculos), actividades (rectángulos redondeados), compuertas (rombos), flujos y, cuando corresponde, carriles para identificar responsables. No conviene mezclar símbolos de ambas notaciones sin explicarlo.
+```
+
+#### Buenas prácticas al dibujar
+
+1. Asigna a cada actividad un nombre que comience con un verbo, como «Verificar disponibilidad».
+2. Escribe preguntas concretas en los rombos y etiqueta todas sus salidas.
+3. Representa los ciclos de corrección y las esperas: ocultarlos impediría detectar problemas reales.
+4. Señala quién realiza cada tarea si participan varias personas.
+5. Usa la misma simbología en todo el diagrama y evita flechas que se crucen innecesariamente.
+6. No uses un rombo para cada actividad; resérvalo para decisiones que realmente cambian el recorrido.
+
+```ejercicio
+Antes de continuar, clasifica estas acciones según el símbolo que corresponde: «Iniciar solicitud», «Revisar datos», «¿Está disponible el equipo?», «Enviar confirmación» y «Cerrar caso». Luego identifica cuál necesita dos flechas de salida.
+```
+
 ### Caso hipotético: préstamo de equipos
 
 Una persona solicita por correo un proyector o una cámara. Una encargada revisa su mensaje, busca la disponibilidad en una planilla, solicita datos faltantes, confirma la reserva y actualiza el registro.
