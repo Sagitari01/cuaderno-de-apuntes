@@ -1,3 +1,5 @@
+<!-- secciones: desplegables -->
+
 # Modelamiento de procesos: comprender el presente y diseñar el futuro
 
 ## Antes de comenzar
