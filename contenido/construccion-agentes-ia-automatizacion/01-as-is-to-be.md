@@ -90,9 +90,11 @@ Una persona solicita por correo un proyector o una cámara. Una encargada revisa
 
 **Representación resumida:**
 
-`Inicio → Recibir correo → ¿Datos completos? → Consultar disponibilidad → ¿Equipo libre? → Registrar reserva → Responder`
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/as-is-solicitudes.html?embed=1&theme=light" title="Diagrama AS-IS del proceso de reserva de equipos" loading="lazy" style="width:100%;height:410px;border:1px solid var(--color-divider)"></iframe>
 
-Las respuestas negativas y los datos incompletos generan ramas y posibles esperas. Un diagrama de flujo ayuda a mostrarlas explícitamente.
+<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/as-is-solicitudes.html" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+
+Las respuestas negativas y los datos incompletos generan ramas y posibles esperas, y el diagrama las muestra explícitamente.
 
 ### ¿Qué es un cuello de botella?
 
@@ -173,9 +175,11 @@ El centro comunitario propone recibir las solicitudes a través de un formulario
 
 **Representación resumida:**
 
-`Solicitud → Interpretación con IA → Validación → Consulta de disponibilidad → Registro controlado → Confirmación`
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/to-be-solicitudes.html?embed=1&theme=light" title="Diagrama TO-BE del proceso de reserva de equipos con IA" loading="lazy" style="width:100%;height:650px;border:1px solid var(--color-divider)"></iframe>
 
-Las ramas de información incompleta, indisponibilidad y revisión humana deben permanecer visibles en el diagrama.
+<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/to-be-solicitudes.html" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+
+Las ramas de información incompleta, indisponibilidad y revisión humana se mantienen visibles en el diagrama.
 
 ### ¿Qué hace la IA y qué NO debería hacer?
 

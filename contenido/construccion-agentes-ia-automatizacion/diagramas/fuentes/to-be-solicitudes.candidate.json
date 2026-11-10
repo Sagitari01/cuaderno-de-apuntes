@@ -1,0 +1,273 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "TO-BE: reserva de equipos con IA y automatización",
+    "locale": "es",
+    "quality_profile": "showcase",
+    "output": "contenido/construccion-agentes-ia-automatizacion/diagramas/to-be-solicitudes.html",
+    "legend": {
+      "mode": "auto",
+      "entries": {
+        "external": {
+          "label": "Evento de inicio / fin"
+        },
+        "backend": {
+          "label": "Actividad"
+        },
+        "messagebus": {
+          "label": "Compuerta exclusiva (decisión)"
+        },
+        "security": {
+          "label": "Revisión humana"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "sol",
+      "label": "Solicitante"
+    },
+    {
+      "id": "ia",
+      "label": "Componente de IA"
+    },
+    {
+      "id": "sis",
+      "label": "Sistema (registro oficial)"
+    },
+    {
+      "id": "rev",
+      "label": "Persona revisora"
+    }
+  ],
+  "mainPath": [
+    "s_ini",
+    "ia_ext",
+    "sis_val",
+    "sis_g1",
+    "sis_dis",
+    "sis_g2",
+    "sis_reg",
+    "s_fin"
+  ],
+  "nodes": [
+    {
+      "id": "s_ini",
+      "lane": "sol",
+      "col": 0,
+      "type": "external",
+      "label": "Enviar solicitud",
+      "tag": "Inicio",
+      "icon": "start"
+    },
+    {
+      "id": "s_acl",
+      "lane": "sol",
+      "col": 3,
+      "type": "backend",
+      "label": "Aclarar datos"
+    },
+    {
+      "id": "s_fin",
+      "lane": "sol",
+      "col": 5,
+      "type": "external",
+      "label": "Recibe respuesta",
+      "tag": "Fin",
+      "icon": "stop"
+    },
+    {
+      "id": "ia_ext",
+      "lane": "ia",
+      "col": 1,
+      "type": "backend",
+      "label": "Extraer datos"
+    },
+    {
+      "id": "sis_val",
+      "lane": "sis",
+      "col": 2,
+      "type": "backend",
+      "label": "Validar campos",
+      "yOffset": 0
+    },
+    {
+      "id": "sis_acl",
+      "lane": "sis",
+      "col": 3,
+      "type": "backend",
+      "label": "Pedir aclaración",
+      "yOffset": -90
+    },
+    {
+      "id": "sis_g1",
+      "lane": "sis",
+      "col": 3,
+      "type": "messagebus",
+      "label": "¿Validación OK?",
+      "icon": "decision",
+      "yOffset": 0
+    },
+    {
+      "id": "sis_dis",
+      "lane": "sis",
+      "col": 4,
+      "type": "backend",
+      "label": "Consultar registro",
+      "yOffset": 0
+    },
+    {
+      "id": "sis_reg",
+      "lane": "sis",
+      "col": 5,
+      "type": "backend",
+      "label": "Registrar reserva",
+      "yOffset": -90
+    },
+    {
+      "id": "sis_g2",
+      "lane": "sis",
+      "col": 5,
+      "type": "messagebus",
+      "label": "¿Equipo libre?",
+      "icon": "decision",
+      "yOffset": 0
+    },
+    {
+      "id": "sis_no",
+      "lane": "sis",
+      "col": 5,
+      "type": "backend",
+      "label": "Registrar rechazo",
+      "yOffset": 90
+    },
+    {
+      "id": "rev_h",
+      "lane": "rev",
+      "col": 3,
+      "type": "security",
+      "label": "Revisar caso"
+    }
+  ],
+  "edges": [
+    {
+      "id": "m1",
+      "from": "s_ini",
+      "to": "ia_ext",
+      "variant": "dashed",
+      "label": "solicitud"
+    },
+    {
+      "id": "f1",
+      "from": "ia_ext",
+      "to": "sis_val",
+      "variant": "default",
+      "label": "datos extraídos"
+    },
+    {
+      "id": "f2",
+      "from": "sis_val",
+      "to": "sis_g1",
+      "variant": "default"
+    },
+    {
+      "id": "f3",
+      "from": "sis_g1",
+      "to": "sis_dis",
+      "variant": "emphasis",
+      "label": "completo"
+    },
+    {
+      "id": "f4",
+      "from": "sis_g1",
+      "to": "sis_acl",
+      "variant": "default",
+      "label": "faltan datos"
+    },
+    {
+      "id": "f5",
+      "from": "sis_g1",
+      "to": "rev_h",
+      "variant": "security",
+      "label": "ambiguo"
+    },
+    {
+      "id": "m2",
+      "from": "sis_acl",
+      "to": "s_acl",
+      "variant": "dashed",
+      "label": "aclaración"
+    },
+    {
+      "id": "m3",
+      "from": "s_acl",
+      "to": "ia_ext",
+      "variant": "dashed",
+      "label": "nueva respuesta",
+      "role": "return"
+    },
+    {
+      "id": "f6",
+      "from": "rev_h",
+      "to": "sis_dis",
+      "variant": "security",
+      "label": "decide"
+    },
+    {
+      "id": "f7",
+      "from": "sis_dis",
+      "to": "sis_g2",
+      "variant": "default"
+    },
+    {
+      "id": "f8",
+      "from": "sis_g2",
+      "to": "sis_reg",
+      "variant": "emphasis",
+      "label": "Sí"
+    },
+    {
+      "id": "f9",
+      "from": "sis_g2",
+      "to": "sis_no",
+      "variant": "default",
+      "label": "No"
+    },
+    {
+      "id": "m4",
+      "from": "sis_reg",
+      "to": "s_fin",
+      "variant": "dashed",
+      "label": "confirmación"
+    },
+    {
+      "id": "m5",
+      "from": "sis_no",
+      "to": "s_fin",
+      "variant": "dashed",
+      "label": "rechazo"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Cómo leerlo",
+      "items": [
+        "Línea continua: flujo de secuencia dentro de un mismo participante",
+        "Línea punteada: flujo de mensaje entre participantes distintos",
+        "Rombo: compuerta exclusiva, sale solo un camino"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Reparto de responsabilidades",
+      "items": [
+        "La IA solo interpreta el texto y señala ambigüedades",
+        "La disponibilidad se consulta en el registro oficial, no en la respuesta de la IA",
+        "Los casos ambiguos pasan a una persona"
+      ]
+    }
+  ]
+}
