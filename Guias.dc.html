@@ -51,6 +51,23 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
 .md .opt.mal{border-color:#b0584f;background:color-mix(in srgb,#b0584f 14%,transparent)}
 .md .exp{margin-top:10px;font-size:14.5px;padding:10px 12px;background:var(--color-surface)}
 .md .marcador{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--color-divider);font-size:14px}
+
+/* Secciones desplegables: conservan la paleta y tipografías del cuaderno. */
+.md .seccion-desplegable{border:1px solid var(--color-divider);background:var(--color-bg);margin:18px 0;overflow:hidden}
+.md .seccion-desplegable[open]{border-color:var(--color-accent-300)}
+.md .seccion-desplegable>summary{display:flex;align-items:center;gap:16px;cursor:pointer;list-style:none;padding:18px 20px;font-family:var(--font-heading);font-size:24px;font-weight:600;line-height:1.2;color:var(--color-text);background:var(--color-surface)}
+.md .seccion-desplegable>summary::-webkit-details-marker{display:none}
+.md .seccion-desplegable>summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--color-accent-700);border-bottom:2px solid var(--color-accent-700);transform:rotate(45deg);margin-left:auto;flex:none;transition:transform .15s}
+.md .seccion-desplegable[open]>summary::after{transform:rotate(225deg)}
+.md .seccion-desplegable>summary:hover{background:var(--color-accent-100)}
+.md .seccion-desplegable>summary:focus-visible{outline:2px solid var(--color-accent-600);outline-offset:-3px}
+.md .seccion-cuerpo{padding:24px 22px}
+.md .seccion-cuerpo>*:last-child{margin-bottom:0}
+.md .seccion-desplegable.interna{margin:12px 0;background:var(--color-surface)}
+.md .seccion-desplegable.interna>summary{font-size:20px;padding:15px 17px;background:var(--color-bg)}
+.md .seccion-desplegable.interna>.seccion-cuerpo{padding:18px}
+.md .seccion-desplegable.interna[open]>summary{border-bottom:1px solid var(--color-divider)}
+@media(max-width:640px){.md .seccion-desplegable>summary{font-size:21px;padding:15px}.md .seccion-cuerpo{padding:16px 13px}.md .seccion-desplegable.interna>summary{font-size:18px;padding:13px}}
 </style>
 </helmet>
 <div style="min-height:100vh; display:flex; flex-direction:column; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body)">
@@ -412,7 +429,43 @@ class Component extends DCLogic {
     if (this.pEl === el && this.pK === m.archivo) return;
     this.pEl = el; this.pK = m.archivo;
     el.innerHTML = window.marked.parse(raw);
+    if (raw.includes("<!-- secciones: desplegables -->")) this.crearSecciones(el);
     this.mejorar(el);
+  }
+  crearSecciones(el) {
+    const elementos = Array.from(el.children);
+    let principal = null;
+    let secundaria = null;
+    const construir = (encabezado, interna, abierto) => {
+      const bloque = document.createElement('details');
+      bloque.className = 'seccion-desplegable' + (interna ? ' interna' : '');
+      bloque.open = abierto;
+      const titulo = document.createElement('summary');
+      titulo.textContent = encabezado.textContent;
+      const cuerpo = document.createElement('div');
+      cuerpo.className = 'seccion-cuerpo';
+      bloque.append(titulo, cuerpo);
+      encabezado.remove();
+      return { bloque, cuerpo };
+    };
+    let primera = true;
+    for (const elemento of elementos) {
+      if (elemento.tagName === 'H2') {
+        const s = construir(elemento, false, primera);
+        primera = false;
+        el.appendChild(s.bloque);
+        principal = s.cuerpo;
+        secundaria = null;
+      } else if (elemento.tagName === 'H3' && principal) {
+        const s = construir(elemento, true, false);
+        principal.appendChild(s.bloque);
+        secundaria = s.cuerpo;
+      } else if (secundaria) {
+        secundaria.appendChild(elemento);
+      } else if (principal) {
+        principal.appendChild(elemento);
+      }
+    }
   }
   esquinas() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
   mejorar(el) {
