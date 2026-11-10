@@ -90,11 +90,11 @@ Una persona solicita por correo un proyector o una cámara. Una encargada revisa
 
 **Representación resumida:**
 
-<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn" title="Diagrama BPMN AS-IS del proceso de reserva de equipos" loading="lazy" style="width:100%;height:340px;border:1px solid var(--color-divider)"></iframe>
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn&fijo=1" title="Diagrama BPMN AS-IS del proceso de reserva de equipos" loading="lazy" style="display:block;width:100%;aspect-ratio:1275/510;border:1px solid var(--color-divider);background:#fff"></iframe>
 
-<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=as-is-solicitudes.bpmn" target="_blank" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Ver en grande y mover<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-8 8M10 6H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg></a>
 
-Las respuestas negativas y los datos incompletos generan ramas y posibles esperas, y el diagrama las muestra explícitamente.
+Las respuestas negativas y los datos incompletos generan ramas y posibles esperas, y el diagrama las muestra explícitamente. Las notas en rojo señalan dónde se produce el cuello de botella, el retrabajo y el trabajo manual.
 
 ### ¿Qué es un cuello de botella?
 
@@ -175,11 +175,11 @@ El centro comunitario propone recibir las solicitudes a través de un formulario
 
 **Representación resumida:**
 
-<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn" title="Diagrama BPMN TO-BE del proceso de reserva de equipos con IA" loading="lazy" style="width:100%;height:420px;border:1px solid var(--color-divider)"></iframe>
+<iframe src="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn&fijo=1" title="Diagrama BPMN TO-BE del proceso de reserva de equipos con IA" loading="lazy" style="display:block;width:100%;aspect-ratio:1415/790;border:1px solid var(--color-divider);background:#fff"></iframe>
 
-<a href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn" target="_blank" rel="noopener">Abrir en pantalla completa</a>
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/diagramas/visor-bpmn.html?src=to-be-solicitudes.bpmn" target="_blank" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Ver en grande y mover<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-8 8M10 6H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"></path></svg></a>
 
-Las ramas de información incompleta, indisponibilidad y revisión humana se mantienen visibles en el diagrama.
+Las ramas de información incompleta, indisponibilidad y revisión humana se mantienen visibles en el diagrama. Las notas en verde indican dónde está cada mejora respecto del AS-IS.
 
 ### ¿Qué hace la IA y qué NO debería hacer?
 
