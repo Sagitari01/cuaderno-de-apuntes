@@ -3,5 +3,27 @@
     "titulo": "Cuaderno de apuntes",
     "subtitulo": "Material de apoyo que va creciendo clase a clase: cuando subo algo nuevo, aparece aquí."
   },
-  "cursos": []
+  "cursos": [
+    {
+      "id": "construccion-agentes-ia-automatizacion",
+      "codigo": "IA-AUTO",
+      "titulo": "Construcción de Agentes con IA y Automatización",
+      "descripcion": "Apuntes de trabajo sobre procesos, agentes de inteligencia artificial y automatización de tareas.",
+      "semanas": [
+        {
+          "titulo": "Semana 1",
+          "tema": "Análisis y modelamiento de procesos",
+          "materiales": [
+            {
+              "id": "as-is-to-be",
+              "titulo": "Modelamiento de procesos: AS-IS y TO-BE",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/01-as-is-to-be.md",
+              "nuevo": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
