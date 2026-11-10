@@ -96,22 +96,26 @@ Las respuestas negativas y los datos incompletos generan ramas y posibles espera
 
 Un **cuello de botella** es una etapa cuya capacidad limita el flujo del proceso o provoca que las solicitudes se acumulen antes de ella. No necesariamente es la tarea más difícil: a veces es una aprobación que se hace una vez al día o una sola persona que revisa todo.
 
-**Ejemplo con números hipotéticos:**
+**Ejemplo con números hipotéticos, a pequeña escala:**
 
-| Etapa | Capacidad estimada |
+| Etapa | Tiempo de trabajo aproximado por solicitud |
 |---|---:|
-| Recepción de solicitudes | 40 por día |
-| Revisión manual y consulta de planilla | 15 por día |
-| Registro y envío de confirmaciones | 30 por día |
+| Leer el correo y comprobar los datos | 1–2 minutos |
+| Consultar disponibilidad en la planilla | 2–3 minutos |
+| Registrar la reserva y responder | 2–3 minutos |
 
-Si llegan 25 solicitudes al día, pero solo pueden revisarse 15, se acumulan **10 solicitudes diarias** mientras las condiciones se mantengan. En este escenario, la revisión manual es el principal **candidato a cuello de botella**.
+Una solicitud completa puede requerir **5–8 minutos de trabajo activo**. Sin embargo, eso no significa que se responda inmediatamente: puede pasar **10–15 minutos esperando** a que la persona encargada termine otra tarea.
+
+Imaginemos que llegan **10 solicitudes durante un día**, pero la encargada solo dispone de un bloque de **40 minutos** para revisar reservas. Si cada revisión con sus verificaciones le toma aproximadamente **5 minutos**, alcanza a procesar **8 solicitudes** en ese bloque y **2 quedan pendientes**. Esto sugiere un posible cuello de botella por **tiempo disponible para la revisión**, no porque cada solicitud sea especialmente compleja.
+
+Esta acumulación es ilustrativa: no implica que todos los días se sumen exactamente dos solicitudes, porque la demanda y el tiempo disponible pueden cambiar.
 
 La capacidad de una etapa orienta el diagnóstico, pero para confirmarlo deben observarse colas, tiempos y variación de la demanda.
 
 ### ¿Cómo identificarlo sin pasar todavía al TO-BE?
 
 1. **Observar el recorrido real:** seguir varias solicitudes desde su llegada hasta la respuesta.
-2. **Medir tiempos de trabajo y de espera por separado:** una revisión puede durar 5 minutos, pero permanecer 6 horas en cola.
+2. **Medir tiempos de trabajo y de espera por separado:** una revisión puede durar 5 minutos, pero pasar otros 10–15 minutos esperando a ser atendida.
 3. **Contar solicitudes pendientes:** registrar en qué etapa se acumulan y durante cuánto tiempo.
 4. **Revisar retrabajo:** observar cuántas solicitudes vuelven atrás por información incompleta.
 5. **Comparar capacidad y demanda:** distinguir una sobrecarga sostenida de un aumento puntual de solicitudes.
