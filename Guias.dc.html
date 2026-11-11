@@ -216,7 +216,10 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
   <!-- CURSO -->
   <sc-if value="{{ isCurso }}" hint-placeholder-val="{{ false }}">
     <div style="flex:1; display:flex; flex-direction:{{ layoutDir }}; align-items:flex-start">
-      <aside style="display:{{ sbDisplay }}; flex-direction:column; gap:22px; width:{{ sbWidth }}; flex:none; box-sizing:border-box; position:{{ sbPos }}; top:57px; height:{{ sbH }}; overflow-y:auto; border-right:{{ sbBorder }}; border-bottom:{{ sbBorderB }}; padding:26px 20px 40px">
+      <aside style="display:{{ sbDisplay }}; flex-direction:column; gap:18px; width:{{ sbWidth }}; flex:none; box-sizing:border-box; position:{{ sbPos }}; top:57px; height:{{ sbH }}; overflow-y:auto; border-right:{{ sbBorder }}; border-bottom:{{ sbBorderB }}; padding:20px 20px 40px">
+        <sc-if value="{{ showSidebarCollapse }}" hint-placeholder-val="{{ false }}">
+          <button type="button" class="btn btn-secondary" onClick="{{ toggleSidebar }}" aria-label="Contraer menú lateral" title="Contraer menú lateral" style="align-self:flex-end;display:flex;align-items:center;justify-content:center;gap:7px;min-height:32px;padding:4px 10px;font-size:12px"><span aria-hidden="true">◀</span> Ocultar menú</button>
+        </sc-if>
         <div style="display:flex; flex-direction:column; gap:10px">
           <a href="{{ cursoHref }}" style="display:flex; flex-direction:column; gap:3px; text-decoration:none; color:var(--color-text)">
             <span class="card-kicker">{{ cursoCodigo }} · Vista general</span>
@@ -298,7 +301,10 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
       </aside>
 
       <main style="flex:1; min-width:0; width:100%; box-sizing:border-box; padding:{{ mainPad }}">
-        <div style="max-width:760px; margin:0 auto">
+        <sc-if value="{{ showSidebarRestore }}" hint-placeholder-val="{{ false }}">
+          <button type="button" class="btn btn-secondary" onClick="{{ toggleSidebar }}" aria-label="Expandir menú lateral" title="Expandir menú lateral" style="display:flex;align-items:center;gap:9px;margin:0 0 18px;padding:7px 12px;font-size:13px"><span aria-hidden="true">▶</span> Mostrar menú</button>
+        </sc-if>
+        <div style="max-width:{{ contentMaxWidth }}; margin:0 auto">
           <sc-if value="{{ isOverview }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex; flex-direction:column; gap:32px">
               <div style="display:flex; flex-direction:column; gap:10px">
@@ -379,7 +385,7 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;variante&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;indice&quot;,&quot;bitacora&quot;,&quot;panel&quot;],&quot;default&quot;:&quot;indice&quot;,&quot;tsType&quot;:&quot;'indice'|'bitacora'|'panel'&quot;,&quot;section&quot;:&quot;Diseño&quot;}}">
 class Component extends DCLogic {
-  state = { data: null, error: null, md: {}, route: this.leer(), q: '', dark: localStorage.getItem('guias:tema') === 'oscuro', w: window.innerWidth, menu: false, semanaSel: null };
+  state = { data: null, error: null, md: {}, route: this.leer(), q: '', dark: localStorage.getItem('guias:tema') === 'oscuro', w: window.innerWidth, menu: false, sidebarCollapsed: false, semanaSel: null };
   mdRef = React.createRef();
 
   leer() {
@@ -538,7 +544,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const { data, error, route, md, q, dark, w, menu } = this.state;
+    const { data, error, route, md, q, dark, w, menu, sidebarCollapsed } = this.state;
     const v = this.props.variante ?? 'indice';
     const narrow = w < 860;
     const cursos = data ? data.cursos : [];
@@ -610,6 +616,10 @@ class Component extends DCLogic {
       dark, light: !dark,
       toggleDark: () => { const d = !dark; localStorage.setItem('guias:tema', d ? 'oscuro' : 'claro'); this.setState({ dark: d }); },
       showMenuBtn: isCurso && narrow, toggleMenu: () => this.setState({ menu: !menu }),
+      showSidebarCollapse: isCurso && !narrow && !sidebarCollapsed,
+      showSidebarRestore: isCurso && !narrow && sidebarCollapsed,
+      toggleSidebar: () => this.setState({ sidebarCollapsed: !sidebarCollapsed }),
+      contentMaxWidth: !narrow && sidebarCollapsed ? '980px' : '760px',
       showMiga: isCurso && !narrow,
       homeA: home && v === 'indice', homeB: home && v === 'bitacora', homeC: home && v === 'panel',
       homePad: narrow ? '36px 18px 64px' : '64px 40px 96px',
@@ -623,7 +633,7 @@ class Component extends DCLogic {
       cursoResumen: curso ? curso.semanas.length + (curso.semanas.length === 1 ? ' semana' : ' semanas') + ' · ' + flat.length + ' materiales' : '',
       semanas, semanaActual: semanas[semSel] || { materiales: [] },
       layoutDir: narrow ? 'column' : 'row',
-      sbDisplay: narrow && !menu ? 'none' : 'flex',
+      sbDisplay: narrow ? (menu ? 'flex' : 'none') : (sidebarCollapsed ? 'none' : 'flex'),
       sbWidth: narrow ? '100%' : (v === 'bitacora' ? '330px' : '310px'),
       sbPos: narrow ? 'static' : 'sticky', sbH: narrow ? 'auto' : 'calc(100vh - 57px)',
       sbBorder: narrow ? 'none' : '1px solid var(--color-divider)',
