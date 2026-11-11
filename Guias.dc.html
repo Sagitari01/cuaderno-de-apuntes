@@ -469,7 +469,7 @@ class Component extends DCLogic {
   }
   esquinas() { return '<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>'; }
   mejorar(el) {
-    el.querySelectorAll('a[href^="http"]').forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+    el.querySelectorAll('a[href]').forEach(a => { a.target = '_blank'; a.rel = 'noopener noreferrer'; });
     el.querySelectorAll('pre > code.language-ejercicio, pre > code.language-nota').forEach(code => {
       const ej = code.classList.contains('language-ejercicio');
       const d = document.createElement('div');
