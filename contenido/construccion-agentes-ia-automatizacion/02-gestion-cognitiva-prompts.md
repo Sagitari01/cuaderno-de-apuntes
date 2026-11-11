@@ -17,8 +17,8 @@ Una persona puede interpretarlo. Pero ¿cómo obtenemos los mismos campos en cie
 **Apoyo visual: tipos de datos**
 
 <div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
-  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/00-tipos-de-datos-original.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/00-tipos-de-datos-original.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
   </a>
 </div>
@@ -52,6 +52,15 @@ Pero **extraer no es verificar**. La IA puede reconocer que alguien pide una sal
 | **No estructurados** | No siguen un esquema fijo fácil de procesar. | Mensajes libres, conversaciones, imágenes y ciertos documentos. |
 
 Un PDF es un **formato de archivo**, no sinónimo automático de dato no estructurado: puede contener texto, tablas o imágenes escaneadas.
+
+**Esquema complementario: tres tipos de datos**
+
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Hoja rayada que compara estructurados, semiestructurados y no estructurados con ejemplos de tabla, JSON y texto libre." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 ### El puente entre ambos mundos
 
