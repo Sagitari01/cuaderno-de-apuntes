@@ -14,7 +14,7 @@ Una persona puede interpretarlo. Pero ¿cómo obtenemos los mismos campos en cie
 
 **Aprenderás:** datos estructurados y no estructurados, prompt engineering, los cinco bloques de un prompt, JSON, zero-shot, few-shot, iteración, alucinaciones, sesgos y validaciones.
 
-### Apoyo visual: tipos de datos
+**Apoyo visual: tipos de datos**
 
 <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
