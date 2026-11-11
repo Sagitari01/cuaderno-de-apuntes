@@ -12,21 +12,15 @@
       "semanas": [
         {
           "titulo": "Semana 1",
-          "tema": "Análisis y modelamiento de procesos",
+          "tema": "Análisis de procesos e IA generativa",
           "materiales": [
             {
               "id": "as-is-to-be",
               "titulo": "Modelamiento de procesos: AS-IS y TO-BE",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/01-as-is-to-be.md",
-              "nuevo": true
-            }
-          ]
-        },
-        {
-          "titulo": "Semana 1 · Clase 3",
-          "tema": "IA generativa y gestión de información",
-          "materiales": [
+              "nuevo": false
+            },
             {
               "id": "gestion-cognitiva-prompts",
               "titulo": "Gestión cognitiva, prompts y calidad de IA",
