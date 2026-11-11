@@ -16,9 +16,12 @@ Una persona puede interpretarlo. Pero ¿cómo obtenemos los mismos campos en cie
 
 **Apoyo visual: tipos de datos**
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver la lámina de tipos de datos en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 Las siguientes secciones incluyen más láminas ilustradas. Puedes abrir los apartados y sus subtítulos para verlas junto a cada explicación.
 
@@ -41,8 +44,6 @@ Pero **extraer no es verificar**. La IA puede reconocer que alguien pide una sal
 
 ### Datos estructurados, semiestructurados y no estructurados
 
-
-[Ver la ilustración de tipos de datos](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
 
 | Tipo | Qué significa | Ejemplo |
 |---|---|---|
@@ -89,9 +90,12 @@ La IA podría escribir un resumen, una tabla o un párrafo distinto en cada ocas
 ### Los cinco bloques de un prompt profesional
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp" alt="Hoja de apuntes que resume rol, contexto, tarea, restricciones y formato de salida de un prompt." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp" alt="Hoja de apuntes que resume rol, contexto, tarea, restricciones y formato de salida de un prompt." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 | Bloque | Pregunta | Ejemplo |
 |---|---|---|
@@ -130,9 +134,12 @@ No conocemos la fecha de envío ni una fecha de referencia. Por eso **no podemos
 **JSON** (*JavaScript Object Notation*) es un formato de intercambio de datos. Utiliza pares de **clave y valor**, con las claves entre comillas dobles.
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp" alt="Esquema de un objeto JSON con campos de texto, número y valor nulo." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp" alt="Esquema de un objeto JSON con campos de texto, número y valor nulo." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 Ejemplo válido:
 
@@ -185,9 +192,12 @@ Un objeto puede tener sintaxis perfecta y contener una fecha inventada. Valida p
 ### Zero-shot: sin ejemplos
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp" alt="Comparación visual entre zero-shot sin ejemplos y few-shot con ejemplos previos." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp" alt="Comparación visual entre zero-shot sin ejemplos y few-shot con ejemplos previos." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 En **zero-shot** indicamos la tarea sin incluir ejemplos previos de entrada y salida. Sirve como primera versión para observar cómo responde el modelo.
 
@@ -253,9 +263,12 @@ No utilices documentos con datos personales o información confidencial en servi
 ### Alucinación
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-alucinaciones-sesgos.svg" alt="Comparación ilustrada de alucinación, sesgo y controles de calidad en la IA." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/05-alucinaciones-sesgos.svg)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-alucinaciones-sesgos.svg" alt="Comparación ilustrada de alucinación, sesgo y controles de calidad en la IA." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/05-alucinaciones-sesgos.svg" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 Una **alucinación** es una afirmación o dato generado sin respaldo suficiente en la información proporcionada.
 
@@ -306,9 +319,12 @@ El sistema no debe completar un dato inexistente únicamente para que el flujo n
 ## 6. Conexión con AS-IS y TO-BE
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp" alt="Secuencia desde mensaje hasta interpretación con IA, JSON, validación y acción del sistema." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;margin:18px auto 12px;line-height:0">
+  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp" alt="Secuencia desde mensaje hasta interpretación con IA, JSON, validación y acción del sistema." style="display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+  <a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;min-width:32px;min-height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
+  </a>
+</div>
 
 Con el centro comunitario podemos comparar los procesos.
 
