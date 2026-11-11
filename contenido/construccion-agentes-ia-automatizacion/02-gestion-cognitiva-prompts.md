@@ -16,9 +16,9 @@ Una persona puede interpretarlo. Pero ¿cómo obtenemos los mismos campos en cie
 
 **Apoyo visual: tipos de datos**
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver la lámina de tipos de datos en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg)
+[Ver la lámina de tipos de datos en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
 
 Las siguientes secciones incluyen más láminas ilustradas. Puedes abrir los apartados y sus subtítulos para verlas junto a cada explicación.
 
@@ -42,9 +42,9 @@ Pero **extraer no es verificar**. La IA puede reconocer que alguien pide una sal
 ### Datos estructurados, semiestructurados y no estructurados
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg)
+[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
 
 | Tipo | Qué significa | Ejemplo |
 |---|---|---|
@@ -91,9 +91,9 @@ La IA podría escribir un resumen, una tabla o un párrafo distinto en cada ocas
 ### Los cinco bloques de un prompt profesional
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.svg" alt="Hoja de apuntes que resume rol, contexto, tarea, restricciones y formato de salida de un prompt." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp" alt="Hoja de apuntes que resume rol, contexto, tarea, restricciones y formato de salida de un prompt." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.svg)
+[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.webp)
 
 | Bloque | Pregunta | Ejemplo |
 |---|---|---|
@@ -187,9 +187,9 @@ Un objeto puede tener sintaxis perfecta y contener una fecha inventada. Valida p
 ### Zero-shot: sin ejemplos
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.svg" alt="Comparación visual entre zero-shot sin ejemplos y few-shot con ejemplos previos." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp" alt="Comparación visual entre zero-shot sin ejemplos y few-shot con ejemplos previos." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.svg)
+[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.webp)
 
 En **zero-shot** indicamos la tarea sin incluir ejemplos previos de entrada y salida. Sirve como primera versión para observar cómo responde el modelo.
 
