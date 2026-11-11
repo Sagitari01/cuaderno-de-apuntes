@@ -33,6 +33,9 @@ Pero **extraer no es verificar**. La IA puede reconocer que alguien pide una sal
 
 ### Datos estructurados, semiestructurados y no estructurados
 
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.svg" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+
 | Tipo | Qué significa | Ejemplo |
 |---|---|---|
 | **Estructurados** | Campos definidos y consistentes. | Tabla de reservas con columnas sala, fecha y hora. |
@@ -77,6 +80,9 @@ La IA podría escribir un resumen, una tabla o un párrafo distinto en cada ocas
 
 ### Los cinco bloques de un prompt profesional
 
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-cinco-bloques-prompt.svg" alt="Hoja de apuntes que resume rol, contexto, tarea, restricciones y formato de salida de un prompt." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+
 | Bloque | Pregunta | Ejemplo |
 |---|---|---|
 | **1. Rol** | ¿Quién debe actuar? | «Eres un extractor de datos de solicitudes». |
@@ -112,6 +118,9 @@ No conocemos la fecha de envío ni una fecha de referencia. Por eso **no podemos
 ## 3. JSON: la forma en que un sistema puede leer la respuesta
 
 **JSON** (*JavaScript Object Notation*) es un formato de intercambio de datos. Utiliza pares de **clave y valor**, con las claves entre comillas dobles.
+
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.svg" alt="Esquema de un objeto JSON con campos de texto, número y valor nulo." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
 Ejemplo válido:
 
@@ -162,6 +171,9 @@ Un objeto puede tener sintaxis perfecta y contener una fecha inventada. Valida p
 ## 4. Zero-shot, few-shot e iteración
 
 ### Zero-shot: sin ejemplos
+
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-zero-shot-few-shot.svg" alt="Comparación visual entre zero-shot sin ejemplos y few-shot con ejemplos previos." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
 En **zero-shot** indicamos la tarea sin incluir ejemplos previos de entrada y salida. Sirve como primera versión para observar cómo responde el modelo.
 
@@ -226,6 +238,9 @@ No utilices documentos con datos personales o información confidencial en servi
 
 ### Alucinación
 
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-alucinaciones-sesgos.svg" alt="Comparación ilustrada de alucinación, sesgo y controles de calidad en la IA." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+
 Una **alucinación** es una afirmación o dato generado sin respaldo suficiente en la información proporcionada.
 
 Si el correo dice «No se distingue la cantidad de asistentes» y la IA responde `"asistentes": 20`, el dato puede ser plausible, pero **no está sustentado**.
@@ -273,6 +288,9 @@ El sistema no debe completar un dato inexistente únicamente para que el flujo n
 ---
 
 ## 6. Conexión con AS-IS y TO-BE
+
+
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.svg" alt="Secuencia desde mensaje hasta interpretación con IA, JSON, validación y acción del sistema." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
 Con el centro comunitario podemos comparar los procesos.
 
