@@ -181,7 +181,7 @@ Ejemplo válido:
 2. **No se agrega conversación:** «Aquí está tu JSON» fuera del objeto puede provocar un error en un lector estricto.
 3. **La ausencia tiene tipos distintos:** `null` (sin comillas), `"NULL"` (cadena de texto) y `0` (número) **no significan lo mismo**.
 
-En algunas actividades se solicita devolver la palabra `NULL`; si se trabaja en JSON hay que definir expresamente si el sistema receptor espera el texto `"NULL"` o el valor nulo `null`. Es una decisión del **contrato de datos**, no algo que se deba cambiar silenciosamente.
+En ciertos sistemas se utiliza la palabra `NULL` para representar datos faltantes; si se trabaja en JSON hay que definir expresamente si el sistema receptor espera el texto `"NULL"` o el valor nulo `null`. Es una decisión del **contrato de datos**, no algo que se deba cambiar silenciosamente.
 
 ### JSON válido no significa dato correcto
 
@@ -352,34 +352,35 @@ El modelo de lenguaje no debe asumir todas esas funciones a la vez.
 
 ---
 
-## 7. Preparación para el laboratorio y la auditoría
+## 7. Buenas prácticas para diseñar y verificar respuestas de IA
 
-### Laboratorio de prompt iterativo
+### Diseño iterativo de prompts
 
-El trabajo práctico plantea construir una primera instrucción **zero-shot** y mejorarla incorporando ejemplos **few-shot**. Para prepararte:
+Un prompt fiable no nace perfecto: se construye mediante un ciclo de **especificación, prueba, comparación y mejora**.
 
-- Reconoce los cinco bloques de la instrucción.
-- Especifica con claridad los campos y su formato.
-- Define qué ocurre si un valor falta.
-- Incorpora al menos dos ejemplos de entrada y salida.
-- Prueba casos fáciles y casos límite.
-- Guarda la instrucción final y la respuesta **tal como la devolvió el modelo**.
+1. Definir con claridad el rol, el contexto, la tarea, las restricciones y el formato esperado.
+2. Establecer los campos obligatorios y cómo representar información ausente.
+3. Comenzar con un prompt **zero-shot** para conocer el comportamiento inicial.
+4. Incorporar ejemplos **few-shot** cuando ayuden a precisar el resultado esperado.
+5. Contrastar las respuestas con ejemplos de referencia, incluidos casos ambiguos y datos faltantes.
+6. Conservar versiones del prompt y resultados de prueba para identificar qué mejoró y qué empeoró.
 
-### Auditoría crítica de resultados
+El objetivo de la iteración no es conseguir una respuesta que *parezca* correcta, sino lograr un comportamiento que pueda **comprobarse** y mantenerse de forma consistente.
 
-La segunda actividad se concentra en identificar fallas de extracción y formato, proponer correcciones y documentar la trazabilidad del trabajo.
+### Verificación crítica de los resultados
 
-Para analizar una respuesta, pregúntate:
+Antes de utilizar datos generados por IA dentro de un sistema, conviene aplicar distintas comprobaciones:
 
-1. ¿La información realmente aparece en el documento?
-2. ¿Los nombres de campos y los tipos son correctos?
-3. ¿La salida es JSON válido sin texto extra?
-4. ¿La IA inventó algo o dejó un dato ambiguo como si fuera seguro?
-5. ¿Qué instrucción podría mejorar el comportamiento?
-6. ¿Qué verificación debería aplicar el sistema **después** del modelo?
-7. ¿Qué ruta de contingencia se ejecutaría si falla?
+| Comprobación | Pregunta clave |
+|---|---|
+| **Respaldo** | ¿El dato aparece en la fuente original? |
+| **Estructura** | ¿Se respetan los nombres y los tipos de campos? |
+| **Formato** | ¿La respuesta es JSON válido, sin texto adicional? |
+| **Ambigüedad** | ¿Hay valores inventados o inferidos sin suficiente información? |
+| **Reglas de negocio** | ¿El resultado cumple las condiciones del proceso? |
+| **Contingencia** | ¿Qué ocurre si falta un dato o falla una validación? |
 
-**Distingue siempre** el diagnóstico del error, la corrección del prompt y la validación técnica del sistema: son tres capas distintas.
+**Tres capas complementarias:** el prompt orienta la extracción, el sistema valida la salida y la supervisión humana interviene cuando es necesaria. Ninguna de estas capas sustituye por completo a las demás.
 
 ---
 
@@ -405,7 +406,7 @@ Para analizar una respuesta, pregúntate:
 
 ## 9. Autoevaluación
 
-Responde y después revisa la explicación. Son preguntas de repaso; no incluyen las soluciones de las actividades.
+Responde y después revisa la explicación. Estas preguntas permiten comprobar tu comprensión de los conceptos del apunte.
 
 ```quiz
 ? ¿Cuál es la función apropiada de la IA al leer una solicitud de reserva?
