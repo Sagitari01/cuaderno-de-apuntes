@@ -22,6 +22,19 @@
               "nuevo": true
             }
           ]
+        },
+        {
+          "titulo": "Semana 1",
+          "tema": "IA generativa y gestión de información",
+          "materiales": [
+            {
+              "id": "gestion-cognitiva-prompts",
+              "titulo": "Gestión cognitiva, prompts y calidad de IA",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/02-gestion-cognitiva-prompts.md",
+              "nuevo": true
+            }
+          ]
         }
       ]
     }
