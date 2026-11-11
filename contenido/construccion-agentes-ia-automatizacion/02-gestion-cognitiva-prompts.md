@@ -42,9 +42,7 @@ Pero **extraer no es verificar**. La IA puede reconocer que alguien pide una sal
 ### Datos estructurados, semiestructurados y no estructurados
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp" alt="Ilustración en papel rayado que compara datos estructurados, semiestructurados y no estructurados." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
-
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
+[Ver la ilustración de tipos de datos](contenido/construccion-agentes-ia-automatizacion/imagenes/01-tipos-de-datos.webp)
 
 | Tipo | Qué significa | Ejemplo |
 |---|---|---|
