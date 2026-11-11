@@ -572,7 +572,7 @@ class Component extends DCLogic {
       const ms = s.materiales.map(m => {
         const act = !!(mat && mat.id === m.id);
         return {
-          ...m, href: href(curso.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo, activo: act, nuevo: !!m.nuevo,
+          ...m, href: href(curso.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo, activo: act, nuevo: !!(flat.length && flat[flat.length - 1].id === m.id),
           bg: act ? 'var(--color-accent-100)' : 'transparent',
           fg: act ? 'var(--color-accent-800)' : 'var(--color-text)',
           peso: act ? '500' : '400'
