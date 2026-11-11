@@ -132,9 +132,9 @@ No conocemos la fecha de envío ni una fecha de referencia. Por eso **no podemos
 **JSON** (*JavaScript Object Notation*) es un formato de intercambio de datos. Utiliza pares de **clave y valor**, con las claves entre comillas dobles.
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.svg" alt="Esquema de un objeto JSON con campos de texto, número y valor nulo." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp" alt="Esquema de un objeto JSON con campos de texto, número y valor nulo." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.svg)
+[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-desde-cero.webp)
 
 Ejemplo válido:
 
@@ -308,9 +308,9 @@ El sistema no debe completar un dato inexistente únicamente para que el flujo n
 ## 6. Conexión con AS-IS y TO-BE
 
 
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.svg" alt="Secuencia desde mensaje hasta interpretación con IA, JSON, validación y acción del sistema." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
+<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp" alt="Secuencia desde mensaje hasta interpretación con IA, JSON, validación y acción del sistema." style="display:block;width:100%;height:auto;max-width:100%;margin:18px auto 10px;border:1px solid var(--color-divider);border-radius:10px;background:#fff" loading="lazy">
 
-[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.svg)
+[Ver ilustración en tamaño completo](contenido/construccion-agentes-ia-automatizacion/imagenes/06-flujo-ia-automatizacion.webp)
 
 Con el centro comunitario podemos comparar los procesos.
 
