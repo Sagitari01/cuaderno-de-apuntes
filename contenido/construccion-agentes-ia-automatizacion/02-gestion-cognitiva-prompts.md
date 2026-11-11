@@ -398,22 +398,42 @@ Para analizar una respuesta, pregúntate:
 
 Responde y después revisa la explicación. Son preguntas de repaso; no incluyen las soluciones de las actividades.
 
-~~~quiz
-{"pregunta":"¿Cuál es la función apropiada de la IA al leer una solicitud de reserva?","opciones":[{"texto":"Confirmar disponibilidad sin consultar el registro.","ok":false},{"texto":"Extraer los datos indicados y señalar los que falten.","ok":true},{"texto":"Inventar la información necesaria para completar el formulario.","ok":false}],"exp":"La IA interpreta el mensaje; la disponibilidad real y la decisión final requieren verificaciones externas."}
-~~~
+```quiz
+? ¿Cuál es la función apropiada de la IA al leer una solicitud de reserva?
+- Confirmar disponibilidad sin consultar el registro.
++ Extraer los datos indicados y señalar los que falten.
+- Inventar la información necesaria para completar el formulario.
+> La IA interpreta el mensaje; la disponibilidad real y la decisión final requieren verificaciones externas.
+```
 
-~~~quiz
-{"pregunta":"¿Qué bloque del prompt especifica qué hacer cuando falta un dato?","opciones":[{"texto":"Las reglas y restricciones.","ok":true},{"texto":"Solo el rol.","ok":false},{"texto":"El saludo inicial.","ok":false}],"exp":"Las restricciones pueden indicar explícitamente que nunca se inventen valores y que se utilice un valor de ausencia acordado."}
-~~~
+```quiz
+? ¿Qué bloque del prompt especifica qué hacer cuando falta un dato?
++ Las reglas y restricciones.
+- Solo el rol.
+- El saludo inicial.
+> Las restricciones pueden indicar explícitamente que nunca se inventen valores y que se utilice un valor de ausencia acordado.
+```
 
-~~~quiz
-{"pregunta":"¿Qué distingue few-shot de zero-shot?","opciones":[{"texto":"Few-shot incluye pares de ejemplos; zero-shot no.","ok":true},{"texto":"Zero-shot necesita una base de datos nueva.","ok":false},{"texto":"Few-shot garantiza exactitud absoluta.","ok":false}],"exp":"Few-shot ayuda a ilustrar el formato esperado; no elimina por sí solo la necesidad de validar."}
-~~~
+```quiz
+? ¿Qué distingue few-shot de zero-shot?
++ Few-shot incluye pares de ejemplos; zero-shot no.
+- Zero-shot necesita una base de datos nueva.
+- Few-shot garantiza exactitud absoluta.
+> Few-shot ayuda a ilustrar el formato esperado; no elimina por sí solo la necesidad de validar.
+```
 
-~~~quiz
-{"pregunta":"En JSON, ¿son equivalentes null, \"NULL\" y 0?","opciones":[{"texto":"Sí, representan exactamente lo mismo.","ok":false},{"texto":"No: son nulo, texto y número, respectivamente.","ok":true},{"texto":"Solo si la temperatura vale cero.","ok":false}],"exp":"Los tipos importan: el sistema receptor debe esperar un formato definido de antemano."}
-~~~
+```quiz
+? En JSON, ¿son equivalentes null, "NULL" y 0?
+- Sí, representan exactamente lo mismo.
++ No: son nulo, texto y número, respectivamente.
+- Solo si la temperatura vale cero.
+> Los tipos importan: el sistema receptor debe esperar un formato definido de antemano.
+```
 
-~~~quiz
-{"pregunta":"¿La temperatura cero impide que un modelo invente datos?","opciones":[{"texto":"Sí, elimina todas las alucinaciones.","ok":false},{"texto":"No. Puede reducir variabilidad, pero siguen siendo necesarias las comprobaciones.","ok":true},{"texto":"Sí, porque verifica la información con una base de datos.","ok":false}],"exp":"Los parámetros de generación no sustituyen el contraste con el documento ni las validaciones de negocio."}
-~~~
+```quiz
+? ¿La temperatura cero impide que un modelo invente datos?
+- Sí, elimina todas las alucinaciones.
++ No. Puede reducir variabilidad, pero siguen siendo necesarias las comprobaciones.
+- Sí, porque verifica la información con una base de datos.
+> Los parámetros de generación no sustituyen el contraste con el documento ni las validaciones de negocio.
+```
