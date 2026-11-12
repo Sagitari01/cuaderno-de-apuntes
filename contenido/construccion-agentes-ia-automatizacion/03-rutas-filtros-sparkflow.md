@@ -458,60 +458,70 @@ Sin resolver ejercicios oficiales, prueba explicarte estas tres preguntas: ¿qu�
 
 ---
 
-## 12. SparkFlow: un juego para entender rutas y filtros
+## 12. SparkFlow: organiza las solicitudes de una oficina
 
-**SparkFlow** es un juego educativo de lógica y simulación de flujos. Tu misión es ayudar a restaurar una central de energía configurando rutas y filtros para que cada «chispa» llegue únicamente a los destinos permitidos.
+**SparkFlow** es un juego educativo de lógica, rutas, filtros y datos JSON. Ahora la historia transcurre en una **oficina**: una coordinadora presenta situaciones y tú ayudas a distribuir solicitudes entre áreas como Ventas, Soporte, Finanzas, Archivo, Jefatura y Gerencia.
 
-No necesitas programar ni instalar Make. El juego está disponible en el navegador y presenta **13 misiones progresivas**.
+El objetivo no es programar ni construir las conexiones desde cero. Debes interpretar los datos que llegan, decidir **qué filtro necesita cada ruta** y comprobar que las solicitudes alcancen únicamente los destinos correctos. El juego cuenta con **13 misiones**, desde comparaciones sencillas hasta decisiones con varios revisores y creación de JSON.
 
 <div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" alt="Pequeño apoyo visual del juego SparkFlow." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
+*Ilustración conceptual del juego. Los controles reales y los objetivos aparecen dentro de SparkFlow.*
+
 ### ¿Cómo se juega?
 
-1. **Abre SparkFlow:** inicia con una pantalla en la que puedes registrar tu nombre o los integrantes de tu equipo.
-2. **Lee el objetivo de la misión:** encontrarás una situación, las entradas que se evalúan y los destinos a los que deberían llegar.
-3. **Observa el circuito:** las rutas ya están dibujadas. Selecciona una haciendo clic en su línea o botón.
-4. **Revisa el filtro:** cuando la misión lo permite, elige un campo, operador y valor. Puedes agregar condiciones y combinarlas con **AND** o **OR**.
-5. **Revisa los datos JSON:** algunas misiones muestran entradas de prueba; en los desafíos de construcción debes escribir tu propio objeto JSON con los tipos correctos.
-6. **Ejecuta la simulación:** pulsa **Ejecutar simulación** y observa qué rutas reciben energía y cuáles no.
-7. **Corrige y vuelve a probar:** puedes utilizar las pistas para comprender el error sin recibir directamente el resultado.
-8. **Avanza:** cuando superas la misión se desbloquea la siguiente. El juego conserva tu progreso en ese navegador.
+1. **Registra a los participantes.** Puedes jugar individualmente o con un equipo; los nombres aparecerán en el reporte.
+2. **Lee el caso que presenta la coordinadora.** Cada misión explica el objetivo y qué destinos deberían recibir cada solicitud.
+3. **Mira el circuito de la pizarra.** Las rutas están conectadas. Selecciona la línea o el botón de una ruta para editar su filtro.
+4. **Configura las condiciones.** Elige el campo, el comparador y el valor. En algunas misiones necesitarás combinar reglas con **AND (Y)** u **OR (O)**.
+5. **Revisa los JSON de prueba.** Observa campos como `monto`, `prioridad`, `area`, `aprobado`, `completo`, `urgente` o `copia`.
+6. **Pulsa «Ejecutar simulación».** El juego comprueba los casos y muestra qué rutas permiten pasar la solicitud y cuáles la retienen.
+7. **Compara, corrige y repite.** Puedes revisar el diagnóstico, usar una pista y ajustar los filtros sin necesitar la respuesta completa.
+8. **Desbloquea nuevas misiones.** Tu progreso se conserva en el navegador, mientras no borres sus datos.
 
-### ¿Qué encontrarás en la interfaz?
+### ¿Qué partes encontrarás en la pantalla?
 
-| Parte | Para qué sirve |
+| Elemento | Para qué sirve |
 |---|---|
-| **Objetivo principal** | Describe lo que debe ocurrir con cada entrada. |
-| **Circuito** | Muestra routers, rutas, destinos y el recorrido de las chispas. |
-| **Editor de rutas y filtros** | Permite configurar condiciones cuando la misión lo admite. |
-| **Datos JSON** | Permite inspeccionar o construir las entradas. |
-| **Ejecutar simulación** | Comprueba el comportamiento de las rutas. |
-| **Tutorial de operadores** | Explica comparadores, AND y OR de forma interactiva. |
-| **Pista** | Orienta la revisión de errores. |
-| **Reporte** | Permite guardar los resultados obtenidos. |
+| **Objetivo principal** | Explica el caso de la oficina, la tarea y los resultados esperados. |
+| **Pizarra o circuito** | Muestra el router, sus rutas, los revisores y los destinos de las solicitudes. |
+| **Datos de entrada** | Permite revisar los diferentes JSON que se usarán en las pruebas. |
+| **Editor de rutas y filtros** | Permite seleccionar campos, operadores y valores de cada condición. |
+| **Ejecutar simulación** | Comprueba los distintos casos y muestra resultados y errores. |
+| **Tutorial de operadores** | Ayuda a comprender comparadores, **AND** y **OR** mediante ejemplos. |
+| **Pistas y diagnósticos** | Orientan sobre qué revisar cuando una misión falla. |
+| **Reporte** | Guarda el avance y las evidencias de tu partida. |
 
-### ¿Qué cambia en las últimas misiones?
+### ¿Qué cambia a medida que avanzas?
 
-En las **misiones 11, 12 y 13**, los filtros están preparados de antemano. El desafío consiste en **escribir un JSON válido** que active las rutas solicitadas y mantenga bloqueadas las demás. Es un ejercicio de pensar la condición «al revés»: desde el resultado esperado hacia los datos de entrada.
+- **Misiones 1 a 4:** comparaciones simples, texto exacto, rutas paralelas y valores límite.
+- **Misiones 5 a 8:** requisitos combinados con AND y OR, varias bandejas y decisiones simultáneas.
+- **Misiones 9 y 10:** varios revisores deben dar su visto bueno para que una solicitud alcance Gerencia.
+- **Misiones 11 a 13:** los filtros ya están configurados; ahora tienes que **escribir un JSON válido** que active solo las rutas solicitadas.
 
-### Consejos de uso
+El tutorial interactivo se presenta como apoyo especial para las condiciones AND y OR. Los campos y valores deben escribirse tal como aparecen en el juego: `"ventas"` y `"soporte"`, por ejemplo, son textos distintos y se comparan exactamente.
 
-- Puedes jugar de manera individual o grupal.
-- El progreso se guarda localmente en el navegador; si cambias de dispositivo o borras los datos del sitio podrías perderlo.
-- Al finalizar, descarga el **reporte cifrado** del propio juego o usa la opción de vista previa/impresión para conservar evidencia personal.
-- La versión descargable también funciona sin conexión. El juego es una **simulación didáctica**: por ejemplo, las compuertas con varios generadores no son una representación literal de la unión de rutas en Make.
+### Consejos antes de empezar
+
+- **Primero lee las condiciones; después ejecuta.** La respuesta no siempre consiste en activar una sola ruta.
+- Comprueba cuidadosamente los límites: `>= 70` incluye 70, pero `> 70` no.
+- Diferencia números, texto y booleanos: `50`, `"50"` y `true` no son el mismo tipo de dato.
+- En pantallas pequeñas puedes utilizar las pestañas **Circuito**, **Filtros** y **JSON** para navegar entre las áreas del juego.
+- El progreso se guarda localmente. La versión nueva contempla la recuperación del progreso anterior y la adaptación de los nombres de los campos.
+- Cuando termines, puedes usar **«Descargar reporte cifrado»** para obtener un archivo `.sfr` con el nombre del primer participante; no modifiques su extensión. **«Vista previa / imprimir»** ofrece otra manera de revisar tus resultados.
+- SparkFlow simula decisiones lógicas: las firmas de varios revisores son una metáfora educativa, no una reproducción exacta de una herramienta de automatización.
 
 <div style="margin:20px 0;padding:20px;border:1px solid #b6c5e6;border-radius:15px;background:linear-gradient(125deg,#eeeaff,#e8f7ff)">
-  <strong style="display:block;font-size:1.2rem;color:#35236d;margin-bottom:8px">⚡ ¿Preparado para restaurar la central?</strong>
-  <p style="margin:0 0 15px;color:#33405d">Empieza por el tutorial, observa las rutas y descubre cómo funcionan los filtros en cada misión.</p>
+  <strong style="display:block;font-size:1.2rem;color:#35236d;margin-bottom:8px">🏢 ¿Preparado para organizar la oficina?</strong>
+  <p style="margin:0 0 15px;color:#33405d">Lee cada solicitud, configura sus filtros y comprueba qué equipos deben recibirla. ¡Las trece misiones te esperan!</p>
   <a href="https://sagitari01.github.io/sparkflow/" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:#6435b8;color:white;border-radius:11px;padding:12px 22px;text-decoration:none;font-weight:800;box-shadow:0 4px 9px #31205d33">🎮 Abrir SparkFlow ↗</a>
 </div>
 
 ---
 
-## 13. Solucionario de las 13 misiones — solo después de intentar el juego
+## 13. Solucionario actualizado — solo después de jugar
 
-**⚠️ Advertencia:** esta sección contiene las condiciones y ejemplos de respuesta de SparkFlow. Te recomendamos **no abrirla** antes de intentar resolver las misiones. Las pistas del propio juego están pensadas para ayudarte a avanzar sin consultar respuestas.
+**⚠️ Advertencia:** aquí encontrarás los filtros y ejemplos de JSON de las **13 misiones de la oficina**. No abras este apartado antes de intentar resolverlas: las pistas y el tutorial permiten aprender sin mirar las respuestas.
 
 <details style="margin:17px 0;padding:14px;border:1px solid #efb65b;border-radius:12px;background:#fff8e8;color:#403322">
   <summary style="cursor:pointer;font-weight:800;padding:6px">🔒 Primera confirmación: ¿estás seguro de querer ver las respuestas antes de jugar?</summary>
@@ -525,28 +535,28 @@ En las **misiones 11, 12 y 13**, los filtros están preparados de antemano. El d
       <details style="padding:12px;border:1px solid #e08b95;border-radius:10px;background:#fffafa">
         <summary style="cursor:pointer;font-weight:800;padding:6px">⚠️ Última confirmación: mostrar el solucionario completo</summary>
         <div style="margin-top:12px;padding:13px;background:#ffffff;border:1px solid #ebd6d8;border-radius:10px;line-height:1.7;color:#283246">
-          <h4>Misiones 1 a 10: filtros de cada ruta</h4>
+          <h4>Misiones 1 a 10: configuración de filtros</h4>
           <ol>
-            <li><strong>El despertar:</strong> potencia mayor o igual que 50 (<code>potencia &gt;= 50</code>).</li>
-            <li><strong>La bifurcación:</strong> Solar si <code>tipo == "solar"</code>; Eólica si <code>tipo == "eolica"</code>.</li>
-            <li><strong>Energía compartida:</strong> receptor A si <code>potencia &gt;= 50</code>; receptor B si <code>estable == true</code>. Ambas rutas pueden activarse.</li>
-            <li><strong>La cámara de selección:</strong> Refrigeración si <code>temperatura &gt;= 70</code>; Normal si <code>temperatura &lt; 70</code>.</li>
-            <li><strong>El escudo de seguridad:</strong> <code>autorizado == true</code> <strong>AND</strong> <code>potencia &gt;= 50</code>.</li>
-            <li><strong>Las compuertas gemelas:</strong> Principal si <code>tipo == "solar"</code>; Respaldo si <code>respaldo == true</code>.</li>
-            <li><strong>Cuatro rutas de emergencia:</strong> Normal: <code>temperatura &lt; 88</code> <strong>AND</strong> <code>alarma == false</code>. Emergencia: <code>temperatura &gt;= 88</code> <strong>OR</strong> <code>alarma == true</code>. Respaldo: <code>respaldo == true</code>. Auditoría: <code>autorizado == false</code>.</li>
-            <li><strong>Cuatro controles independientes:</strong> Calidad: <code>potencia &gt;= 60</code> <strong>AND</strong> <code>estable == true</code>. Falla: <code>potencia &lt; 60</code> <strong>OR</strong> <code>estable == false</code>. Frío: <code>temperatura &lt;= 25</code>. Riesgo: <code>temperatura &gt; 25</code> <strong>AND</strong> <code>alarma == true</code>.</li>
-            <li><strong>Cuatro generadores:</strong> A: <code>potencia &lt;= 90</code>. B: <code>autorizado == true</code>. C: <code>estable != false</code>. D: <code>temperatura &lt; 40</code>.</li>
-            <li><strong>Cinco rutas del núcleo:</strong> Entrada al segundo router: <code>potencia &gt; 40</code>. Luego, respectivamente: <code>tipo == "solar"</code>, <code>autorizado == true</code>, <code>estable == true</code>, <code>temperatura &lt;= 75</code>, <code>respaldo == false</code>.</li>
+            <li><strong>Primer día en la oficina:</strong> Finanzas recibe cuando <code>monto &gt;= 50</code>.</li>
+            <li><strong>Dos áreas, dos bandejas:</strong> Ventas: <code>area == "ventas"</code>. Soporte: <code>area == "soporte"</code>.</li>
+            <li><strong>Una solicitud, dos destinos:</strong> Finanzas: <code>monto &gt;= 50</code>. Archivo: <code>completo == true</code>. Ambas rutas pueden activarse.</li>
+            <li><strong>La mesa de prioridades:</strong> Jefatura: <code>prioridad &gt;= 70</code>. Atención normal: <code>prioridad &lt; 70</code>.</li>
+            <li><strong>La doble firma:</strong> <code>aprobado == true</code> <strong>AND</strong> <code>monto &gt;= 50</code>.</li>
+            <li><strong>Original y copia:</strong> Ventas: <code>area == "ventas"</code>. Archivo: <code>copia == true</code>.</li>
+            <li><strong>Cuatro bandejas de atención:</strong> Normal: <code>prioridad &lt; 88</code> <strong>AND</strong> <code>urgente == false</code>. Urgencias: <code>prioridad &gt;= 88</code> <strong>OR</strong> <code>urgente == true</code>. Archivo: <code>copia == true</code>. Auditoría: <code>aprobado == false</code>.</li>
+            <li><strong>Cuatro revisiones independientes:</strong> Conforme: <code>monto &gt;= 60</code> <strong>AND</strong> <code>completo == true</code>. Observada: <code>monto &lt; 60</code> <strong>OR</strong> <code>completo == false</code>. Baja: <code>prioridad &lt;= 25</code>. Crítica: <code>prioridad &gt; 25</code> <strong>AND</strong> <code>urgente == true</code>.</li>
+            <li><strong>Cuatro vistos buenos:</strong> Revisor A: <code>monto &lt;= 90</code>. B: <code>aprobado == true</code>. C: <code>completo != false</code>. D: <code>prioridad &lt; 40</code>. La firma final requiere los cuatro vistos buenos.</li>
+            <li><strong>El circuito de Gerencia:</strong> Entrada al segundo router: <code>monto &gt; 40</code>. Los cinco revisores exigen, respectivamente: <code>area == "ventas"</code>, <code>aprobado == true</code>, <code>completo == true</code>, <code>prioridad &lt;= 75</code> y <code>copia == false</code>.</li>
           </ol>
           <h4>Misiones 11 a 13: ejemplos válidos de JSON</h4>
-          <p>En estos niveles pueden existir <strong>varias respuestas correctas</strong>; los siguientes son ejemplos que satisfacen los filtros de las rutas solicitadas.</p>
-          <p><strong>11. Construye el mensaje:</strong> activar Solar y Frío, pero no Alerta.</p>
-          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"tipo":"solar","potencia":60,"temperatura":15}</pre>
-          <p><strong>12. JSON de decisiones:</strong> activar solo Control C y Control D.</p>
-          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"tipo":"eolica","potencia":60,"temperatura":30,"alarma":false,"estable":true,"autorizado":false}</pre>
-          <p><strong>13. El JSON maestro:</strong> activar solo A, C y E.</p>
-          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"tipo":"eolica","potencia":85,"temperatura":30,"alarma":false,"estable":true,"autorizado":true,"respaldo":false}</pre>
-          <p><em>Las condiciones se derivan de la versión publicada del código del juego. Si SparkFlow cambia sus misiones, este solucionario también necesitará revisión.</em></p>
+          <p>En los últimos niveles puede haber varias respuestas correctas. Estas son <strong>soluciones de ejemplo</strong> con los campos y tipos de datos que exige la versión actual.</p>
+          <p><strong>11. Redacta la solicitud:</strong> activar Ventas y Baja, pero no Gerencia.</p>
+          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"area":"ventas","monto":60,"prioridad":15}</pre>
+          <p><strong>12. JSON de decisiones:</strong> activar únicamente Control C y Control D.</p>
+          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"area":"soporte","monto":60,"prioridad":30,"urgente":false,"completo":true,"aprobado":false}</pre>
+          <p><strong>13. El JSON maestro:</strong> activar solo A, C y E, dejando B y D bloqueadas.</p>
+          <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f5fb;padding:10px;border-radius:7px">{"area":"soporte","monto":85,"prioridad":30,"urgente":false,"completo":true,"aprobado":true,"copia":false}</pre>
+          <p><em>Solucionario contrastado con la versión de SparkFlow publicada el 12 de noviembre de 2026. Los nombres de campo corresponden a la nueva temática de oficina.</em></p>
         </div>
       </details>
     </details>
