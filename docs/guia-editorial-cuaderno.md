@@ -22,7 +22,7 @@ Estas convenciones orientan la creación y revisión de futuras lecciones del si
 ## Navegación y autoevaluación
 
 - Conservar el comportamiento de secciones desplegables previsto en la aplicación.
-- Autoevaluación **interactiva al final del documento**, nunca convertida en una imagen.
+- En apuntes conceptuales, la autoevaluación puede ser **interactiva al final**, nunca convertida en una imagen. En apuntes de juego, puede reemplazarse por el acceso al recurso, un tutorial y un solucionario oculto tras confirmaciones.
 - Para cada pregunta usar el formato que admite el visor:
 
 ```quiz
@@ -33,7 +33,9 @@ Estas convenciones orientan la creación y revisión de futuras lecciones del si
 > Los campos definidos facilitan su validación y procesamiento.
 ```
 
-- Verificar que cada pregunta tenga opciones, **una alternativa correcta** y explicación.
+- Cuando haya autoevaluación, verificar que cada pregunta tenga opciones, **una alternativa correcta** y explicación.
+- Si se incluye un juego, comprobar el repositorio oficial y describir controles reales de la versión publicada. Las ilustraciones conceptuales no deben presentarse como capturas auténticas.
+- Los solucionarios son opcionales y deben estar al final, ocultos detrás de varias confirmaciones; evitar mostrarlos sin una interacción explícita.
 - Solo el material más reciente del índice se marca automáticamente como **Nuevo**.
 
 ## Lista de revisión antes de cerrar un cambio
@@ -43,5 +45,5 @@ Estas convenciones orientan la creación y revisión de futuras lecciones del si
 3. Botones de ampliar visibles, accesibles y enlazados al archivo correspondiente.
 4. Conceptos explicados con precisión; ejemplos ficticios y neutros.
 5. Sin referencias a actividades, entregables o instituciones privadas.
-6. Autoevaluación final compatible con el parser (`? + - >`).
+6. Autoevaluación final compatible con el parser (`? + - >`), **o** juego con tutorial y solucionario escalonado, según el tipo de apunte.
 7. Verificación de archivos y enlaces en GitHub; distinguir esa revisión de una prueba visual en el sitio desplegado.
