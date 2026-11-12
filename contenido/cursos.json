@@ -30,7 +30,7 @@
             },
             {
               "id": "rutas-filtros-sparkflow",
-              "titulo": "Rutas, filtros y el juego SparkFlow",
+              "titulo": "Integraciones, APIs, JSON, rutas y calidad de datos",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/03-rutas-filtros-sparkflow.md",
               "nuevo": true
