@@ -398,12 +398,12 @@ class Component extends DCLogic {
     window.addEventListener('hashchange', this.onHash);
     window.addEventListener('resize', this.onResize);
     this.aplicarTema();
-    fetch('contenido/cursos.json', { cache: 'no-cache' })
+    fetch('contenido/cursos.json?v=' + Date.now(), { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
       .then(data => {
         this.setState({ data });
         data.cursos.forEach(c => c.semanas.forEach(s => s.materiales.forEach(m => {
-          fetch('contenido/' + m.archivo, { cache: 'no-cache' })
+          fetch('contenido/' + m.archivo + '?v=' + Date.now(), { cache: 'no-store' })
             .then(r => r.ok ? r.text() : 'No pude cargar `' + m.archivo + '`.')
             .catch(() => 'No pude cargar `' + m.archivo + '`.')
             .then(t => this.setState(s => ({ md: { ...s.md, [m.archivo]: t } })));
