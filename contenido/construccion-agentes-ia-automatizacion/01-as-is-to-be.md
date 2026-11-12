@@ -35,9 +35,7 @@ Para representar el estado **AS-IS** de un proceso podemos utilizar la notación
 
 La lámina está dividida en tres grupos: **contenedores**, **elementos del proceso** y **conexiones**. Observa las formas y los trazos antes de revisar sus significados.
 
-<img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" alt="Simbología BPMN organizada en tres secciones: pool y carriles; eventos de inicio y fin, actividad y compuerta; flujo de secuencia, flujo de mensaje y asociación." style="display:block;width:100%;max-width:100%;height:auto;margin:22px auto 26px;border-radius:12px" loading="lazy">
-
-[Ver la simbología en tamaño completo](contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg)
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:22px auto 26px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" alt="Simbología BPMN organizada en tres secciones: pool y carriles; eventos de inicio y fin, actividad y compuerta; flujo de secuencia, flujo de mensaje y asociación." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/diagramas/simbologia-bpmn.svg" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 #### Después, interpreta la leyenda
 
