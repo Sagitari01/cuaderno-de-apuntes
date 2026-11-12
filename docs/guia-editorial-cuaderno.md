@@ -14,6 +14,10 @@ Estas convenciones orientan la creación y revisión de futuras lecciones del si
 
 - Estética aprobada: **hoja de cuaderno rayada**, margen y espiral/perforaciones, trazos y letras de apariencia manual, colores suaves, iconos explicativos y anotaciones pedagógicas.
 - Usar **el archivo original de la ilustración aprobada**, no reemplazarlo por una reimplementación SVG minimalista.
+- **Una imagen, una idea:** priorizar diagramas, flechas, comparaciones y ejemplos mínimos. Evitar láminas con párrafos, tablas extensas o toda la lección condensada.
+- Distribuir ilustraciones junto a los conceptos que explican, en vez de reunirlas todas al inicio o publicar un único póster recargado.
+- Mantener los textos y matices pedagógicos en el apunte; las imágenes son apoyos simples y no deben reemplazar la explicación.
+- Revisar que ninguna imagen contradiga las reglas escritas ni exponga información de actividades privadas.
 - Incluir las láminas junto al concepto que aclaran; no generar imágenes para decorar.
 - Publicar imágenes optimizadas en `contenido/<curso>/imagenes/` y verificar cada ruta en el repositorio.
 - Cada imagen debe tener `alt` descriptivo, tamaño adaptable, y un botón discreto de expandir (arriba a la derecha) que abra la lámina completa en una pestaña nueva.
