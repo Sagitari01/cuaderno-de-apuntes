@@ -7,7 +7,7 @@ Imagina un centro comunitario que recibe inscripciones a talleres. El formulario
 
 El reto de hoy es comprender **cómo viajan los datos entre aplicaciones y cómo tomar decisiones seguras**. La secuencia será: conectar sistemas → pedir y recibir información → organizarla como JSON → aplicar rutas y filtros → revisar que sea válida → resolver problemas.
 
-Esta lectura recoge los **conceptos centrales** del bloque de contenidos 3.1 al 3.6; no sustituye las actividades del curso ni entrega sus soluciones. Los ejemplos son nuevos y ficticios.
+En estas páginas encontrarás las ideas fundamentales para comprender cómo se conectan aplicaciones, cómo se organizan los datos y cómo una automatización toma decisiones. Usaremos ejemplos cotidianos y ficticios para aprender paso a paso.
 
 ### Mapa visual del tema
 
@@ -20,7 +20,7 @@ Esta lectura recoge los **conceptos centrales** del bloque de contenidos 3.1 al 
 
 ---
 
-## 1. Integraciones y flujos de datos (3.1)
+## 1. Integraciones y flujos de datos
 
 ### El problema de las aplicaciones separadas
 
@@ -45,7 +45,7 @@ Un orquestador como **Make** facilita conectar servicios mediante módulos visua
 
 ---
 
-## 2. APIs: la comunicación entre aplicaciones (3.2)
+## 2. APIs: la comunicación entre aplicaciones
 
 ### ¿Qué es una API?
 
@@ -97,7 +97,7 @@ Las API keys y los tokens son como credenciales. Deben guardarse en conexiones o
 
 ---
 
-## 3. JSON: organizar los datos para intercambiarlos (3.3)
+## 3. JSON: organizar los datos para intercambiarlos
 
 ### El mismo dato, pero estructurado
 
@@ -355,7 +355,7 @@ Una **ruta de contingencia** (fallback) permite pedir aclaraciones, registrar un
 
 ---
 
-## 10. Mapeo JSON y diseño lógico (3.5)
+## 10. Mapeo JSON y diseño lógico
 
 ### El problema del mismo dato con nombres diferentes
 
@@ -399,7 +399,7 @@ Esta tabla es una **matriz de decisiones**: ayuda a evitar solapamientos y vací
 
 ---
 
-## 11. Debugging, limpieza y manejo de errores (3.6)
+## 11. Debugging, limpieza y manejo de errores
 
 **Debugging** significa localizar y entender por qué un flujo no funcionó como se esperaba. **Limpieza de datos** significa corregir o estandarizar información antes de utilizarla.
 
