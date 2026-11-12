@@ -23,6 +23,8 @@ Una **integración** permite que distintas aplicaciones intercambien informació
 
 **Ejemplo ficticio:** una persona completa un formulario → se consulta un calendario → se registra la reserva → se envía un mensaje de confirmación.
 
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ejemplo-formulario.webp" alt="Ejemplo visual de formulario que se conecta mediante una API para guardar un registro en una hoja de cálculo." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ejemplo-formulario.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
+
 ### De dónde vienen los datos y adónde llegan
 
 | Etapa | Pregunta útil | Ejemplo |
@@ -49,8 +51,6 @@ Una **API** es una interfaz con reglas definidas para que un sistema solicite in
 <div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ciclo-peticion.webp" alt="Tres etapas de comunicación con una API: la aplicación envía la petición, el servicio la procesa y devuelve una respuesta." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ciclo-peticion.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 **Ejemplo ficticio:** una automatización consulta a un servicio de bicicletas compartidas cuántas bicicletas quedan en una estación; después informa el resultado.
-
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-api-solicitud-respuesta.webp" alt="Petición y respuesta entre dos aplicaciones mediante una API." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/02-api-solicitud-respuesta.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 ### Las cuatro piezas de una petición
 
@@ -99,8 +99,6 @@ No basta con crear una URL para que cualquier servicio envíe eventos: **el sist
 ### Seguridad mínima
 
 Las API keys y los tokens son como credenciales. Deben guardarse en conexiones o gestores de secretos, **no** pegarse en documentos públicos, capturas ni ejemplos compartidos. Las acciones disponibles dependen también de los permisos de cada cuenta.
-
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ejemplo-formulario.webp" alt="Ejemplo visual de formulario que se conecta mediante una API para guardar un registro en una hoja de cálculo." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/api-ejemplo-formulario.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 ---
 
@@ -178,6 +176,8 @@ Por ejemplo:
 
 Cada ruta puede terminar en una acción diferente: crear una fila, enviar una notificación, solicitar información o derivar el caso para revisión.
 
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/router-filtros-correcto.webp" alt="Ejemplo de un router con dos filtros: el verdadero permite registrar la reserva y el falso bloquea la otra ruta." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/router-filtros-correcto.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
+
 El router **no adivina cuál es la ruta correcta**. Son las condiciones asociadas a cada salida las que determinan si los datos continúan por ella.
 
 ### Una ruta no significa necesariamente una sola opción
@@ -185,10 +185,6 @@ El router **no adivina cuál es la ruta correcta**. Son las condiciones asociada
 Si varias rutas cumplen sus filtros, un router puede permitir que **más de una ruta** se ejecute para la misma entrada. No todos los routers funcionan como un interruptor exclusivo de «una opción u otra».
 
 Esto importa cuando, por ejemplo, un mensaje debe **registrarse** y además **enviar una alerta**: ambas rutas podrían ser válidas simultáneamente.
-
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-router-ramas.webp" alt="Router con varias rutas y filtros independientes." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/04-router-ramas.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
-
-
 
 ---
 
@@ -269,6 +265,8 @@ Una condición como `urgente == true` **no se cumple** con este ejemplo. Y `"12"
 
 A veces una sola regla no basta. Para decidir se combinan varias mediante **AND (Y)** y **OR (O)**.
 
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" alt="Comparación visual entre condiciones AND y OR." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
+
 ### AND: todo debe cumplirse
 
 Supongamos que una sala puede reservarse automáticamente únicamente cuando:
@@ -302,8 +300,6 @@ Con OR es suficiente que **una de las dos condiciones** sea verdadera.
 | Falso | Falso | Falso |
 
 **Error frecuente:** utilizar OR cuando en realidad se necesitan dos requisitos simultáneos. Una ruta podría activarse con información incompleta.
-
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" alt="Comparación visual entre condiciones AND y OR." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 ### Ejemplo con dos rutas
 
@@ -411,10 +407,6 @@ Esta tabla es una **matriz de decisiones**: ayuda a evitar solapamientos y vací
 
 <div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/07-debugging.webp" alt="Datos con un error identificados mediante una lupa y revisados." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/07-debugging.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
-
-
-
-
 ### Un caso fácil de reconocer
 
 El sistema de inscripciones espera recibir un número de cupos:
@@ -473,10 +465,6 @@ Sin resolver ejercicios oficiales, prueba explicarte estas tres preguntas: ¿qu�
 No necesitas programar ni instalar Make. El juego está disponible en el navegador y presenta **13 misiones progresivas**.
 
 <div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" alt="Pequeño apoyo visual del juego SparkFlow." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
-
-
-
-
 
 ### ¿Cómo se juega?
 
