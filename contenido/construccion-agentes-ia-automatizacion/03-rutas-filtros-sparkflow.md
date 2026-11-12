@@ -9,15 +9,6 @@ El reto de hoy es comprender **cómo viajan los datos entre aplicaciones y cómo
 
 En estas páginas encontrarás las ideas fundamentales para comprender cómo se conectan aplicaciones, cómo se organizan los datos y cómo una automatización toma decisiones. Usaremos ejemplos cotidianos y ficticios para aprender paso a paso.
 
-### Mapa visual del tema
-
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0">
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-integraciones-json-cuaderno.webp" alt="Lámina de cuaderno sobre integración de aplicaciones, APIs, JSON, routers, filtros y calidad de datos, con diagramas dibujados a mano." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy">
-<a href="contenido/construccion-agentes-ia-automatizacion/imagenes/05-integraciones-json-cuaderno.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a>
-</div>
-
-*La lámina sirve para visualizar los conceptos; las reglas y ejemplos escritos a continuación son la referencia para los detalles técnicos.*
-
 ---
 
 ## 1. Integraciones y flujos de datos
@@ -27,6 +18,8 @@ En estas páginas encontrarás las ideas fundamentales para comprender cómo se 
 Piensa en tres lugares donde podría existir una misma inscripción: un formulario, una hoja de cálculo y un calendario. Si no están conectados, alguien debe trasladar los datos de uno a otro; a esos espacios aislados se les suele llamar **silos de información**.
 
 Una **integración** permite que distintas aplicaciones intercambien información mediante interfaces acordadas. Una **automatización** coordina los pasos para que, cuando ocurra un evento, los datos lleguen al siguiente sistema sin copiarlos manualmente.
+
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/01-conexion-aplicaciones.webp" alt="Dibujo de una aplicación que comparte datos con otra." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/01-conexion-aplicaciones.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 **Ejemplo ficticio:** una persona completa un formulario → se consulta un calendario → se registra la reserva → se envía un mensaje de confirmación.
 
@@ -54,6 +47,8 @@ Una **API** es una interfaz con reglas definidas para que un sistema solicite in
 **Analogía:** en un restaurante, tú haces un pedido según el menú y el personal te devuelve lo que pediste o te informa que no está disponible. En una API, el sistema cliente hace una **petición (request)** a un servicio y recibe una **respuesta (response)**.
 
 **Ejemplo ficticio:** una automatización consulta a un servicio de bicicletas compartidas cuántas bicicletas quedan en una estación; después informa el resultado.
+
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/02-api-solicitud-respuesta.webp" alt="Petición y respuesta entre dos aplicaciones mediante una API." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/02-api-solicitud-respuesta.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 ### Las cuatro piezas de una petición
 
@@ -113,6 +108,8 @@ Un texto suelto puede decir: «Andrea quiere reservar dos cupos para el taller d
 ~~~
 
 **JSON** es un formato de texto para representar datos estructurados. Sus piezas principales son:
+
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-claves-valores.webp" alt="Objeto JSON y sus pares clave valor." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/03-json-claves-valores.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
 - **Objeto `{}`:** agrupa pares de **clave: valor**.
 - **Clave:** el nombre del dato, siempre entre comillas dobles.
@@ -177,16 +174,9 @@ Si varias rutas cumplen sus filtros, un router puede permitir que **más de una 
 
 Esto importa cuando, por ejemplo, un mensaje debe **registrarse** y además **enviar una alerta**: ambas rutas podrían ser válidas simultáneamente.
 
-### Lámina de rutas y filtros
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-router-ramas.webp" alt="Router con varias rutas y filtros independientes." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/04-router-ramas.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0">
-  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/03-rutas-filtros-hoja.webp" alt="Dos hojas ilustradas de cuaderno sobre rutas, filtros, su comparación y un ejemplo de bifurcación condicional en un flujo." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy">
-  <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/03-rutas-filtros-hoja.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
-  </a>
-</div>
 
-*Apoyo visual elaborado para estudiar. Los iconos y escenarios de la lámina son ilustrativos; la configuración exacta se realiza en la herramienta utilizada.*
 
 ---
 
@@ -301,6 +291,8 @@ Con OR es suficiente que **una de las dos condiciones** sea verdadera.
 
 **Error frecuente:** utilizar OR cuando en realidad se necesitan dos requisitos simultáneos. Una ruta podría activarse con información incompleta.
 
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" alt="Comparación visual entre condiciones AND y OR." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/05-and-or.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
+
 ### Ejemplo con dos rutas
 
 Un sistema ficticio recibe `{"temperatura": 30, "alarma": false}`.
@@ -363,6 +355,8 @@ Un formulario puede llamar al campo `nombreCompleto` y la aplicación de destino
 
 **Mapear datos** es indicar qué información del origen corresponde a cada campo del destino; a veces también hay que **transformarla**, por ejemplo, convertir texto en número, ajustar una fecha o separar un nombre.
 
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-mapeo-campos.webp" alt="Correspondencia de campos entre aplicaciones." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/06-mapeo-campos.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
+
 | Formulario (origen) | Registro (destino) | Transformación necesaria |
 |---|---|---|
 | `nombreCompleto` | `cliente` | Copiar el texto. |
@@ -403,12 +397,11 @@ Esta tabla es una **matriz de decisiones**: ayuda a evitar solapamientos y vací
 
 **Debugging** significa localizar y entender por qué un flujo no funcionó como se esperaba. **Limpieza de datos** significa corregir o estandarizar información antes de utilizarla.
 
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0">
-<img src="contenido/construccion-agentes-ia-automatizacion/imagenes/06-debugging-mapeo-cuaderno.webp" alt="Ilustración tipo cuaderno con ejemplos de mapeo entre sistemas, errores de datos, proceso de limpieza y rutas de contingencia." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy">
-<a href="contenido/construccion-agentes-ia-automatizacion/imagenes/06-debugging-mapeo-cuaderno.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a>
-</div>
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/07-debugging.webp" alt="Datos con un error identificados mediante una lupa y revisados." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/07-debugging.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
-*La ilustración ayuda a visualizar el proceso. Revisa siempre las reglas específicas escritas en los ejemplos de este apunte.*
+
+
+
 
 ### Un caso fácil de reconocer
 
@@ -467,14 +460,11 @@ Sin resolver ejercicios oficiales, prueba explicarte estas tres preguntas: ¿qu�
 
 No necesitas programar ni instalar Make. El juego está disponible en el navegador y presenta **13 misiones progresivas**.
 
-<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0">
-  <img src="contenido/construccion-agentes-ia-automatizacion/imagenes/04-sparkflow-hoja.webp" alt="Hoja ilustrada del cuaderno con una introducción a SparkFlow, pasos generales para jugar, rutas y un recordatorio sobre el solucionario. Es una ilustración, no una captura literal del programa." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy">
-  <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/04-sparkflow-hoja.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;box-shadow:0 2px 8px rgba(0,0,0,.14);text-decoration:none;line-height:1">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg>
-  </a>
-</div>
+<div class="lamina-apunte" style="position:relative;display:block;width:100%;max-width:760px;margin:18px auto 14px;line-height:0"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" alt="Pequeño apoyo visual del juego SparkFlow." style="display:block;width:100%;height:auto;border:1px solid var(--color-divider);border-radius:12px;background:#fff" loading="lazy"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/08-sparkflow-icono.webp" target="_blank" rel="noopener noreferrer" title="Ampliar lámina" aria-label="Ampliar lámina en una pestaña nueva" style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid #c9d3df;border-radius:8px;background:#fff;color:#244264;text-decoration:none;line-height:1"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M21 3l-8 8M9 21H3v-6M3 21l8-8"/></svg></a></div>
 
-*Esta hoja es una guía visual conceptual, **no una captura de la interfaz real**. Las instrucciones verificadas del juego aparecen a continuación.*
+
+
+
 
 ### ¿Cómo se juega?
 
