@@ -29,6 +29,19 @@
               "nuevo": true
             }
           ]
+        },
+        {
+          "titulo": "Semana 2",
+          "tema": "Lógica condicional, rutas y filtros",
+          "materiales": [
+            {
+              "id": "rutas-filtros-sparkflow",
+              "titulo": "Rutas, filtros y el juego SparkFlow",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/03-rutas-filtros-sparkflow.md",
+              "nuevo": true
+            }
+          ]
         }
       ]
     }
