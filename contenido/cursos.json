@@ -12,7 +12,7 @@
       "semanas": [
         {
           "titulo": "Semana 1",
-          "tema": "Análisis de procesos, IA generativa, integraciones y lógica condicional",
+          "tema": "Análisis de procesos, IA generativa, integraciones, lógica condicional y construcción de flujos en Make",
           "materiales": [
             {
               "id": "as-is-to-be",
@@ -26,13 +26,20 @@
               "titulo": "Gestión cognitiva, prompts y calidad de IA",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/02-gestion-cognitiva-prompts.md",
-              "nuevo": true
+              "nuevo": false
             },
             {
               "id": "rutas-filtros-sparkflow",
               "titulo": "Integraciones, APIs, JSON, rutas y calidad de datos",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/03-rutas-filtros-sparkflow.md",
+              "nuevo": false
+            },
+            {
+              "id": "make-flujos-no-code",
+              "titulo": "Tu primera automatización en Make: del disparador a la prueba",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/04-make-flujos-no-code.md",
               "nuevo": true
             }
           ]
