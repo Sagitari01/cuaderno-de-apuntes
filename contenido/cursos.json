@@ -12,7 +12,7 @@
       "semanas": [
         {
           "titulo": "Semana 1",
-          "tema": "Análisis de procesos, IA generativa, integraciones, lógica condicional y construcción de flujos en Make",
+          "tema": "Análisis de procesos, IA generativa, integraciones, lógica condicional y automatizaciones con Make",
           "materiales": [
             {
               "id": "as-is-to-be",
@@ -37,9 +37,16 @@
             },
             {
               "id": "make-flujos-no-code",
-              "titulo": "Tu primera automatización en Make: del disparador a la prueba",
+              "titulo": "Make desde cero: conexiones, Router y mapeo",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/04-make-flujos-no-code.md",
+              "nuevo": false
+            },
+            {
+              "id": "make-gemini-parse-json",
+              "titulo": "Make con inteligencia artificial: Gemini y Parse JSON",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/05-make-gemini-parse-json.md",
               "nuevo": true
             }
           ]
