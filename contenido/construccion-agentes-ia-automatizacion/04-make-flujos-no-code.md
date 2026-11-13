@@ -280,18 +280,6 @@ Este JSON **es un ejemplo ilustrativo, no la respuesta de una ejecución real**.
 
 ---
 
-## 10. Ahora te toca: cambia la regla
-
-En lugar de clasificar por prioridad, configura las rutas para enviar las solicitudes del **área Soporte** a `Urgentes` y las de las demás áreas a `Normales`.
-
-Elige el campo dinámico **Area** y configura un filtro con `Equal to Soporte` y otro con `Not equal to Soporte`. Escribe primero tu predicción para dos nuevas solicitudes: una de Soporte con prioridad Normal y una de Ventas con prioridad Alta.
-
-**Comprueba:** ¿qué ocurrió con cada solicitud?, ¿coincide la salida con tu predicción?, ¿el campo Estado refleja la ruta elegida?, ¿aparecen registros duplicados?
-
-> **Pista:** en este desafío el campo que decide el destino ya no es Prioridad. No cambies los campos mapeados a la hoja; cambia únicamente la condición de cada ruta.
-
----
-
 ## Para recordar
 
 - **El disparador lee** filas nuevas y entrega bundles.
