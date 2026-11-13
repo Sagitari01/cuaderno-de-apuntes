@@ -218,54 +218,7 @@ Ejecuta nuevamente **sin agregar filas nuevas**. El resultado esperado es que `U
 
 ---
 
-## 8. ¿Dónde entra la inteligencia artificial?
-
-Hasta aquí construimos un flujo **determinista**: si la columna `Prioridad` dice `Alta`, el filtro envía la fila a `Urgentes`. No necesita interpretar un mensaje ambiguo, porque el dato ya viene clasificado. Esto es automatización **sin un modelo de IA**, y sigue siendo una base importante.
-
-Pero muchas situaciones laborales empiezan con un correo o documento que **no trae las columnas listas**. Por ejemplo, alguien escribe: «Hola, necesito cambiar mi reserva para mañana; ¿me pueden confirmar?». Antes de decidir el destino, hace falta identificar qué solicita la persona.
-
-En un flujo más completo, **la inteligencia artificial puede ayudar a interpretar o extraer información**. Make coordina el proceso; no es el Router quien piensa ni la IA quien configura los filtros.
-
-### Imagina este recorrido
-
-**1. Correo de entrada → 2. IA interpreta → 3. JSON organiza → 4. Router evalúa → 5. Sheets o correo ejecuta una acción.**
-
-| Etapa | ¿Qué recibe o hace? | ¿Es IA? |
-|---|---|---|
-| **Gmail** | Detecta un correo nuevo. | No; es el disparador. |
-| **Modelo de IA** | Interpreta el mensaje y propone campos como tipo de solicitud y prioridad. | **Sí**; usa un modelo generativo. |
-| **Parse JSON** | Convierte un texto JSON válido en datos que se pueden mapear. | No; transforma una estructura de datos. |
-| **Router y filtros** | Comprueba condiciones explícitas sobre los campos obtenidos. | No; aplica reglas. |
-| **Google Sheets / Gmail** | Registra un resultado o envía una comunicación. | No; realiza acciones. |
-
-### Ejemplo de salida que podríamos solicitarle a una IA
-
-Imagina que llega un correo ficticio solicitando modificar una reserva. El modelo podría devolver:
-
-```json
-{
-  "tipo_solicitud": "cambio_de_reserva",
-  "prioridad": "Normal",
-  "requiere_revision": true
-}
-```
-
-Este JSON **es un ejemplo ilustrativo, no la respuesta de una ejecución real**. El módulo `Parse JSON` permitiría acceder a los campos por separado. Después, un filtro podría comprobar `requiere_revision == true` y enviar el caso a revisión humana.
-
-**Lo importante:** una respuesta de IA puede equivocarse, omitir campos o generar un JSON inválido. Por eso, en un flujo real debemos comprobar que la salida tenga la estructura esperada, validar valores y definir qué hacer si falta información. Elegir temperatura 0 o pedir «solo JSON» **no garantiza** una respuesta perfecta.
-
-### ¿Qué cambia respecto a nuestra práctica?
-
-- En el laboratorio de hoy, la prioridad viene **escrita directamente en una columna**; por eso el Router puede leerla sin IA.
-- En una automatización con IA, la prioridad podría ser una **propuesta extraída de un texto** y necesitar validación antes de activar las rutas.
-- El principio del mapeo es igual en ambos casos: seleccionar el campo correcto del módulo anterior y enviarlo al destino adecuado.
-- Los **bundles**, las **collections** (objetos con varios campos) y los **arrays** (listas de elementos) permiten trabajar con información más compleja. Cuando una lista contiene varios elementos, puede ser necesario usar un **Iterator** para tratarlos individualmente.
-
-**Este apartado explica la arquitectura conceptual. Las capturas anteriores documentan únicamente el escenario probado con Google Sheets y Router; no muestran un modelo de IA configurado ni probado.** Para incorporar IA de verdad harían falta una conexión autorizada, un modelo disponible, pruebas, validaciones y revisión de permisos y costos.
-
----
-
-## 9. Qué revisar si algo no funciona
+## 8. Qué revisar si algo no funciona
 
 | Síntoma | Qué revisar primero |
 |---|---|
@@ -287,6 +240,5 @@ Este JSON **es un ejemplo ilustrativo, no la respuesta de una ejecución real**.
 - **El filtro permite o bloquea** cada ruta según una condición.
 - **El mapeo transmite** datos dinámicos y agrega valores fijos cuando hace falta.
 - **La prueba final revisa las hojas**, no solo las marcas verdes del escenario.
-- **Una IA puede interpretar** contenido no estructurado; el Router **sigue aplicando reglas** sobre los datos resultantes.
 
-Con estas bases, ya puedes empezar a diseñar flujos visuales más grandes con diferentes aplicaciones. Aprende a leer primero el dato de entrada, luego el criterio de decisión y finalmente el resultado esperado.
+Con estas bases, ya puedes diseñar flujos visuales más grandes. Primero identifica el dato de entrada, después la regla que toma la decisión y finalmente el resultado esperado. En la siguiente lectura veremos cómo incorporar un modelo de IA cuando la información llegue como texto y no como columnas previamente clasificadas.
