@@ -37,8 +37,6 @@ La pestaña **Solicitudes** almacena los datos originales; las pestañas **Urgen
 En **Watch New Rows**, selecciona el nuevo archivo y su pestaña de entrada. Antes de configurar la IA, comprueba que el disparador entregue el campo de descripción en su **bundle** de prueba.
 
 
-### Capturas verificadas del laboratorio
-
 <figure class="lamina-apunte" style="max-width:760px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-sheets-19-solicitudes-de-prueba.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-sheets-19-solicitudes-de-prueba.jpg" alt="Hoja Solicitudes con las filas ficticias de entrada; la descripción está en la columna C."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Hoja Solicitudes con las filas ficticias de entrada; la descripción está en la columna C. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
 <figure class="lamina-apunte" style="max-width:560px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-02-watch-new-rows.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-02-watch-new-rows.jpg" alt="Watch New Rows en Make: pestaña Solicitudes y encabezados de la hoja."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Watch New Rows en Make: pestaña Solicitudes y encabezados de la hoja. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
@@ -55,16 +53,13 @@ En **Watch New Rows**, selecciona el nuevo archivo y su pestaña de entrada. Ant
 
 El modelo y sus cuotas pueden variar. Una API Key no da automáticamente un servicio sin límites.
 
-
-### Capturas verificadas del laboratorio
-
 ## 4. Construir el prompt con los cinco bloques
 
 Este laboratorio retoma lo aprendido en **Gestión cognitiva, prompts y calidad de IA**. En el módulo **Groq → Create a JSON Chat Completion**, el campo **System Prompt** contiene cinco bloques: Rol, Contexto, Tarea, Restricciones y Formato.
 
 ### ¿Dónde se escribe el System Prompt?
 
-La siguiente captura muestra el lugar donde comienza el prompt en Make. **Es una sola imagen de referencia**; el prompt completo está disponible en texto justo debajo para que puedas leerlo y copiarlo sin depender de varias capturas parciales.
+La siguiente captura muestra el lugar donde comienza el prompt en Make. El prompt completo está en texto justo debajo para que puedas leerlo y copiarlo.
 
 <figure class="lamina-apunte" style="max-width:560px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-03-groq-prompt-inicio.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-03-groq-prompt-inicio.jpg" alt="Configuración de Groq: modelo y campo System Prompt. El prompt completo está escrito a continuación."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Configuración de Groq: modelo y campo System Prompt. El prompt completo está escrito a continuación. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
@@ -121,11 +116,9 @@ Al probar Parse JSON, revisa el inspector del módulo: las cuatro variables debe
 **Dos errores distintos:** JSON inválido significa que Parse JSON puede detenerse antes de llegar al Router. JSON válido pero con campos ausentes significa que la estructura se puede interpretar sin que necesariamente cumpla todas nuestras reglas de negocio.
 
 
-### Capturas verificadas del laboratorio
+<figure class="lamina-apunte" style="max-width:560px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-07-parse-json-result.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-07-parse-json-result.jpg" alt="Parse JSON: JSON string recibe la píldora Result de Groq."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Parse JSON: JSON string recibe la píldora Result de Groq. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
 <figure class="lamina-apunte" style="max-width:560px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-08-parse-json-esquema-superior.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-08-parse-json-esquema-superior.jpg" alt="Data Structure contiene categoria, prioridad, resumen y requiere_revision."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Data Structure contiene categoria, prioridad, resumen y requiere_revision. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
-
-<figure class="lamina-apunte" style="max-width:560px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-07-parse-json-result.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-07-parse-json-result.jpg" alt="Parse JSON: JSON string recibe la píldora Result de Groq."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Parse JSON: JSON string recibe la píldora Result de Groq. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
 ## 6. Router: tres destinos y reglas explícitas
 
@@ -149,16 +142,16 @@ Después de **JSON → Parse JSON**, el Router decide a cuál de las tres pesta�
 
 ### Paso 6.2 · Envía cada resultado a Google Sheets
 
-En cada salida agrega **Google Sheets → Add a Row** y selecciona el archivo **Laboratorio 02 - Solicitudes con IA**. Elige la pestaña según la ruta. Si Make oculta visualmente el identificador del archivo en una captura, verifica el archivo seleccionado desde tu propia conexión.
+En cada salida agrega **Google Sheets → Add a Row** y selecciona el archivo **Laboratorio 02 - Solicitudes con IA**. Elige la pestaña según la ruta. En las capturas el identificador del archivo está tachado; en tu escenario verás el archivo que seleccionaste.
 
 El mapeo es **igual en las tres rutas**. Puedes usar las píldoras visuales de los módulos anteriores en los siguientes campos:
 
 | Campo en la hoja de destino | Selecciona en Make |
 |---|---|
-| ID (A) | Píldora **ID** de **Watch New Rows** |
-| Nombre (B) | Píldora **Nombre** de **Watch New Rows** |
-| Descripción (C) | Píldora **Descripción** de **Watch New Rows** |
-| Categoría (D) | Píldora **Categoría** de **Parse JSON** |
+| ID (A) | Píldora **ID** de **Watch New Rows** (en las capturas, `2. 0`) |
+| Nombre (B) | Píldora **Nombre** de **Watch New Rows** (en las capturas, `2. 1`) |
+| Descripcion (C) | Píldora **Descripción** de **Watch New Rows** (en las capturas, `2. 2`) |
+| Categoria (D) | Píldora **Categoría** de **Parse JSON** |
 | Prioridad (E) | Píldora **Prioridad** de **Parse JSON** |
 | Resumen (F) | Píldora **Resumen** de **Parse JSON** |
 | Requiere_Revision (G) | Píldora **Requiere revisión** de **Parse JSON** |
@@ -203,7 +196,7 @@ Para verificar una automatización no basta con que Make muestre la ruta correct
 
 ### Verifica las píldoras y los datos
 
-Cuando abras el inspector de **Parse JSON**, comprueba que `categoria`, `prioridad`, `resumen` y `requiere_revision` aparecen como campos separados. Cada solicitud producirá valores diferentes, aunque la estructura de la pantalla sea similar. Por ejemplo, la siguiente captura corresponde a la solicitud IA-101:
+Cuando abras el inspector de **Parse JSON**, comprueba que `categoria`, `prioridad`, `resumen` y `requiere_revision` aparecen como campos separados. Cada solicitud producirá valores diferentes, aunque la estructura de la pantalla sea similar. Por ejemplo, la siguiente captura corresponde a la solicitud IA-311:
 
 <figure class="lamina-apunte" style="max-width:760px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-24-parse-json-ejecucion.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-24-parse-json-ejecucion.jpg" alt="Inspector de ejecución de Parse JSON y sus campos de salida."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Inspector de ejecución de Parse JSON y sus campos de salida. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
@@ -260,10 +253,6 @@ Cuando se supera alguna cuota, Groq puede devolver **`429 Too Many Requests`**. 
 
 Groq y Make tienen **cuotas independientes**. Tener llamadas disponibles en Groq **no significa** disponer de operaciones o créditos ilimitados en Make. Cada módulo ejecutado puede contribuir al consumo del escenario.
 
-
-### Capturas verificadas del laboratorio
-
-**Nota:** los ejemplos de errores de JSON se explican en texto para evitar capturas parciales. Las capturas de configuración principales proceden del escenario verificado.
 
 ## 10. Buenas prácticas para estudiantes
 ### Estado final del escenario de práctica
