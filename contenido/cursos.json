@@ -41,13 +41,6 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/04-make-flujos-no-code.md",
               "nuevo": false
-            },
-            {
-              "id": "make-gemini-parse-json",
-              "titulo": "Automatizaciones con IA: Groq, Parse JSON y Make",
-              "tipo": "lectura",
-              "archivo": "construccion-agentes-ia-automatizacion/05-make-gemini-parse-json.md",
-              "nuevo": true
             }
           ]
         }
