@@ -88,7 +88,7 @@ Devuelve exclusivamente un objeto JSON válido, con exactamente estas claves: {"
 
 ### ¿Qué se coloca en User Message?
 
-En **User Message**, selecciona directamente la **píldora verde de Descripción** del módulo **Google Sheets → Watch New Rows**. En este escenario Make identifica las columnas de origen como **0 (ID), 1 (Nombre) y 2 (Descripción)**: selecciona la píldora **2**, sin escribir códigos manualmente. Cada fila enviará su propia descripción a Groq. **No escribas un ejemplo fijo** en User Message. En el laboratorio, **Max tokens returned** quedó sin valor manual.
+En **User Message**, selecciona directamente la **píldora verde de Descripción** del módulo **Google Sheets → Watch New Rows**. Make la muestra como **`2. Descripcion (C)`**: el 2 es el número del módulo y la letra indica la columna. Selecciónala con clic, sin escribir códigos manualmente. Cada fila enviará su propia descripción a Groq. **No escribas un ejemplo fijo** en User Message. En el laboratorio, **Max tokens returned** quedó sin valor manual.
 
 **Para verificarlo:** el System Prompt define las reglas permanentes, mientras que User Message recibe el texto variable de la solicitud. La respuesta debe contener exactamente `categoria`, `prioridad`, `resumen` y `requiere_revision`; `prioridad` admite `"Alta"`, `"Normal"` o `null`, y `requiere_revision` debe ser un booleano real (`true` o `false`, no texto).
 
@@ -148,9 +148,9 @@ El mapeo es **igual en las tres rutas**. Puedes usar las píldoras visuales de l
 
 | Campo en la hoja de destino | Selecciona en Make |
 |---|---|
-| ID (A) | Píldora **ID** de **Watch New Rows** (en las capturas, `2. 0`) |
-| Nombre (B) | Píldora **Nombre** de **Watch New Rows** (en las capturas, `2. 1`) |
-| Descripcion (C) | Píldora **Descripción** de **Watch New Rows** (en las capturas, `2. 2`) |
+| ID (A) | Píldora **ID** de **Watch New Rows** |
+| Nombre (B) | Píldora **Nombre** de **Watch New Rows** |
+| Descripcion (C) | Píldora **Descripción** de **Watch New Rows** |
 | Categoria (D) | Píldora **Categoría** de **Parse JSON** |
 | Prioridad (E) | Píldora **Prioridad** de **Parse JSON** |
 | Resumen (F) | Píldora **Resumen** de **Parse JSON** |
@@ -196,7 +196,7 @@ Para verificar una automatización no basta con que Make muestre la ruta correct
 
 ### Verifica las píldoras y los datos
 
-Cuando abras el inspector de **Parse JSON**, comprueba que `categoria`, `prioridad`, `resumen` y `requiere_revision` aparecen como campos separados. Cada solicitud producirá valores diferentes, aunque la estructura de la pantalla sea similar. Por ejemplo, la siguiente captura corresponde a la solicitud IA-311:
+Cuando abras el inspector de **Parse JSON**, comprueba que `categoria`, `prioridad`, `resumen` y `requiere_revision` aparecen como campos separados. Cada solicitud producirá valores diferentes, aunque la estructura de la pantalla sea similar. Por ejemplo, la siguiente captura corresponde a la solicitud IA-101:
 
 <figure class="lamina-apunte" style="max-width:760px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-24-parse-json-ejecucion.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-make-24-parse-json-ejecucion.jpg" alt="Inspector de ejecución de Parse JSON y sus campos de salida."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Inspector de ejecución de Parse JSON y sus campos de salida. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
@@ -214,7 +214,7 @@ Cuando abras el inspector de **Parse JSON**, comprueba que `categoria`, `priorid
 
 <figure class="lamina-apunte" style="max-width:760px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-sheets-22-resultados-revision.jpg" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/groq-laboratorio/l02-sheets-22-resultados-revision.jpg" alt="Resultados de Revision, incluidos casos con prioridad indeterminada."></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Resultados de Revision, incluidos casos con prioridad indeterminada. <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
-Las capturas de resultados muestran **registros de varias pruebas**, no solo los cuatro casos iniciales. Evita volver a ejecutar sobre filas ya procesadas para no producir duplicados.
+Evita volver a ejecutar sobre filas ya procesadas para no producir duplicados.
 
 ### Una ejecución sin filas nuevas
 
