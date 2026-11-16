@@ -143,7 +143,7 @@ Agrega **Send an Email** después de cada escritura. Usa el buzón de prueba com
 
 ## 5. Configura el manejo de errores
 
-- **Drive y Groq.** Activa **Store incomplete executions** y conecta **Retry** a la carga, la descarga y la acción de Groq. Comprueba la recuperación en el historial si aparece una ejecución incompleta.
+- **Drive y Groq.** Activa **Store incomplete executions** y conecta **Retry** a la carga, la descarga y la acción de Groq. Comprueba la recuperación en el historial si aparece una ejecución incompleta. Para probarlo con Groq, activa **Map** en **Model**, escribe un modelo inexistente, ejecuta con un caso nuevo y restablece el modelo original al terminar.
 
 - **Parse JSON.** Agrega un manejador que envíe un aviso técnico con el ID y el nombre del módulo. Termina con **Skip**. Para la prueba, mapea temporalmente un JSON inválido, ejecuta con REP-305 y restablece la píldora de respuesta de IA.
 - **Sheets.** Agrega un manejador a cada **Add a Row**. Envía al buzón de prueba un correo `[L03-ERROR]` con el ID, el módulo y los datos ficticios necesarios para recuperar el caso. Termina con **Skip** para omitir el aviso de éxito de esa rama. Para la prueba, usa un destino descartable, hazlo fallar de forma reversible y restablece el destino antes de repetir un caso válido.
@@ -152,13 +152,19 @@ Para agregar un manejador, haz clic derecho sobre el módulo y elige **Add error
 
 <figure class="lamina-apunte" style="max-width:340px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-21-make-agregar-manejador-errores.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-21-make-agregar-manejador-errores.png" alt="Menú contextual de un módulo con la opción Add error handler resaltada"></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Clic derecho sobre un módulo: la opción <strong>Add error handler</strong> abre el manejador <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
-Estos son los resultados esperados de cada prueba de error. La demostración con Groq todavía no los verifica.
+Así se comportó cada prueba de error con Groq. Cada una usó un caso nuevo y se restableció la configuración al terminar.
 
-| Prueba | Resultado esperado |
-| --- | --- |
-| JSON inválido en Parse JSON | Llega un aviso técnico con el ID y el módulo. El caso termina en **Skip** y no se escribe ninguna fila de negocio. |
-| Fallo de escritura en Sheets | Llega un correo `[L03-ERROR]`. El caso termina en **Skip**, sin fila ni aviso de éxito. |
-| Fallo recuperable en Drive o Groq | La ejecución queda como incompleta y **Retry** la recupera. Antes de relanzarla, comprueba que no haya producido ya una fila o un aviso. |
+| Prueba | Cómo se provocó | Resultado observado |
+| --- | --- | --- |
+| JSON inválido (REP-312) | Se escribió un texto antes de la expresión en **JSON string** de Parse JSON. | Llegó `[L03-ERROR] REP-312 Parse JSON`. El caso terminó en **Skip** y no se escribió ninguna fila, aunque el PDF era válido. |
+| Fallo de escritura en Sheets (REP-313) | Se renombró temporalmente la pestaña `Aprobados`. | Llegó `[L03-ERROR] REP-313 Sheets Aprobado`. El caso terminó en **Skip**, sin fila ni aviso de éxito. Al restaurar el nombre, REP-314 se registró con normalidad. |
+| Fallo recuperable en Groq (REP-315) | Se activó **Map** en **Model** y se escribió un modelo inexistente. | La ejecución terminó en **Warning** y quedó como ejecución incompleta sin resolver, sin fila ni aviso. Con el escenario inactivo, Make no permite reintentarla. |
+
+Make solo reintenta una ejecución incompleta si el escenario está activo. Con la programación desactivada, el registro queda guardado y puedes revisarlo, pero no recuperarlo. Antes de activar el escenario para reintentar, revisa qué caso contiene cada registro y de qué versión del escenario viene: si cambiaste módulos desde entonces, ese registro ya no se puede reanudar con seguridad y es mejor no relanzarlo.
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-ejecucion-incompleta.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-ejecucion-incompleta.png" alt="Lista de ejecuciones incompletas con el registro nuevo sin resolver y 0 intentos" loading="lazy"></a><figcaption>Ejecuciones incompletas: el registro de las 18:14 corresponde a REP-315. Los identificadores están cubiertos <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-24-make-reintento-escenario-inactivo.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-24-make-reintento-escenario-inactivo.png" alt="Mensaje de Make: la ejecución no se puede reintentar porque el escenario está inactivo" loading="lazy"></a><figcaption>Con el escenario inactivo, Make bloquea el reintento y lo explica <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
 [Retry en Make](https://help.make.com/retry-error-handler) · [Router y fallback en Make](https://help.make.com/router)
 
@@ -172,7 +178,9 @@ Con la programación desactivada, usa **Run once** con un correo de prueba por c
 | REP-308 | T-082 y 24.650 CLP | Una fila en `Aprobados`. Make registró el envío de `[L03-RESULTADO] REP-308 Aprobado` y el aviso llegó a la bandeja de destino. |
 | REP-309 | T-093 y 31.400 CLP | Una fila en `Pendientes` con el código y monto del PDF. El aviso `Pendiente` llegó a la bandeja. |
 | REP-310 | Presupuesto sin código ni monto | Una fila en `Revision_Datos` con ambos campos vacíos. El aviso `Revision_datos` llegó a la bandeja. |
-| Control sin correo nuevo | Una ejecución adicional | Se conservaron las ocho filas de prueba, sin duplicados. Se comprobó con la API de Sheets; no hay captura del historial de esa ejecución. |
+| REP-311 | T-111 y 25.000 CLP exactos | Una sola fila en `Aprobados` y ninguna en `Pendientes`: el límite es inclusivo. El aviso `Aprobado` llegó a la bandeja. |
+| REP-314 | T-114 y 22.500 CLP, con el destino ya restaurado | Una fila en `Aprobados` y su aviso. Confirma que el flujo funciona después de la prueba de fallo en Sheets. |
+| Control sin correo nuevo | Una ejecución adicional (18:18) | Usó 1 operación y 0 créditos y no agregó filas. Al terminar las pruebas quedaban 10 filas: 6 en `Aprobados`, 2 en `Pendientes` y 2 en `Revision_Datos`. |
 
 <figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-historial-rep-308.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-historial-rep-308.png" alt="Historial de la ejecución del caso REP-308" loading="lazy"></a><figcaption>Historial de la ejecución del caso REP-308</figcaption></figure>
 
@@ -188,4 +196,8 @@ Con la programación desactivada, usa **Run once** con un correo de prueba por c
 
 <figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-22-make-escenario-final-inactivo.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-22-make-escenario-final-inactivo.png" alt="Diagrama final del escenario con programación inactiva" loading="lazy"></a><figcaption>Diagrama final del escenario con programación inactiva</figcaption></figure>
 
-Con esta configuración queda pendiente repetir el caso de borde de **25.000 CLP**, inducir los errores de **Parse JSON** y **Sheets**, y comprobar la recuperación por **Retry**. El envío de REP-308 se verificó desde Make, y la llegada de los avisos de REP-308, REP-309 y REP-310 se comprobó en la bandeja de destino.
+<figure class="lamina-apunte" style="max-width:1196px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-25-make-historial-pruebas.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-25-make-historial-pruebas.png" alt="Historial de Make con las ejecuciones de las pruebas, incluida la de Warning y la de control sin correo nuevo" loading="lazy"></a><figcaption>Historial de las pruebas: 18:04 REP-311, 18:07 REP-312, 18:09 REP-313, 18:10 REP-314, 18:13 REP-315 con <strong>Warning</strong> y 18:18 el control sin correo nuevo, con 1 operación y 0 créditos. Los autores de cada cambio están cubiertos <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-26-gmail-avisos-pruebas.png" target="_blank" rel="noopener noreferrer"><img style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-26-gmail-avisos-pruebas.png" alt="Bandeja con los avisos de resultado y de error de las pruebas, entre ellos REP-312 Parse JSON y REP-313 Sheets" loading="lazy"></a><figcaption>Bandeja de destino con los avisos <code>[L03-RESULTADO]</code> y <code>[L03-ERROR]</code>. REP-312 y REP-313 llegaron como error técnico y REP-315 no generó ningún aviso, porque Retry detuvo el caso <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+Todas las pruebas de aceptación se ejecutaron con Groq y el escenario quedó guardado con la programación desactivada. Queda un único pendiente: recuperar REP-315 con **Retry**, lo que exige activar el escenario. Hazlo solo después de revisar qué contiene cada ejecución incompleta y desactívalo al terminar.
