@@ -67,6 +67,13 @@
               "titulo": "Laboratorio 03 · De Gmail a Google Sheets con Make",
               "tipo": "ejercicio",
               "archivo": "construccion-agentes-ia-automatizacion/07-laboratorio-03-make-end-to-end.md",
+              "nuevo": false
+            },
+            {
+              "id": "n8n-docker-primer-workflow",
+              "titulo": "n8n y Docker · Tu primer workflow de decisión",
+              "tipo": "ejercicio",
+              "archivo": "construccion-agentes-ia-automatizacion/08-n8n-docker-primer-workflow.md",
               "nuevo": true
             }
           ]
