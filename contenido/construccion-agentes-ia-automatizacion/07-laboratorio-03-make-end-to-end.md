@@ -6,11 +6,38 @@ En este laboratorio, un centro cultural recibe presupuestos de reparación en PD
 
 <!-- secciones: desplegables -->
 
+## Antes de empezar
+
+- **Cuentas.** Necesitas una cuenta de Make, un buzón de Gmail de pruebas, Google Drive y una clave de API de Groq.
+- **Conexiones.** Crea en Make las conexiones de Gmail, Google Drive, Google Sheets y Groq. Make te pide autorizar cada cuenta de Google la primera vez que agregas su módulo. Para Groq, sigue el apartado «3. Conectar Groq de manera segura» de la guía «Automatizaciones con inteligencia artificial: Groq, Parse JSON y Make» y pega la clave solo en el campo de credenciales.
+- **Conceptos.** Si necesitas repasar para qué sirven el Router, el fallback, Retry y Skip, lee antes «De un correo a un registro confiable con Make».
+
 ## 1. Prepara Gmail y Google Sheets
 
 1. Crea el escenario **Laboratorio 03 - Presupuestos end-to-end y control de errores**. Conserva la programación desactivada y usa **Run once**.
 2. Crea el archivo **Laboratorio 03 - Presupuestos de reparación** con las pestañas `Aprobados`, `Pendientes` y `Revision_Datos`. Escribe en A1:E1 los encabezados `ID_Caso`, `Tipo_Documento`, `Codigo_Taller`, `Monto_Total` y `Estado`.
 3. Usa un buzón propio de pruebas y un PDF ficticio por caso. Conserva el ID en el archivo y en el asunto, por ejemplo `[L03-IN] REP-301`. Limita el disparador a correos sin leer, con adjunto PDF y con la etiqueta de pruebas o el asunto de entrada. Excluye los asuntos de resultado y error. Configura el punto de inicio antes de enviar el primer correo.
+
+### Prepara los casos de prueba
+
+Crea un PDF por caso. Escribe este texto en un documento de Google Docs, cambia los datos y descárgalo como PDF con el ID del caso como nombre, por ejemplo `REP-301.pdf`.
+
+```text
+Presupuesto de reparación
+Caso REP-301
+Código de taller: T-031
+Total: 18.500 CLP
+Documento ficticio para el Laboratorio 03.
+```
+
+| Caso | Datos del PDF | Ruta esperada |
+| --- | --- | --- |
+| REP-301 | T-031 y 18.500 CLP | `Aprobados` |
+| REP-302 | T-042 y 25.000 CLP | `Aprobados`, porque el límite es inclusivo |
+| REP-303 | T-073 y 36.800 CLP | `Pendientes` |
+| REP-304 | Sin la línea del código ni la del total | `Revision_Datos` |
+
+Envía cada PDF al buzón de pruebas con el asunto `[L03-IN] REP-301`, uno por ejecución. En la demostración final con Groq se repitieron un caso aprobado, uno pendiente y uno de revisión con otros IDs (REP-308 a REP-310) para no confundirlos con las pruebas anteriores. Usa un ID nuevo cada vez que repitas un caso.
 
 En **Gmail filter**, escribe esta consulta y fija **Limit** en `1`.
 
@@ -74,7 +101,13 @@ Devuelve exclusivamente un objeto JSON válido, sin Markdown ni texto adicional.
 
 ## 3. Convierte la respuesta en campos
 
-En **JSON → Parse JSON**, mapea **Choices → Message → Content** de Groq al campo de entrada. En el escenario probado la expresión fue `7.choices[1].message.content`. Genera la estructura desde el objeto del prompt para que `monto_total` sea numérico. Deja los campos opcionales si la interfaz lo requiere para que el parser admita datos faltantes. Inspecciona cómo aparecen un campo ausente y un valor `null` antes de decidir el filtro. Conserva los faltantes sin reemplazarlos por cero.
+En **JSON → Parse JSON**, mapea **Choices → Message → Content** de Groq al campo de entrada. En el escenario probado la expresión fue `7.choices[1].message.content`. Crea la estructura con **Generate** y pega el ejemplo del prompt, que aparece abajo, para que `monto_total` sea numérico. Deja los campos opcionales si la interfaz lo requiere para que el parser admita datos faltantes. Inspecciona cómo aparecen un campo ausente y un valor `null` antes de decidir el filtro. Conserva los faltantes sin reemplazarlos por cero.
+
+Ejemplo para generar la estructura. Debe dar tres campos: `tipo_documento` y `codigo_taller` como texto, y `monto_total` como número.
+
+```json
+{"tipo_documento":"presupuesto","codigo_taller":"T-042","monto_total":25000}
+```
 
 <figure class="lamina-apunte" style="max-width:550px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-07-make-parse-json.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-07-make-parse-json.png" alt="Parse JSON recibe choices[1].message.content de Groq y usa la estructura del laboratorio"></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Parse JSON recibe choices[1].message.content de Groq y usa la estructura del laboratorio <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
@@ -110,6 +143,14 @@ Agrega **Send an Email** después de cada escritura. Usa el buzón de prueba com
 
 - **Parse JSON.** Agrega un manejador que envíe un aviso técnico con el ID y el nombre del módulo. Termina con **Skip**. Para la prueba, mapea temporalmente un JSON inválido, ejecuta con REP-305 y restablece la píldora de respuesta de IA.
 - **Sheets.** Agrega un manejador a cada **Add a Row**. Envía al buzón de prueba un correo `[L03-ERROR]` con el ID, el módulo y los datos ficticios necesarios para recuperar el caso. Termina con **Skip** para omitir el aviso de éxito de esa rama. Para la prueba, usa un destino descartable, hazlo fallar de forma reversible y restablece el destino antes de repetir un caso válido.
+
+Estos son los resultados esperados de cada prueba de error. La demostración con Groq todavía no los verifica.
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| JSON inválido en Parse JSON | Llega un aviso técnico con el ID y el módulo. El caso termina en **Skip** y no se escribe ninguna fila de negocio. |
+| Fallo de escritura en Sheets | Llega un correo `[L03-ERROR]`. El caso termina en **Skip**, sin fila ni aviso de éxito. |
+| Fallo recuperable en Drive o Groq | La ejecución queda como incompleta y **Retry** la recupera. Antes de relanzarla, comprueba que no haya producido ya una fila o un aviso. |
 
 [Retry en Make](https://help.make.com/retry-error-handler) · [Router y fallback en Make](https://help.make.com/router)
 
