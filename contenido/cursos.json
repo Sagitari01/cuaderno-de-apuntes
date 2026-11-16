@@ -47,6 +47,19 @@
               "titulo": "Automatizaciones con IA: Groq, Parse JSON y Make",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/05-make-gemini-parse-json.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Semana 2",
+          "tema": "Flujos end-to-end con Make y control de errores",
+          "materiales": [
+            {
+              "id": "make-end-to-end-resiliencia",
+              "titulo": "De un correo a un registro confiable con Make",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/06-make-end-to-end-resiliencia.md",
               "nuevo": true
             }
           ]
