@@ -47,6 +47,26 @@
               "titulo": "Automatizaciones con IA: Groq, Parse JSON y Make",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/05-make-gemini-parse-json.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Semana 2",
+          "tema": "Flujos end-to-end con Make y control de errores",
+          "materiales": [
+            {
+              "id": "make-end-to-end-resiliencia",
+              "titulo": "De un correo a un registro confiable con Make",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/06-make-end-to-end-resiliencia.md",
+              "nuevo": false
+            },
+            {
+              "id": "laboratorio-03-make-end-to-end",
+              "titulo": "Laboratorio 03 · De Gmail a Google Sheets con Make",
+              "tipo": "ejercicio",
+              "archivo": "construccion-agentes-ia-automatizacion/07-laboratorio-03-make-end-to-end.md",
               "nuevo": true
             }
           ]
