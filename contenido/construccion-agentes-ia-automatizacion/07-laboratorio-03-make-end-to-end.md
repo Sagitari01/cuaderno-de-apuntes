@@ -16,7 +16,7 @@ En este laboratorio, un centro cultural recibe presupuestos de reparación en PD
 
 1. Crea el escenario **Laboratorio 03 - Presupuestos end-to-end y control de errores**. Conserva la programación desactivada y usa **Run once**.
 2. Crea el archivo **Laboratorio 03 - Presupuestos de reparación** con las pestañas `Aprobados`, `Pendientes` y `Revision_Datos`. Escribe en A1:E1 los encabezados `ID_Caso`, `Tipo_Documento`, `Codigo_Taller`, `Monto_Total` y `Estado`.
-3. Usa un buzón propio de pruebas y un PDF ficticio por caso. Conserva el ID en el archivo y en el asunto, por ejemplo `[L03-IN] REP-301`. Limita el disparador a correos sin leer, con adjunto PDF y con la etiqueta de pruebas o el asunto de entrada. Excluye los asuntos de resultado y error. Configura el punto de inicio antes de enviar el primer correo.
+3. Usa un buzón propio de pruebas y un PDF ficticio por caso. Conserva el ID en el archivo y en el asunto, por ejemplo `[L03-IN] REP-301`. Configura el punto de inicio antes de enviar el primer correo, para que el disparador ignore los mensajes anteriores.
 
 ### Prepara los casos de prueba
 
@@ -39,11 +39,13 @@ Documento ficticio para el Laboratorio 03.
 
 Envía cada PDF al buzón de pruebas con el asunto `[L03-IN] REP-301`, uno por ejecución. En la demostración final con Groq se repitieron un caso aprobado, uno pendiente y uno de revisión con otros IDs (REP-308 a REP-310) para no confundirlos con las pruebas anteriores. Usa un ID nuevo cada vez que repitas un caso.
 
-En **Gmail filter**, escribe esta consulta y fija **Limit** en `1`.
+En **Gmail filter**, escribe esta consulta y fija **Limit** en `1`. Busca los correos con `L03-IN` en el asunto que traen un PDF.
 
 ```text
-in:inbox is:unread has:attachment filename:pdf subject:"L03-IN" -subject:"L03-RESULTADO" -subject:"L03-ERROR"
+subject:"L03-IN" filename:pdf
 ```
+
+Los avisos del escenario no coinciden con esta búsqueda: su asunto empieza con `[L03-RESULTADO]` o `[L03-ERROR]` y no llevan adjunto, así que no hace falta excluirlos. En la captura verás una versión más larga, con `in:inbox`, `is:unread`, `has:attachment` y exclusiones. Da el mismo resultado: en la búsqueda de Gmail, ambas devolvieron los mismos 17 correos de prueba.
 
 <figure class="lamina-apunte" style="max-width:550px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-03-make-disparador.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-03-make-disparador.png" alt="Gmail filter limita la búsqueda a la entrada de prueba y procesa un mensaje por ejecución"></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Gmail filter limita la búsqueda a la entrada de prueba y procesa un mensaje por ejecución <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
