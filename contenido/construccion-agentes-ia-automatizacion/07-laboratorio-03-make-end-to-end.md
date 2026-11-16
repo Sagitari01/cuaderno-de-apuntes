@@ -2,7 +2,7 @@
 
 En este laboratorio, un centro cultural recibe presupuestos de reparación en PDF. Make extrae tres datos y decide qué hacer con cada caso usando un umbral de **25.000 CLP**.
 
-> Borrador para revisión. Las capturas muestran la configuración de Make. Queda pendiente verificar el buzón de prueba, conectar los avisos y las rutas técnicas de Gmail y ejecutar los casos de aceptación.
+> Demostración realizada con correos y presupuestos ficticios. Los resultados de cada prueba y el estado de las ejecuciones incompletas se documentan al final.
 
 <!-- secciones: desplegables -->
 
@@ -113,16 +113,27 @@ Agrega **Send an Email** después de cada escritura. Usa el buzón de prueba com
 
 Ejecuta con **Run once**. Para cada caso, coteja el ID en el PDF, el historial de Make, la hoja y el aviso. Antes de repetir, verifica el punto de inicio y usa un correo con un ID nuevo si corresponde. Busca duplicados en las tres pestañas. Guarda el escenario con la programación desactivada.
 
-<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-escenario-inactivo.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-escenario-inactivo.png" alt="Estado del borrador guardado e inactivo con las tres rutas de Sheets y Retry"></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Estado del borrador guardado e inactivo con las tres rutas de Sheets y Retry <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-escenario-inactivo.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto;object-fit:contain;border:1px solid #d4d4db;border-radius:12px" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-23-make-escenario-inactivo.png" alt="Escenario guardado e inactivo con las rutas de negocio, avisos técnicos, Skip y Retry"></a><figcaption style="font-size:.92em;color:var(--color-text-secondary,#666);margin-top:8px">Escenario guardado e inactivo con las rutas de negocio, avisos técnicos, Skip y Retry <em>(Pulsa para ampliar)</em>.</figcaption></figure>
 
 | Caso | Entrada | Resultado esperado | Resultado observado |
 | --- | --- | --- | --- |
-| REP-301 | T-031, 18.500 CLP | Fila en Aprobados y aviso | Pendiente de ejecución |
-| REP-302 | T-042, 25.000 CLP | Fila en Aprobados y aviso. Caso de borde | Pendiente de ejecución |
-| REP-303 | T-073, 36.800 CLP | Fila en Pendientes y aviso | Pendiente de ejecución |
-| REP-304 | Presupuesto sin código ni total | Fila en Revision_Datos, campos ausentes vacíos y aviso | Pendiente de ejecución |
-| REP-305 | JSON inválido temporal | Incidente del parser y cero filas de negocio | Pendiente de ejecución |
-| REP-306 | Escritura temporalmente fallida | Aviso técnico y cero avisos de éxito | Pendiente de ejecución |
-| REP-307 | T-071, 22.400 CLP, configuración restaurada | Fila en Aprobados y aviso con mapeo dinámico | Pendiente de ejecución |
-| Sin correo nuevo | Cursor al día y sin correos elegibles | Cero filas adicionales | Pendiente de ejecución |
-| Reintento de IA | Falla temporal recuperable | Ejecución incompleta y recuperación en el historial | Pendiente de ejecución |
+| REP-301 | T-031, 18.500 CLP | Fila en Aprobados y aviso | El intento inicial falló con 401 en la carga de Gemini. Tras unificar las conexiones, REP-301-R1 escribió 18.500 CLP en Aprobados y ejecutó el aviso. |
+| REP-302 | T-042, 25.000 CLP | Fila en Aprobados y aviso. Caso de borde | Una fila en Aprobados con 25.000 CLP y aviso ejecutado. |
+| REP-303 | T-073, 36.800 CLP | Fila en Pendientes y aviso | Una fila en Pendientes con 36.800 CLP y aviso ejecutado. |
+| REP-304 | Presupuesto sin código ni total | Fila en Revision_Datos, campos ausentes vacíos y aviso | Una fila en Revision_Datos, con código y monto vacíos. Aviso ejecutado. |
+| REP-305 | JSON inválido temporal | Incidente del parser y cero filas de negocio | La ruta de error de Parse JSON ejecutó Gmail y Skip. Cero filas de negocio. |
+| REP-306 | Escritura temporalmente fallida | Aviso técnico y cero avisos de éxito | La pestaña temporal inexistente disparó Gmail y Skip. Cero filas y sin ejecución del aviso de éxito. |
+| REP-307 | T-071, 22.400 CLP, configuración restaurada | Fila en Aprobados y aviso con mapeo dinámico | Gemini devolvió 503 en el intento original. REP-307-R1 escribió 22.400 CLP en Aprobados y ejecutó el aviso con la configuración restaurada. |
+| Sin correo nuevo | Cursor al día y sin correos elegibles | Cero filas adicionales | Make ejecutó solo el disparador. Sheets mantuvo cinco filas, sin IDs duplicados. |
+| Reintento de IA | Falla temporal recuperable | Ejecución incompleta y recuperación en el historial | La cola registró los fallos 401 y 503. El reintento de esas ejecuciones está deshabilitado con el escenario inactivo. Las ejecuciones nuevas con ID R1 completaron el flujo. |
+
+
+La escritura se verificó directamente en Sheets. El registro de Make confirmó la ejecución de los módulos de aviso en los casos indicados. La comprobación visual en Gmail y las capturas directas de Google Sheets quedaron pendientes de acceso desde el navegador.
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-run-103921.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-run-103921.png" alt="Historial de REP-301-R1 con el recorrido hacia Aprobados"></a><figcaption>Historial de REP-301-R1 con el recorrido hacia Aprobados <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-25-rep-307-r1.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-25-rep-307-r1.png" alt="Ejecución manual de REP-307-R1 con escritura en Aprobados y envío posterior"></a><figcaption>Ejecución manual de REP-307-R1 con escritura en Aprobados y envío posterior <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-22-make-sin-novedad.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-22-make-sin-novedad.png" alt="Ejecución de control con actividad solo en el disparador de Gmail"></a><figcaption>Ejecución de control con actividad solo en el disparador de Gmail <em>(Pulsa para ampliar)</em>.</figcaption></figure>
+
+<figure class="lamina-apunte" style="max-width:1120px;margin:16px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-24-retry-cola.png" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-end-to-end-laboratorio-03/l03-24-retry-cola.png" alt="Cola de ejecuciones incompletas con el escenario inactivo"></a><figcaption>Cola de ejecuciones incompletas con el escenario inactivo <em>(Pulsa para ampliar)</em>.</figcaption></figure>
