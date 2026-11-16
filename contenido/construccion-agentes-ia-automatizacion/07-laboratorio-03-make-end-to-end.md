@@ -319,7 +319,13 @@ Así, si uno de esos módulos falla por un problema temporal, Make guarda el cas
 
 ### G3. Aviso técnico si Sheets falla
 
-Haz lo mismo sobre cada **Add a Row**: manejador **Gmail → Send an Email** con asunto `[L03-ERROR] `, la pastilla **Subject** y el nombre del módulo, y después **Skip**.
+Haz lo mismo sobre cada **Add a Row**: manejador **Gmail → Send an Email** y después **Skip**. Aquí el aviso debe traer los datos para recuperar el caso a mano, porque la fila no se escribió.
+
+1. En **Subject** escribe `[L03-ERROR] `, la pastilla **Subject** de Watch Emails y el nombre de la pestaña, por ejemplo ` Sheets Aprobado`.
+2. En **Content** escribe `Caso ` y la pastilla **Subject**. Después escribe `. Módulo: Google Sheets Add a Row. Pestaña: Aprobados. Código: ` y la pastilla **Codigo taller**, y por último `. Monto: ` y la pastilla **Monto total**.
+3. Pulsa el **+** a la salida del Gmail y elige **Skip**.
+
+Así, en la prueba, el aviso de REP-313 llegó con el caso, la pestaña, el código `T-113` y el monto `21300`.
 
 **Debes ver:** el diagrama de la parte superior de esta guía: tres marcas **Retry** y un aviso con **Skip** bajo Parse JSON y bajo cada Sheets. Pulsa **Save**.
 
