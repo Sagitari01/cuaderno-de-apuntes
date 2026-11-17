@@ -52,6 +52,57 @@ Puedes usar n8n como servicio en la nube o ejecutarlo en tu propio equipo. **Doc
 
 Cuando n8n corre en tu equipo, necesita que el equipo y el servicio sigan encendidos para ejecutar automatizaciones. También puedes exportar un workflow como archivo **JSON**, que guarda la estructura de los nodos y sus conexiones.
 
+## 5. Instalar n8n con Docker
+
+Estos pasos quedan como referencia si quieres abrir n8n en tu equipo. Si en la sesión te entregan una carpeta con su propio `compose.yaml`, usa ese archivo. El siguiente ejemplo levanta una instancia local de n8n con SQLite.
+
+1. Instala **Docker Desktop** en Windows o macOS y ábrelo. En Linux también puedes usar **Docker Engine** con el complemento **Compose**. Para comprobar que tu terminal reconoce ambos comandos, ejecuta:
+
+```bash
+docker --version
+docker compose version
+```
+
+[Instalación de Docker por sistema operativo](https://docs.docker.com/get-docker/)
+
+2. Crea una carpeta y guarda en ella un archivo llamado `compose.yaml` con este contenido:
+
+```yaml
+services:
+  n8n:
+    image: n8nio/n8n:2.44.6
+    ports:
+      - "127.0.0.1:5690:5678"
+    environment:
+      TZ: America/Santiago
+      GENERIC_TIMEZONE: America/Santiago
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+```
+
+El navegador entra por el puerto **5690** de tu equipo. Dentro del contenedor, n8n escucha en el **5678**. El volumen `n8n_data` conserva los datos de la instancia.
+
+3. Abre una terminal **en esa carpeta**. Inicia n8n en segundo plano con el primer comando y comprueba que esté en ejecución con el segundo:
+
+```bash
+docker compose up -d
+docker compose ps
+```
+
+4. Abre **`http://localhost:5690`** en el navegador. La primera vez, n8n te pedirá crear una cuenta de propietario para esta instalación.
+
+| Si necesitas… | Comando |
+| --- | --- |
+| Ver qué pasó durante el arranque | `docker compose logs n8n` |
+| Detener n8n y conservar sus datos | `docker compose stop` |
+| Volver a iniciar el contenedor detenido | `docker compose start` |
+
+Si el puerto 5690 está ocupado, cambia ese número en el archivo y abre la dirección con el nuevo puerto. Si cambiaste la configuración, vuelve a ejecutar `docker compose up -d`. Evita agregar `-v` a `docker compose down` si quieres conservar los datos: esa opción elimina el volumen de este ejemplo.
+
 ## Autoevaluación
 
 ```quiz
