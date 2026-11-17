@@ -71,8 +71,8 @@
             },
             {
               "id": "n8n-docker-primer-workflow",
-              "titulo": "n8n y Docker · Tu primer workflow de decisión",
-              "tipo": "ejercicio",
+              "titulo": "Primer vistazo a n8n y Docker",
+              "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/08-n8n-docker-primer-workflow.md",
               "nuevo": true
             }
