@@ -29,7 +29,7 @@ Al abrir un nodo, **Input** muestra lo que recibió y **Output** lo que devolvi�
 
 Un nodo **If** hace una pregunta sobre los datos y tiene dos salidas: **true** si la condición se cumple y **false** si no se cumple. En el ejemplo de Calbuco se usan dos preguntas en orden. Primero, ¿tenemos el monto? Si lo tenemos, ¿supera los $500.000?
 
-<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/03-rutas-calbuco.svg" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/03-rutas-calbuco.svg" style="display:block;width:100%;height:auto" loading="lazy" alt="El primer If manda los datos sin monto a contingencia; el segundo separa valores superiores a 500.000 de los demás."></a><figcaption>El primer If comprueba si hay monto. El segundo aplica la regla de aprobación.</figcaption></figure>
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/03-rutas-calbuco.png" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/03-rutas-calbuco.png" style="display:block;width:100%;height:auto" loading="lazy" alt="Sin monto: Contingencia. Con monto superior a $500.000: Pendiente. Con monto de $500.000 o menos: Aprobado."></a><figcaption>El primer If comprueba si hay monto. El segundo aplica la regla de aprobación.</figcaption></figure>
 
 | Lo que llega | Qué pasa |
 | --- | --- |
@@ -44,7 +44,7 @@ Un presupuesto sin monto puede recorrer una ruta prevista. Si un nodo falla al l
 
 Puedes usar n8n como servicio en la nube o ejecutarlo en tu propio equipo. **Docker** permite hacer lo segundo usando una configuración repetible.
 
-<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/02-docker-local.svg" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/02-docker-local.svg" style="display:block;width:100%;height:auto" loading="lazy" alt="El navegador accede a n8n por el puerto local 5690 y el contenedor usa un volumen para los datos."></a><figcaption>El navegador abre n8n en tu equipo. Docker ejecuta la aplicación y el volumen conserva sus datos.</figcaption></figure>
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/02-docker-local.png" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/02-docker-local.png" style="display:block;width:100%;height:auto" loading="lazy" alt="La imagen de n8n se usa para crear el contenedor. El navegador abre n8n, el volumen conserva los datos y Docker Compose define cómo se inicia el servicio."></a><figcaption>El navegador abre n8n en tu equipo. Docker ejecuta la aplicación y el volumen conserva sus datos.</figcaption></figure>
 
 | Palabra | Explicación |
 | --- | --- |
