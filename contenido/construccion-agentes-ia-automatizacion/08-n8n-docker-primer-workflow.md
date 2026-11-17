@@ -13,6 +13,8 @@ Un **workflow** es el recorrido completo de la automatización. Cada paso es un 
 | Bundle o paquete de datos | Ítem o registro, aproximadamente |
 | Filtro que decide por dónde sigue un dato | Nodo If con una salida para cada respuesta |
 
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="https://2446198290-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FCxSeOtVxqqhfxMSac0AV%2Fuploads%2Fgit-blob-a4ded6e98c65464468ab6d5de15287ad4ba5daab%2Fbuild-your-first-workflow.png?alt=media" target="_blank" rel="noopener noreferrer"><img src="https://2446198290-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FCxSeOtVxqqhfxMSac0AV%2Fuploads%2Fgit-blob-a4ded6e98c65464468ab6d5de15287ad4ba5daab%2Fbuild-your-first-workflow.png?alt=media" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Editor de n8n con un disparador programado y tres nodos conectados"></a><figcaption>En el lienzo real, las líneas muestran el orden en que se conectan los nodos. Este ejemplo oficial es un flujo del tiempo meteorológico. <a href="https://docs.n8n.io/try-it-out/tutorial-first-workflow/" target="_blank" rel="noopener noreferrer">Captura de la documentación de n8n</a>.</figcaption></figure>
+
 ## 2. Cómo pasan los datos de un nodo a otro
 
 Cada presupuesto es un **ítem**. Puede tener campos como el nombre del documento y el monto. Una sola **ejecución** puede procesar varios ítems. Si entran cuatro presupuestos, el mismo flujo puede revisar los cuatro y darles resultados distintos.
@@ -51,6 +53,8 @@ Puedes usar n8n como servicio en la nube o ejecutarlo en tu propio equipo. **Doc
 | **Compose** | Herramienta que lee un archivo con la configuración y pone en marcha los servicios. |
 
 Cuando n8n corre en tu equipo, necesita que el equipo y el servicio sigan encendidos para ejecutar automatizaciones. También puedes exportar un workflow como archivo **JSON**, que guarda la estructura de los nodos y sus conexiones.
+
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="https://docs.docker.com/get-started/docker-concepts/the-basics/images/view-your-containers.webp" target="_blank" rel="noopener noreferrer"><img src="https://docs.docker.com/get-started/docker-concepts/the-basics/images/view-your-containers.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Vista Containers de Docker Desktop con un contenedor en estado Running y el puerto 8080:80"></a><figcaption>En Docker Desktop, fíjate en las columnas «Status» y «Port(s)». La captura oficial usa un contenedor de ejemplo. La instalación de n8n de abajo usa el puerto local 5690. <a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/" target="_blank" rel="noopener noreferrer">Captura de Docker Docs</a>.</figcaption></figure>
 
 ## 5. Instalar n8n con Docker
 
