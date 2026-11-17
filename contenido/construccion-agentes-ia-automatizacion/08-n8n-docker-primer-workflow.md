@@ -13,6 +13,8 @@ Un **workflow** es el recorrido completo de la automatización. Cada paso es un 
 | Bundle o paquete de datos | Ítem o registro, aproximadamente |
 | Filtro que decide por dónde sigue un dato | Nodo If con una salida para cada respuesta |
 
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="https://storage.ghost.io/c/0d/78/0d78b34c-0c5f-4975-900e-61d00ccb1c2d/content/images/2024/09/image-workflow.webp" target="_blank" rel="noopener noreferrer"><img src="https://storage.ghost.io/c/0d/78/0d78b34c-0c5f-4975-900e-61d00ccb1c2d/content/images/2024/09/image-workflow.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Editor real de n8n con nodos conectados en el lienzo"></a><figcaption>Esta captura muestra un flujo de ejemplo del blog. Fíjate en que los nodos se conectan de izquierda a derecha y que algunos abren ramas. <a href="https://blog.n8n.io/ai-workflow-automation/" target="_blank" rel="noopener noreferrer">Captura del blog oficial de n8n</a>.</figcaption></figure>
+
 ## 2. Cómo pasan los datos de un nodo a otro
 
 Cada presupuesto es un **ítem**. Puede tener campos como el nombre del documento y el monto. Una sola **ejecución** puede procesar varios ítems. Si entran cuatro presupuestos, el mismo flujo puede revisar los cuatro y darles resultados distintos.
@@ -20,6 +22,8 @@ Cada presupuesto es un **ítem**. Puede tener campos como el nombre del document
 <figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/01-workflow-items.svg" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/01-workflow-items.svg" style="display:block;width:100%;height:auto" loading="lazy" alt="Manual Trigger inicia el flujo; Documentos de prueba genera ítems que evalúa el primer If."></a><figcaption>El disparador inicia una ejecución. El nodo de decisión revisa el monto de cada documento.</figcaption></figure>
 
 Al abrir un nodo, **Input** muestra lo que recibió y **Output** lo que devolvió. Por ejemplo, si el nodo recibe un presupuesto por $320.000 y agrega el estado «Aprobado», el monto sigue ahí y el estado aparece como un campo nuevo.
+
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="https://storage.ghost.io/c/0d/78/0d78b34c-0c5f-4975-900e-61d00ccb1c2d/content/images/2024/09/data-input-node.webp" target="_blank" rel="noopener noreferrer"><img src="https://storage.ghost.io/c/0d/78/0d78b34c-0c5f-4975-900e-61d00ccb1c2d/content/images/2024/09/data-input-node.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Vista del nodo Edit Fields en n8n con sus paneles de datos"></a><figcaption>En un nodo abierto puedes revisar los datos que recibe y lo que devuelve. Los campos de la captura pertenecen al ejemplo oficial. <a href="https://blog.n8n.io/ai-workflow-automation/" target="_blank" rel="noopener noreferrer">Captura del blog oficial de n8n</a>.</figcaption></figure>
 
 ## 3. Cómo se toma una decisión
 
@@ -51,6 +55,8 @@ Puedes usar n8n como servicio en la nube o ejecutarlo en tu propio equipo. **Doc
 | **Compose** | Herramienta que lee un archivo con la configuración y pone en marcha los servicios. |
 
 Cuando n8n corre en tu equipo, necesita que el equipo y el servicio sigan encendidos para ejecutar automatizaciones. También puedes exportar un workflow como archivo **JSON**, que guarda la estructura de los nodos y sus conexiones.
+
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="https://docs.docker.com/get-started/docker-concepts/the-basics/images/view-your-containers.webp" target="_blank" rel="noopener noreferrer"><img src="https://docs.docker.com/get-started/docker-concepts/the-basics/images/view-your-containers.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Vista Containers de Docker Desktop con un contenedor en estado Running y el puerto 8080:80"></a><figcaption>En Docker Desktop, fíjate en las columnas «Status» y «Port(s)». La captura oficial usa un contenedor de ejemplo. La instalación de n8n de abajo usa el puerto local 5690. <a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/" target="_blank" rel="noopener noreferrer">Captura de Docker Docs</a>.</figcaption></figure>
 
 ## 5. Instalar n8n con Docker
 
