@@ -99,7 +99,15 @@ docker compose up -d
 docker compose ps
 ```
 
+En la salida de `docker compose ps`, busca el servicio `n8n`, comprueba que su estado diga `Up` y revisa que el puerto local sea `5690`. La captura muestra un laboratorio que también levanta una API y PostgreSQL. Si usas el `compose.yaml` de arriba, verás una sola fila, la de `n8n`.
+
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/04-docker-compose-arranque.png" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/04-docker-compose-arranque.png" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Terminal de PowerShell después de ejecutar docker compose up -d y docker compose ps. El servicio n8n figura en ejecución con el puerto local 5690 vinculado al 5678 del contenedor."></a><figcaption>Verificación del arranque en Windows. En la fila de n8n, fíjate en el estado <code>Up</code> y el mapeo <code>5690-&gt;5678</code>.</figcaption></figure>
+
 4. Abre **`http://localhost:5690`** en el navegador. La primera vez, n8n te pedirá crear una cuenta de propietario para esta instalación.
+
+Después de configurar la cuenta, elige **Build a workflow** o abre el menú **+** y selecciona **New workflow**. Ambas opciones te llevan al editor donde puedes añadir el primer nodo.
+
+<figure class="lamina-apunte" style="max-width:1000px;margin:18px auto 24px"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/05-n8n-primer-workflow.png" target="_blank" rel="noopener noreferrer"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-docker/05-n8n-primer-workflow.png" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" alt="Pantalla inicial de n8n con el botón Build a workflow y el menú lateral abierto en New workflow."></a><figcaption>Pantalla inicial de n8n después de ingresar. Puedes abrir el editor desde <strong>Build a workflow</strong> o <strong>New workflow</strong>.</figcaption></figure>
 
 | Si necesitas… | Comando |
 | --- | --- |
