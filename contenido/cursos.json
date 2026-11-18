@@ -53,7 +53,7 @@
         },
         {
           "titulo": "Semana 2",
-          "tema": "Flujos end-to-end con Make y control de errores",
+          "tema": "Flujos end-to-end con Make, control de errores y primeros workflows con n8n",
           "materiales": [
             {
               "id": "make-end-to-end-resiliencia",
@@ -74,6 +74,13 @@
               "titulo": "Primer vistazo a n8n y Docker",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/08-n8n-docker-primer-workflow.md",
+              "nuevo": false
+            },
+            {
+              "id": "n8n-api-webhook",
+              "titulo": "APIs y webhooks en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/09-n8n-api-webhook.md",
               "nuevo": true
             }
           ]
