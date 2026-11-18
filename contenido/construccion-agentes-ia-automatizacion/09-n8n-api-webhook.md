@@ -19,6 +19,8 @@ Por ejemplo, si un equipo ya administra sus flujos de Gmail y Google Sheets en M
 
 Una **API HTTP** define qué solicitudes acepta un servicio y cómo responde. Un **webhook** es una URL que recibe una solicitud cuando otro sistema quiere avisar de un evento o iniciar una acción. Puedes simular ese sistema enviando la solicitud desde Postman.
 
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks/02-viaje-solicitud.webp" style="display:block;width:100%;height:auto" loading="lazy" width="1536" height="1024" alt="En una hoja de cuaderno, unos sobres ilustran el intercambio de mensajes entre Postman, n8n y PokéAPI."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks/02-viaje-solicitud.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar El viaje de una solicitud" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Postman envía un <code>POST</code> al Webhook de n8n. n8n consulta PokéAPI con un <code>GET</code> y devuelve a Postman un JSON con los campos seleccionados.</figcaption></figure>
+
 | Tramo | Quién hace la solicitud | Qué ocurre en n8n |
 | --- | --- | --- |
 | Entrada · `POST` | Postman envía `{"pokemon":"ditto"}` | **Webhook** inicia el workflow y deja el JSON en `body`. |
@@ -50,6 +52,8 @@ Con n8n abierto en el puerto `5690`, crea un workflow con los nodos de la tabla.
 | **Edit Fields** | Usa **Manual Mapping**. Crea `pokemon` como **String** con `{{ $json.name }}` e `id` como **Number** con `{{ $json.id }}`. Deja **Include Other Input Fields** desactivado para devolver solo esos dos campos. |
 | **Respond to Webhook** · rama válida | En **Respond With**, elige **First Incoming Item**. Devuelve los dos campos del nodo anterior con el código `200` predeterminado. |
 | **Respond to Webhook** · rama inválida | En **Respond With**, elige **JSON** y usa `{"error":"Envía un nombre de Pokémon en el campo pokemon"}`. En **Options → Response Code**, indica `400`. |
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks/03-dos-caminos-solicitud.webp" style="display:block;width:100%;height:auto" loading="lazy" width="1536" height="1024" alt="Una solicitud llega al nodo If. La rama superior va hacia un archivo y la rama inferior devuelve un sobre marcado con una cruz."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks/03-dos-caminos-solicitud.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar Dos caminos para una solicitud" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>La rama <strong>true</strong>, arriba, consulta PokéAPI y devuelve <code>200</code> si la consulta tiene éxito. La rama <strong>false</strong>, abajo, devuelve <code>400</code> cuando el dato de entrada falta o tiene un formato inválido.</figcaption></figure>
 
 En el nodo **If**, cambia el valor a **Expression**. Esta expresión acepta nombres de hasta 40 caracteres que contengan letras sin acentos, números o guiones. Tolera espacios al comienzo o al final.
 
