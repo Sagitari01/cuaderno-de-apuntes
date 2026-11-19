@@ -89,6 +89,13 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/10-make-arquitectura-gmail-groq.md",
               "nuevo": true
+            },
+            {
+              "id": "n8n-transformar-encaminar-datos",
+              "titulo": "Cómo transformar y encaminar datos en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/11-n8n-transformar-encaminar-datos.md",
+              "nuevo": true
             }
           ]
         }
