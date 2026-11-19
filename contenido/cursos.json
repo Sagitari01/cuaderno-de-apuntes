@@ -82,6 +82,13 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/09-n8n-api-webhook.md",
               "nuevo": true
+            },
+            {
+              "id": "make-arquitectura-gmail-groq",
+              "titulo": "4.2 Arquitectura avanzada en Make: de Gmail a Google Sheets",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/10-make-arquitectura-gmail-groq.md",
+              "nuevo": true
             }
           ]
         }
