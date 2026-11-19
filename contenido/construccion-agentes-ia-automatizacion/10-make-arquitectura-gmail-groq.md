@@ -1,6 +1,4 @@
-# 4.2 Arquitectura avanzada en Make: de Gmail a Google Sheets
-
-**Clase del 19 de noviembre de 2026 · Diseño de flujos end-to-end en Make**
+# De Gmail a Google Sheets con Make y Groq
 
 Un centro cultural recibe presupuestos de reparación por correo. Queremos guardar el tipo de documento, el código del taller y el monto en una hoja compartida. En esta práctica, el presupuesto va escrito en el **cuerpo del mensaje**.
 
@@ -28,12 +26,12 @@ Make transporta los datos en **bundles**. Cada correo detectado en esta práctic
 4. Usa **Run once** para cada prueba manual. Abre la salida de Gmail y localiza el asunto y el cuerpo en texto plano.
 
 ```text
-in:inbox is:unread subject:"L03-IN"
+in:inbox is:unread subject:"PRESUPUESTO PRUEBA"
 ```
 
 ## 3. Mapea el cuerpo en Groq y convierte la respuesta en campos
 
-Agrega **Groq → Create a JSON Chat Completion** y elige tu conexión. En el laboratorio usamos `openai/gpt-oss-20b`. En **User Message**, selecciona el campo dinámico del cuerpo en texto plano que entrega Gmail.
+Agrega **Groq → Create a JSON Chat Completion** y elige tu conexión. Para este ejemplo, selecciona `openai/gpt-oss-20b`. En **User Message**, selecciona el campo dinámico del cuerpo en texto plano que entrega Gmail.
 
 Pega este texto en **System Prompt**.
 
@@ -50,7 +48,7 @@ Conserva las tres claves y entrega solo el objeto JSON.
 ```
 
 <figure class="lamina-apunte" style="max-width:490px;margin:16px auto 24px">
-  <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-arquitectura-gmail-groq/01-groq.webp" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-arquitectura-gmail-groq/01-groq.webp" alt="Configuración del modelo y System Prompt en el módulo Groq del laboratorio"></a>
+  <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/make-arquitectura-gmail-groq/01-groq.webp" target="_blank" rel="noopener noreferrer"><img loading="lazy" style="display:block;width:100%;height:auto" src="contenido/construccion-agentes-ia-automatizacion/imagenes/make-arquitectura-gmail-groq/01-groq.webp" alt="Configuración del modelo y System Prompt en el módulo Groq"></a>
   <figcaption>Captura de Make con el modelo de Groq y el campo System Prompt.</figcaption>
 </figure>
 
@@ -83,7 +81,7 @@ Agrega **Google Sheets → Add a Row** en cada ruta. Usa el ID que aparece en el
 
 ## 5. Prueba el recorrido con un correo
 
-**Asunto** `[L03-IN] REP-401`
+**Asunto** `[PRESUPUESTO PRUEBA] REP-401`
 
 ```text
 Presupuesto de reparación
@@ -95,8 +93,8 @@ Ejecuta **Run once** y revisa las burbujas de Gmail, Groq y Parse JSON. Confirma
 
 | Siguiente correo | Qué debes cambiar en el ejemplo | Resultado esperado |
 | --- | --- | --- |
-| `[L03-IN] REP-402` | Usa `T-093` y `$31.400 CLP`. | Una fila en `Pendientes`. |
-| `[L03-IN] REP-403` | Quita la línea del código y la del monto. | Una fila en `Revision_Datos`, con ambos campos vacíos. |
-| `[L03-IN] REP-404` | Conserva el código y usa exactamente `$25.000 CLP`. | Una fila en `Aprobados`. |
+| `[PRESUPUESTO PRUEBA] REP-402` | Usa `T-093` y `$31.400 CLP`. | Una fila en `Pendientes`. |
+| `[PRESUPUESTO PRUEBA] REP-403` | Quita la línea del código y la del monto. | Una fila en `Revision_Datos`, con ambos campos vacíos. |
+| `[PRESUPUESTO PRUEBA] REP-404` | Conserva el código y usa exactamente `$25.000 CLP`. | Una fila en `Aprobados`. |
 
 Para cada caso, contrasta **la entrada de Gmail**, **los campos de Parse JSON** y **la fila en Sheets**. El mismo ID te permite seguir el recorrido desde el correo hasta el registro.
