@@ -372,3 +372,17 @@ En el Switch, las pestañas deben mostrar **Bajo (2 items)** con B y F, **Medio 
 - [Nodo Code](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code/)
 - [Expresiones en n8n](https://docs.n8n.io/code/expressions/)
 - [Variables integradas](https://docs.n8n.io/code/builtin/overview/)
+
+## Workflow para importar
+
+Si quieres comprobar tu flujo, o probar el caso completo sin armarlo nodo por nodo, descarga el workflow de este apunte e impórtalo en n8n. Trae los trece nodos del flujo, con los seis pedidos ya cargados en **Pedidos de ejemplo**, y ocho notas adhesivas que explican cada paso en el lienzo. No usa credenciales ni llamadas externas, así que funciona sin configurar nada.
+
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-transformar-datos/ayudantia-condiciones-n8n.json" download="ayudantia-condiciones-n8n.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar ayudantia-condiciones-n8n.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+
+Para importarlo:
+
+1. Crea un workflow nuevo.
+2. Abre el menú de tres puntos junto al nombre, elige **Import** y luego **From file**, y selecciona el archivo descargado. También puedes abrirlo en un editor de texto, copiar todo su contenido y pegarlo con Ctrl+V sobre el lienzo vacío.
+3. Pulsa **Execute workflow** y abre cada nodo para comparar su OUTPUT con la tabla de la sección 11.
+
+Si todo salió bien, el Switch reparte los pedidos así: **Bajo** con Ana (23800) y Elena (16958), **Medio** con Bruno (90440) y **Alto** con Diego (114240). Descarga el archivo tal cual: si lo abres y lo guardas desde un procesador de texto, puede dejar de importar.

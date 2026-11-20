@@ -1,0 +1,651 @@
+{
+  "name": "Ayudantía n8n - Condiciones y transformación (Set, Filter, IF, Merge, Switch)",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        64
+      ],
+      "id": "4a02665c-445b-40c2-a592-f4eee17cd798",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Datos de ejemplo: 6 pedidos de una tienda. Cada objeto = 1 item en n8n.\nreturn [\n  { json: { cliente: 'Ana',    monto: 25000,  vip: true  } },\n  { json: { cliente: 'Bruno',  monto: 80000,  vip: false } },\n  { json: { cliente: 'Carla',  monto: 0,      vip: true  } },\n  { json: { cliente: 'Diego',  monto: 120000, vip: true  } },\n  { json: { cliente: 'Elena',  monto: 15000,  vip: false } },\n  { json: { cliente: 'Fabián', monto: -5000,  vip: false } }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        64
+      ],
+      "id": "87a83843-5dca-480c-b9cc-7cb71f730baf",
+      "name": "Pedidos de ejemplo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5bc17acb-9f42-423c-adcd-3de1aa164681",
+              "name": "monto_con_iva",
+              "value": "={{ $json.monto * 1.19 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        64
+      ],
+      "id": "48749173-a174-4f4c-ad35-8919bae674a8",
+      "name": "Calcular IVA"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "7d788455-3a16-4b4e-bfc9-bbb44527022d",
+              "leftValue": "={{ $json.monto }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.4,
+      "position": [
+        672,
+        64
+      ],
+      "id": "158c5485-202f-463b-8932-599f15c010f5",
+      "name": "Filter: solo montos válidos"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "60711f98-d88c-43a0-9b18-01573d51dc24",
+              "leftValue": "={{ $json.vip }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        896,
+        64
+      ],
+      "id": "f28aedf1-1b40-45b9-b4f4-447ff6b3e096",
+      "name": "IF: ¿cliente VIP?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a778f469-7561-4260-be2a-ee5fa4bf915b",
+              "name": "descuento",
+              "value": 0.2,
+              "type": "number"
+            },
+            {
+              "id": "cc0a4c12-46f8-4c2d-9684-b7847302d6b5",
+              "name": "tipo",
+              "value": "VIP",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1120,
+        -32
+      ],
+      "id": "7bb8ecf0-eba3-4188-83ec-ff1c31594f23",
+      "name": "Descuento VIP 20%"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6608d77-b8a4-439d-a750-4fb9ca9ff7fa",
+              "name": "descuento",
+              "value": 0.05,
+              "type": "number"
+            },
+            {
+              "id": "ba5622a4-cbde-4e51-8011-7e5f621f7dcc",
+              "name": "tipo",
+              "value": "Normal",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1120,
+        160
+      ],
+      "id": "15bacdb4-78bc-4100-8d78-aeb8e8bcabe9",
+      "name": "Descuento normal 5%"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1344,
+        64
+      ],
+      "id": "ccd2955d-4dfd-45ac-94a2-58305f667eb2",
+      "name": "Merge: juntar ramas"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd5c076c-737b-4356-979c-a96a085e5342",
+              "name": "total_a_pagar",
+              "value": "={{ Math.round($json.monto_con_iva * (1 - $json.descuento)) }}",
+              "type": "number"
+            },
+            {
+              "id": "6b711c52-bf5f-4744-bed5-2bb6f5cfd980",
+              "name": "mensaje",
+              "value": "={{ $json.cliente }} ({{ $json.tipo }}): paga ${{ Math.round($json.monto_con_iva * (1 - $json.descuento)) }} con {{ $json.descuento * 100 }}% de descuento",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1568,
+        64
+      ],
+      "id": "e177f409-8354-4a27-a9fb-51fc73165ce3",
+      "name": "Armar resumen"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.total_a_pagar }}",
+                    "rightValue": 50000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lt"
+                    },
+                    "id": "94adac7c-4459-4145-bc86-379b47e88387"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Bajo"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "8cb3a4e1-1173-4204-bb07-bf2fd8652abc",
+                    "leftValue": "={{ $json.total_a_pagar }}",
+                    "rightValue": 100000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Medio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "f63a5523-3c71-4518-a102-8480869d9ab7",
+                    "leftValue": "={{ $json.total_a_pagar }}",
+                    "rightValue": 100000,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Alto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        1792,
+        48
+      ],
+      "id": "6545083b-a72a-42cf-9c43-7bc94c6857cb",
+      "name": "Switch: tramo del total"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b2d8bee-9351-4884-9190-4eaab0ce41db",
+              "name": "tramo",
+              "value": "Bajo",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2016,
+        -128
+      ],
+      "id": "04120b84-5b28-4735-9e1e-49156dc4480b",
+      "name": "Tramo bajo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3ba71761-af98-40cb-b01a-a24c1b55d409",
+              "name": "tramo",
+              "value": "Medio",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2016,
+        64
+      ],
+      "id": "d610d16c-1bdf-46e0-90c4-3ed9b657dc27",
+      "name": "Tramo medio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e42be93f-fb54-4f54-8ff3-b86151af6c51",
+              "name": "tramo",
+              "value": "Alto",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2016,
+        256
+      ],
+      "id": "01a2e550-ee6f-4085-b71b-f7de985c30ab",
+      "name": "Tramo alto"
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 Caso: descuentos de una tienda\n\nLlegan **6 pedidos**. Queremos:\n1. Calcular el IVA (**Set**)\n2. Descartar pedidos inválidos (**Filter**)\n3. Separar clientes VIP y normales (**IF**)\n4. Aplicar un descuento a cada grupo (**Set** x2) y juntar todo (**Merge**)\n5. Clasificar el total en 3 tramos (**Switch**)\n\n▶ Pulsa *Execute workflow* y abre cada nodo: mira **Input** y **Output**.",
+        "height": 230,
+        "width": 760,
+        "color": 7
+      },
+      "id": "b0066038-e091-4b2f-ae5c-019d49b08f8c",
+      "name": "Nota 0 - Objetivo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -330
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 1️⃣ Datos de ejemplo\nEl nodo **Code** crea 6 pedidos. **Cada objeto es un item**.\n\nCarla (monto 0) y Fabián (monto -5000) son inválidos a propósito, para que el Filter tenga algo que descartar.",
+        "height": 330,
+        "width": 320,
+        "color": 4
+      },
+      "id": "5df86b9b-d602-456b-a9d3-704fc2bd7430",
+      "name": "Nota 1 - Datos",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2️⃣ Set (Edit Fields)\n**Agrega o cambia campos** de cada item.\n\nExpresión: `{{ $json.monto * 1.19 }}`\n- `{{ }}` = expresión, no texto fijo\n- `$json` = el item actual\n\n*Include Other Input Fields* activo para conservar cliente, monto y vip.",
+        "height": 330,
+        "width": 320,
+        "color": 5
+      },
+      "id": "fe89ca6c-4989-4d39-93df-e7b128886caf",
+      "name": "Nota 2 - Set",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        320,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3️⃣ Filter\n**Deja pasar o descarta.** Tiene una sola salida: solo sale lo que cumple.\n\nCondición: `monto` es mayor que `0`\n\n👉 Entran **6**, salen **4**. En el Output hay pestañas *Kept* (pasan) y *Discarded* (descartados).",
+        "height": 330,
+        "width": 320,
+        "color": 3
+      },
+      "id": "9b9492c3-ffbb-4df5-8369-c3f3b56a83b1",
+      "name": "Nota 3 - Filter",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        660,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4️⃣ IF\n**Bifurca** en dos caminos según una condición.\n\nCondición: `vip` es true\n- Salida **true** (arriba): VIP\n- Salida **false** (abajo): normales\n\nDiferencia con Filter: el IF **no descarta nada**, reparte los items.",
+        "height": 330,
+        "width": 320,
+        "color": 6
+      },
+      "id": "824d2bc9-47c3-4886-9d5c-657d14da8623",
+      "name": "Nota 4 - IF",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 5️⃣ Un Set por rama y Merge\nVIP recibe `descuento = 0.2` y los normales `0.05`.\n\n**Merge** (modo *Append*) une las dos ramas en una sola lista: primero los items de la entrada 1 y luego los de la entrada 2.\n\nSin Merge, el nodo siguiente correría dos veces.",
+        "height": 330,
+        "width": 320,
+        "color": 2
+      },
+      "id": "d1f1aa0c-6124-40c9-837e-476eb9905ec1",
+      "name": "Nota 5 - Ramas y Merge",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 6️⃣ Armar resumen\nUltimo Set: calcula `total_a_pagar` y arma un texto con expresiones.\n\nFórmula: `monto_con_iva * (1 - descuento)`\n\nTotales: Ana 23.800 · Diego 114.240 · Bruno 90.440 · Elena 16.958",
+        "height": 330,
+        "width": 320,
+        "color": 4
+      },
+      "id": "64be0269-5c28-4ce1-b336-202254621a49",
+      "name": "Nota 6 - Resumen",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 7️⃣ Switch\nComo un IF pero con **más de dos salidas**. Cada regla tiene su salida con nombre.\n\n- Bajo: total < 50.000\n- Medio: total <= 100.000\n- Alto: total > 100.000\n\n⚠️ Se evalúan **en orden** y el item sale por la primera regla que cumple.",
+        "height": 330,
+        "width": 320,
+        "color": 7
+      },
+      "id": "e97bdd35-8ea8-43cd-bb75-2cc0fb48e28b",
+      "name": "Nota 7 - Switch",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        440
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Pedidos de ejemplo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedidos de ejemplo": {
+      "main": [
+        [
+          {
+            "node": "Calcular IVA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular IVA": {
+      "main": [
+        [
+          {
+            "node": "Filter: solo montos válidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter: solo montos válidos": {
+      "main": [
+        [
+          {
+            "node": "IF: ¿cliente VIP?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: ¿cliente VIP?": {
+      "main": [
+        [
+          {
+            "node": "Descuento VIP 20%",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descuento normal 5%",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descuento VIP 20%": {
+      "main": [
+        [
+          {
+            "node": "Merge: juntar ramas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descuento normal 5%": {
+      "main": [
+        [
+          {
+            "node": "Merge: juntar ramas",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge: juntar ramas": {
+      "main": [
+        [
+          {
+            "node": "Armar resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar resumen": {
+      "main": [
+        [
+          {
+            "node": "Switch: tramo del total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch: tramo del total": {
+      "main": [
+        [
+          {
+            "node": "Tramo bajo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tramo medio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tramo alto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

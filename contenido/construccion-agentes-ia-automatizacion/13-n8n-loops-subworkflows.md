@@ -360,3 +360,18 @@ El segundo flujo no copió ningún cálculo: llamó al mismo subworkflow que usa
 - [Subworkflows](https://docs.n8n.io/flow-logic/subworkflows/)
 - [Nodo Edit Fields (Set)](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/)
 - [Diccionario práctico de expresiones en n8n](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/extra-diccionario-expresiones-n8n)
+
+## Workflows para importar
+
+Estos son los dos archivos que se importan en la parte práctica. Son los mismos que están en la carpeta de recursos 6.6; aquí los tienes a mano para descargarlos directamente.
+
+| Archivo | Qué trae | Dónde se usa |
+| --- | --- | --- |
+| `u21-clase10-subworkflow-vacio.json` | El subworkflow con solo el disparador «Cuando lo llaman» y una nota. El cálculo lo agregas tú. | Parte 1, paso 1. |
+| `u21-clase10-principal-referencia.json` | El flujo principal completo, con el loop. Falta elegir el subworkflow en «Normalizar documento». | Parte 2, paso 6. |
+
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/u21-clase10-subworkflow-vacio.json" download="u21-clase10-subworkflow-vacio.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar u21-clase10-subworkflow-vacio.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/u21-clase10-principal-referencia.json" download="u21-clase10-principal-referencia.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar u21-clase10-principal-referencia.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+
+Impórtalos en ese orden: primero el subworkflow, que completas y renombras a «Normalizar documento», y después el flujo principal. En los dos casos el menú es **Import** y luego **From file**, como en el paso 1. El segundo flujo de la Parte 4 lo armas tú, así que no tiene archivo. Descarga los archivos tal cual: si los abres y los guardas desde un procesador de texto, dejan de importar.

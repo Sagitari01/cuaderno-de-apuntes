@@ -1,0 +1,51 @@
+{
+  "name": "Normalizar documento (vacío)",
+  "nodes": [
+    {
+      "id": "n-cuando-lo-llaman",
+      "name": "Cuando lo llaman",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "documento",
+              "type": "string"
+            },
+            {
+              "name": "proveedor",
+              "type": "string"
+            },
+            {
+              "name": "monto_total",
+              "type": "any"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "n-notas-de-la-práctica",
+      "name": "Notas de la práctica",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -200
+      ],
+      "parameters": {
+        "content": "Práctica 6.6. Aquí va la normalización de montos que hoy está en el flujo principal.",
+        "height": 120,
+        "width": 520
+      }
+    }
+  ],
+  "connections": {},
+  "settings": {}
+}

@@ -1,0 +1,459 @@
+{
+  "name": "Calbuco 6.6 Flujo principal",
+  "nodes": [
+    {
+      "id": "n-inicio-manual",
+      "name": "Inicio manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "n-lote-de-documentos",
+      "name": "Lote de documentos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        100
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"documentos\": [\n    {\n      \"documento\": \"Factura 4521\",\n      \"proveedor\": \"P-101\",\n      \"monto_total\": 1250000\n    },\n    {\n      \"documento\": \"OC-9102\",\n      \"proveedor\": \"P-101\",\n      \"monto_total\": 320000\n    },\n    {\n      \"documento\": \"Borde\",\n      \"proveedor\": \"P-102\",\n      \"monto_total\": 500000\n    },\n    {\n      \"documento\": \"Corrupto\",\n      \"proveedor\": \"P-101\",\n      \"monto_total\": null\n    },\n    {\n      \"documento\": \"Factura 4530\",\n      \"proveedor\": \"P-102\",\n      \"monto_total\": 89990\n    },\n    {\n      \"documento\": \"Factura 4533\",\n      \"proveedor\": \"P-103\",\n      \"monto_total\": 450000\n    },\n    {\n      \"documento\": \"OC-9110\",\n      \"proveedor\": \"P-101\",\n      \"monto_total\": 1000000\n    },\n    {\n      \"documento\": \"Factura 4541\",\n      \"proveedor\": \"P-102\",\n      \"monto_total\": null\n    },\n    {\n      \"documento\": \"OC-9115\",\n      \"proveedor\": \"P-103\",\n      \"monto_total\": 2100000\n    },\n    {\n      \"documento\": \"Factura 4550\",\n      \"proveedor\": \"P-999\",\n      \"monto_total\": 76000\n    }\n  ]\n}",
+        "options": {}
+      }
+    },
+    {
+      "id": "n-separar-documentos",
+      "name": "Separar documentos",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        440,
+        100
+      ],
+      "parameters": {
+        "fieldToSplitOut": "documentos",
+        "include": "noOtherFields",
+        "options": {}
+      }
+    },
+    {
+      "id": "n-recorrer-de-a-cinco",
+      "name": "Recorrer de a cinco",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        100
+      ],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "n-normalizar-documento",
+      "name": "Normalizar documento",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        200
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "SUBWORKFLOW_ID",
+          "cachedResultName": "Normalizar documento"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "documento": "={{ $json.documento }}",
+            "proveedor": "={{ $json.proveedor }}",
+            "monto_total": "={{ $json.monto_total }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n-solo-con-monto",
+      "name": "Solo con monto",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1140,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.monto_total }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "rightValue": 0
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "n-tabla-de-proveedores",
+      "name": "Tabla de proveedores",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        380
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"proveedores\": [\n    {\n      \"codigo\": \"P-101\",\n      \"nombre_proveedor\": \"Ferretería Andes\",\n      \"estado\": \"vigente\"\n    },\n    {\n      \"codigo\": \"P-102\",\n      \"nombre_proveedor\": \"Transportes del Sur\",\n      \"estado\": \"vigente\"\n    },\n    {\n      \"codigo\": \"P-103\",\n      \"nombre_proveedor\": \"Insumos Norte\",\n      \"estado\": \"suspendido\"\n    }\n  ]\n}",
+        "options": {}
+      }
+    },
+    {
+      "id": "n-separar-proveedores",
+      "name": "Separar proveedores",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        440,
+        380
+      ],
+      "parameters": {
+        "fieldToSplitOut": "proveedores",
+        "include": "noOtherFields",
+        "options": {}
+      }
+    },
+    {
+      "id": "n-unir-con-proveedores",
+      "name": "Unir con proveedores",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1360,
+        200
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByFields",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "proveedor",
+              "field2": "codigo"
+            }
+          ]
+        },
+        "joinMode": "enrichInput1",
+        "options": {}
+      }
+    },
+    {
+      "id": "n-decidir-ruta",
+      "name": "Decidir ruta",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1580,
+        200
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "r1",
+                    "leftValue": "={{ $json.estado }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "suspendido"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Contingencia"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "r2",
+                    "leftValue": "={{ $json.monto_total }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    },
+                    "rightValue": 1000000
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Revisión humana"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Automático"
+        }
+      }
+    },
+    {
+      "id": "n-ruta-contingencia",
+      "name": "Ruta contingencia",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        40
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-ruta",
+              "name": "ruta",
+              "value": "Contingencia",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "n-ruta-revisión",
+      "name": "Ruta revisión",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-ruta",
+              "name": "ruta",
+              "value": "Revisión humana",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    },
+    {
+      "id": "n-ruta-automática",
+      "name": "Ruta automática",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        360
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a-ruta",
+              "name": "ruta",
+              "value": "Automático",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Inicio manual": {
+      "main": [
+        [
+          {
+            "node": "Lote de documentos",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tabla de proveedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lote de documentos": {
+      "main": [
+        [
+          {
+            "node": "Separar documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar documentos": {
+      "main": [
+        [
+          {
+            "node": "Recorrer de a cinco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recorrer de a cinco": {
+      "main": [
+        [
+          {
+            "node": "Solo con monto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Normalizar documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar documento": {
+      "main": [
+        [
+          {
+            "node": "Recorrer de a cinco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solo con monto": {
+      "main": [
+        [
+          {
+            "node": "Unir con proveedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tabla de proveedores": {
+      "main": [
+        [
+          {
+            "node": "Separar proveedores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar proveedores": {
+      "main": [
+        [
+          {
+            "node": "Unir con proveedores",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Unir con proveedores": {
+      "main": [
+        [
+          {
+            "node": "Decidir ruta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir ruta": {
+      "main": [
+        [
+          {
+            "node": "Ruta contingencia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ruta revisión",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ruta automática",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {}
+}
