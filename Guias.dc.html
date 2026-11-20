@@ -278,7 +278,7 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
           <div style="display:flex; flex-direction:column; gap:16px">
             <div style="display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:1px; background:var(--color-divider); border:1px solid var(--color-divider)">
               <sc-for list="{{ semanas }}" as="s" hint-placeholder-count="2">
-                <button onClick="{{ s.elegir }}" style="padding:8px 0; border:0; cursor:pointer; font-family:var(--font-heading); font-weight:600; font-size:14px; background:{{ s.tabBg }}; color:{{ s.tabFg }}">S{{ s.num }}</button>
+                <button onClick="{{ s.elegir }}" style="padding:8px 0; border:0; cursor:pointer; font-family:var(--font-heading); font-weight:600; font-size:14px; background:{{ s.tabBg }}; color:{{ s.tabFg }}">{{ s.tabTitulo }}</button>
               </sc-for>
             </div>
             <div style="display:flex; flex-direction:column; gap:1px">
@@ -324,12 +324,12 @@ html[data-theme="oscuro"]{color-scheme:dark;--color-bg:#141719;--color-surface:#
               </div>
               </sc-if>
               <div style="display:flex; flex-direction:column">
-                <h2 style="font-size:28px; margin:0 0 12px">Documentos por semana</h2>
+                <h2 style="font-size:28px; margin:0 0 12px">Documentos del curso</h2>
                 <sc-for list="{{ semanas }}" as="s" hint-placeholder-count="2">
                   <a href="{{ s.href }}" style="display:grid; grid-template-columns:56px minmax(0,1fr) auto; gap:16px; align-items:center; padding:18px 8px; border-top:1px solid var(--color-divider); text-decoration:none; color:var(--color-text)" style-hover="background:color-mix(in srgb, var(--color-accent) 6%, transparent)">
                     <span style="font-family:var(--font-heading); font-size:40px; line-height:1; color:var(--color-accent)">{{ s.num }}</span>
                     <span style="display:flex; flex-direction:column; gap:2px">
-                      <span style="font-family:var(--font-heading); font-weight:600; font-size:20px">{{ s.tema }}</span>
+                      <span style="font-family:var(--font-heading); font-weight:600; font-size:20px">{{ s.tituloResumen }}</span>
                       <span style="font-size:13px; color:var(--color-neutral-700)">{{ s.lista }}</span>
                     </span>
                     <span style="font-size:13px; color:var(--color-neutral-700)">{{ s.countTxt }}</span>
@@ -551,12 +551,16 @@ class Component extends DCLogic {
     const pad = n => String(n).padStart(2, '0');
     const tipos = { lectura: 'Lectura', codigo: 'Código', ejercicio: 'Ejercicio', enlaces: 'Enlaces', quiz: 'Quiz' };
     const href = (c, m) => '#/c/' + c + (m ? '/' + m : '');
+    const semanasTxt = c => {
+      const n = c.semanas.filter(s => s.tipo !== 'extra').length;
+      return n + (n === 1 ? ' semana' : ' semanas');
+    };
     const plano = c => c.semanas.flatMap((s, si) => s.materiales.map(m => ({ ...m, si, semanaTxt: s.titulo + ' · ' + s.tema, href: href(c.id, m.id), tipoLabel: tipos[m.tipo] || m.tipo })));
     const cards = cursos.map((c, i) => {
       const f = plano(c); const ult = f[f.length - 1];
       return {
         ...c, num: pad(i + 1), href: href(c.id),
-        semanasTxt: c.semanas.length + (c.semanas.length === 1 ? ' semana' : ' semanas'),
+        semanasTxt: semanasTxt(c),
         matsTxt: f.length + (f.length === 1 ? ' material' : ' materiales'),
         ultimo: ult ? ult.titulo : '—',
         recientes: f.slice(-3).reverse().map(m => ({ titulo: m.titulo, tipo: m.tipoLabel, semana: c.semanas[m.si].titulo, href: m.href }))
@@ -579,8 +583,11 @@ class Component extends DCLogic {
         };
       });
       const sel = si === semSel;
+      const extra = s.tipo === 'extra';
+      const num = extra ? '+' : pad(si + 1);
       return {
-        titulo: s.titulo, tema: s.tema, num: pad(si + 1), materiales: ms, countTxt: ms.length + (ms.length === 1 ? ' documento' : ' documentos'),
+        titulo: s.titulo, tema: s.tema, num, materiales: ms, countTxt: ms.length + (ms.length === 1 ? ' documento' : ' documentos'),
+        tabTitulo: extra ? s.titulo : 'S' + num, tituloResumen: extra ? s.titulo : s.tema,
         href: ms[0] ? ms[0].href : href(curso.id),
         lista: ms.map(m => m.titulo).join(' · '),
         tabBg: sel ? 'var(--color-accent)' : 'var(--color-bg)', tabFg: sel ? 'var(--color-bg)' : 'var(--color-text)',
@@ -630,7 +637,7 @@ class Component extends DCLogic {
       cards, destacado: cards[0] || { recientes: [] }, resto: cards.slice(1),
       isCurso, isA: v === 'indice', isB: v === 'bitacora', isC: v === 'panel',
       cursoHref: curso ? href(curso.id) : '#/', cursoTitulo: curso?.titulo || '', cursoCodigo: curso?.codigo || '', cursoDesc: curso?.descripcion || '',
-      cursoResumen: curso ? curso.semanas.length + (curso.semanas.length === 1 ? ' semana' : ' semanas') + ' · ' + flat.length + ' materiales' : '',
+      cursoResumen: curso ? semanasTxt(curso) + ' · ' + flat.length + ' materiales' : '',
       semanas, semanaActual: semanas[semSel] || { materiales: [] },
       layoutDir: narrow ? 'column' : 'row',
       sbDisplay: narrow ? (menu ? 'flex' : 'none') : (sidebarCollapsed ? 'none' : 'flex'),

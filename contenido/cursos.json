@@ -98,6 +98,20 @@
               "nuevo": true
             }
           ]
+        },
+        {
+          "titulo": "Extra",
+          "tema": "Material complementario",
+          "tipo": "extra",
+          "materiales": [
+            {
+              "id": "extra-diccionario-expresiones-n8n",
+              "titulo": "Diccionario práctico de expresiones en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/12-extra-diccionario-expresiones-n8n.md",
+              "nuevo": true
+            }
+          ]
         }
       ]
     }

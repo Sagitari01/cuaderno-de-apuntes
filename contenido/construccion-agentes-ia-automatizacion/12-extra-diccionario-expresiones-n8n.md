@@ -1,0 +1,234 @@
+<!-- secciones: desplegables -->
+
+# Diccionario práctico de expresiones en n8n
+
+Busca una tarea en las tablas, copia la expresión en un campo en modo **Expression** y compara el resultado. Los ejemplos se basan en un pedido ficticio y complementan el apunte [Cómo transformar y encaminar datos en n8n](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/n8n-transformar-encaminar-datos).
+
+## Datos para probar los ejemplos
+
+1. Crea un flujo **Manual Trigger → Edit Fields → Edit Fields**.
+2. Llama **Pedidos de ejemplo** al primer Edit Fields, selecciona **Mode → JSON Output** y pega el siguiente objeto.
+3. En el segundo Edit Fields, agrega un campo en modo **Expression**. Elige el tipo que corresponda al resultado, como **String**, **Number**, **Boolean** o **Array**. Selecciona **Include in Output → All Input Fields** cuando quieras conservar también los campos originales.
+
+```json
+{
+  "pedido_id": "P-1042",
+  "Nombre completo": "Ana Muñoz",
+  "cliente": "  Ana Muñoz  ",
+  "tipo": " vip ",
+  "correo": "  ANA@EJEMPLO.COM  ",
+  "contacto": "Contacto: ana@ejemplo.com",
+  "monto": 10001,
+  "monto_con_iva": 11901,
+  "monto_texto": "8500",
+  "descuento": 0.20,
+  "stock": 0,
+  "activo": false,
+  "referencia": null,
+  "comentario": "",
+  "cliente_datos": { "direccion": { "comuna": "Santiago" } },
+  "productos": [
+    { "nombre": "Cuaderno", "cantidad": 2, "precio": 3000 },
+    { "nombre": "Lápiz", "cantidad": 1, "precio": 4001 }
+  ],
+  "etiquetas": ["vip", "correo", "vip"],
+  "fecha": "2026-11-19T23:30:00Z",
+  "detalle_json": "{\"canal\":\"web\",\"prioridad\":2}"
+}
+```
+
+Los ejemplos con `$json` usan este pedido. En la columna **Resultado**, las comillas alrededor de un valor indican que es texto.
+
+[Configuración de Edit Fields](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set)
+
+## Datos del pedido y de otros nodos
+
+| Expresión o método | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `$json.campo` | Leer un campo del ítem actual. | `{{ $json.pedido_id }}` | `"P-1042"` |
+| `$json["nombre del campo"]` | Leer una clave que contiene espacios. | `{{ $json["Nombre completo"] }}` | `"Ana Muñoz"` |
+| Propiedades anidadas | Llegar a un campo dentro de otros objetos. | `{{ $json.cliente_datos.direccion.comuna }}` | `"Santiago"` |
+| Índice `[0]` | Leer el primer elemento de una lista. | `{{ $json.productos[0].nombre }}` | `"Cuaderno"` |
+| `$itemIndex` | Obtener la posición del ítem actual, desde cero. | `{{ $itemIndex }}` | `0` |
+| `$("Nodo").item` | Leer el ítem anterior vinculado al que se está procesando. | `{{ $("Pedidos de ejemplo").item.json.pedido_id }}` | `"P-1042"` |
+| `$("Nodo").first()` | Leer el primer ítem que entregó ese nodo. | `{{ $("Pedidos de ejemplo").first().json.pedido_id }}` | `"P-1042"` |
+| `$("Nodo").all()` | Obtener todos los ítems de un nodo. Aquí se cuentan con `.length`. | `{{ $("Pedidos de ejemplo").all().length }}` | `1` |
+| `$input.all()` | Obtener todos los ítems que entran al nodo actual. | `{{ $input.all().length }}` | `1` |
+
+`$json.productos.length` cuenta productos dentro de **un pedido**. `$("Pedidos de ejemplo").all().length` cuenta los **ítems** que entregó el nodo. Para relacionar un pedido con su registro de origen, usa `.item` cuando el flujo conserve ese vínculo.
+
+[Referencia de datos entre nodos](https://docs.n8n.io/build/work-with-data/reference-data/reference-previous-nodes)
+
+## Condiciones y valores faltantes
+
+| Expresión o método | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `>` | Verificar si el monto es positivo. | `{{ $json.monto > 0 }}` | `true` |
+| `===` | Comparar valor y tipo. | `{{ $json.monto_texto === 8500 }}` | `false` |
+| `&&` | Exigir que se cumplan ambas condiciones. | `{{ $json.monto > 0 && $json.stock > 0 }}` | `false` |
+| `!` | Invertir un valor booleano. | `{{ !$json.activo }}` | `true` |
+| `condición ? a : b` | Elegir un valor según una condición. | `{{ $json.monto > 0 ? "Válido" : "Revisar" }}` | `"Válido"` |
+| `$if()` | Elegir entre dos valores con una función de n8n. | `{{ $if($json.stock > 0, "Disponible", "Sin stock") }}` | `"Sin stock"` |
+| `??` | Usar un valor alternativo si el dato es `null` o `undefined`. | `{{ $json.referencia ?? "Sin referencia" }}` | `"Sin referencia"` |
+| `?.` | Leer una propiedad cuando podría faltar el objeto. | `{{ $json.envio?.comuna ?? "Sin comuna" }}` | `"Sin comuna"` |
+| `$ifEmpty()` | Reemplazar un valor vacío, como `""`, `null` o una lista vacía. | `{{ $ifEmpty($json.comentario, "Sin comentario") }}` | `"Sin comentario"` |
+
+`??` conserva valores válidos como `0` y `false`. Por ejemplo, `{{ $json.stock ?? 10 }}` devuelve `0`. Para reemplazar un texto vacío, usa `$ifEmpty()`. Si el dato puede contener solo espacios, aplica `.trim()` primero.
+
+[Funciones de n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/root) · [Operadores de JavaScript](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Expressions_and_operators)
+
+## Texto
+
+| Método | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `trim()` | Quitar espacios al inicio y al final. | `{{ $json.cliente.trim() }}` | `"Ana Muñoz"` |
+| `toLowerCase()` | Pasar a minúsculas. | `{{ $json.correo.trim().toLowerCase() }}` | `"ana@ejemplo.com"` |
+| `toUpperCase()` | Pasar a mayúsculas. | `{{ $json.tipo.trim().toUpperCase() }}` | `"VIP"` |
+| `includes()` | Comprobar si aparece un fragmento. | `{{ $json.pedido_id.includes("1042") }}` | `true` |
+| `startsWith()` | Comprobar si el texto empieza con un prefijo. | `{{ $json.pedido_id.startsWith("P-") }}` | `true` |
+| `endsWith()` | Comprobar si el texto termina con un sufijo. | `{{ $json.correo.trim().toLowerCase().endsWith("@ejemplo.com") }}` | `true` |
+| `replace()` | Reemplazar la primera aparición de un texto literal. | `{{ "VIP VIP".replace("VIP", "Preferente") }}` | `"Preferente VIP"` |
+| `replaceAll()` | Reemplazar todas las apariciones. | `{{ "orden_2026_vip".replaceAll("_", "-") }}` | `"orden-2026-vip"` |
+| `split()` | Dividir un texto usando un separador. | `{{ $json.pedido_id.split("-") }}` | `["P","1042"]` |
+| `slice()` | Extraer una parte del texto por posición. | `{{ $json.pedido_id.slice(2) }}` | `"1042"` |
+| `length` | Obtener la longitud del texto. | `{{ $json.pedido_id.length }}` | `6` |
+| `isEmail()` | Comprobar si el texto tiene formato de correo. Función de n8n. | `{{ $json.correo.trim().isEmail() }}` | `true` |
+| `extractEmail()` | Obtener el primer correo de un texto. Función de n8n. | `{{ $json.contacto.extractEmail() }}` | `"ana@ejemplo.com"` |
+| `toSnakeCase()` | Convertir un nombre a minúsculas separadas por guiones bajos. Función de n8n. | `{{ "Monto con IVA".toSnakeCase() }}` | `"monto_con_iva"` |
+
+[Texto en n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/string) · [JavaScript String en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/String)
+
+## Números, porcentajes y montos
+
+| Método u operación | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `Number()` | Convertir un texto numérico para hacer cálculos. | `{{ Number($json.monto_texto) }}` | `8500` |
+| `toNumber()` | Convertir un texto numérico mediante un método de n8n. | `{{ $json.monto_texto.toNumber() }}` | `8500` |
+| `Number.isFinite()` | Comprobar si se obtuvo un número finito. | `{{ Number.isFinite(Number("sin monto")) }}` | `false` |
+| `Math.round()` | Redondear al entero más cercano. | `{{ Math.round($json.monto * 1.19) }}` | `11901` |
+| `Math.floor()` | Redondear hacia abajo. | `{{ Math.floor(12.7) }}` | `12` |
+| `Math.ceil()` | Redondear hacia arriba, por ejemplo al contar cajas necesarias. | `{{ Math.ceil(25 / 12) }}` | `3` |
+| `Math.abs()` | Obtener la magnitud sin el signo. | `{{ Math.abs(-500) }}` | `500` |
+| `Math.min()` | Quedarse con el menor valor para aplicar un tope. | `{{ Math.min($json.monto, 10000) }}` | `10000` |
+| `Math.max()` | Quedarse con el mayor valor para aplicar un mínimo. | `{{ Math.max(0, -500) }}` | `0` |
+| `toFixed()` | Mostrar un número con una cantidad fija de decimales. Devuelve texto. | `{{ (19.5).toFixed(2) }}` | `"19.50"` |
+| Multiplicar por `100` | Mostrar un descuento fraccionario como porcentaje. | `{{ $json.descuento * 100 }}%` | `"20%"` |
+| Multiplicar por `1 - descuento` | Calcular cuánto se paga después del descuento. | `{{ Math.round($json.monto_con_iva * (1 - $json.descuento)) }}` | `9521` |
+
+En el ejemplo se guarda `0.20` para un 20 % de descuento. Si un formulario entrega `20`, divídelo por `100` antes del cálculo. Al validar un monto recibido como texto, comprueba primero que haya contenido. `Number("")` devuelve `0`.
+
+[Números en n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/number) · [JavaScript Math en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math)
+
+## Listas de productos y etiquetas
+
+| Método | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `length` | Contar los elementos de una lista. | `{{ $json.productos.length }}` | `2` |
+| `map()` | Transformar cada elemento, por ejemplo obtener solo el nombre. | `{{ $json.productos.map(p => p.nombre) }}` | `["Cuaderno","Lápiz"]` |
+| `filter()` | Conservar los elementos que cumplen una condición. | `{{ $json.productos.filter(p => p.cantidad > 1).map(p => p.nombre) }}` | `["Cuaderno"]` |
+| `find()` | Obtener el primer elemento que cumple una condición. | `{{ $json.productos.find(p => p.nombre === "Lápiz")?.precio ?? 0 }}` | `4001` |
+| `some()` | Comprobar si al menos un elemento cumple. | `{{ $json.productos.some(p => p.cantidad > 1) }}` | `true` |
+| `every()` | Comprobar si todos los elementos cumplen. | `{{ $json.productos.every(p => p.precio > 0) }}` | `true` |
+| `includes()` | Buscar un valor dentro de una lista sencilla. | `{{ $json.etiquetas.includes("vip") }}` | `true` |
+| `join()` | Juntar elementos en un texto. | `{{ $json.productos.map(p => p.nombre).join(", ") }}` | `"Cuaderno, Lápiz"` |
+| `reduce()` | Acumular valores en un solo resultado. | `{{ $json.productos.reduce((total, p) => total + p.cantidad * p.precio, 0) }}` | `10001` |
+| `sort()` | Ordenar con un criterio. `slice()` crea antes una copia de la lista. | `{{ $json.productos.slice().sort((a, b) => b.precio - a.precio).map(p => p.nombre) }}` | `["Lápiz","Cuaderno"]` |
+| `removeDuplicates()` | Eliminar elementos repetidos. Función de n8n. | `{{ $json.etiquetas.removeDuplicates() }}` | `["vip","correo"]` |
+
+`find()` devuelve un elemento y `filter()` arma una lista. Con una lista vacía, `some()` devuelve `false` y `every()` devuelve `true`. Si tu regla exige que haya al menos un producto antes de verificar sus precios, comprueba también `length > 0`.
+
+[Listas en n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/array)
+
+## Fechas y horas
+
+| Método o variable | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `$now.toISO()` | Registrar la fecha y hora de ejecución en formato ISO. | `{{ $now.toISO() }}` | Fecha y hora de ejecución |
+| `$today.toISODate()` | Obtener la fecha del día en formato ISO. | `{{ $today.toISODate() }}` | Fecha de ejecución |
+| `DateTime.fromISO()` | Interpretar una fecha que llega como texto ISO. | `{{ DateTime.fromISO($json.fecha, { zone: "utc" }).toISODate() }}` | `"2026-11-19"` |
+| `toFormat()` | Mostrar una fecha en un formato legible. | `{{ DateTime.fromISO($json.fecha, { zone: "utc" }).toFormat("dd/MM/yyyy") }}` | `"19/11/2026"` |
+| `plus()` | Calcular una fecha dos días después. | `{{ DateTime.fromISO($json.fecha, { zone: "utc" }).plus({ days: 2 }).toISODate() }}` | `"2026-11-21"` |
+| `minus()` | Calcular una fecha un día antes. | `{{ DateTime.fromISO($json.fecha, { zone: "utc" }).minus({ days: 1 }).toISODate() }}` | `"2026-11-18"` |
+| `setZone()` | Mostrar el mismo instante en la hora local de otra zona. | `{{ DateTime.fromISO($json.fecha).setZone("America/Santiago").toFormat("HH:mm") }}` | `"20:30"` |
+
+`$now` y `$today` usan la zona horaria de la ejecución. Los ejemplos con fechas fijas indican expresamente si muestran la fecha en UTC o la hora en Santiago.
+
+[Fechas en n8n con Luxon](https://docs.n8n.io/build/work-with-data/handle-special-data-types/work-with-dates-and-times) · [Referencia DateTime](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/datetime)
+
+## JSON y datos para APIs
+
+| Método | Para qué sirve | Ejemplo en n8n | Resultado |
+|---|---|---|---|
+| `JSON.parse()` | Convertir texto JSON válido en un objeto o valor. | `{{ JSON.parse($json.detalle_json).canal }}` | `"web"` |
+| `parseJson()` | Leer JSON con un método de n8n y usar un valor alternativo si el texto es inválido. | `{{ "JSON inválido".parseJson()?.canal ?? "Sin canal" }}` | `"Sin canal"` |
+| `JSON.stringify()` | Convertir un objeto en texto JSON para enviarlo o registrarlo. | `{{ JSON.stringify({ id: $json.pedido_id, monto: $json.monto }) }}` | `'{"id":"P-1042","monto":10001}'` |
+| `Object.keys()` | Obtener los nombres de los campos de un objeto. | `{{ Object.keys($json.productos[0]) }}` | `["nombre","cantidad","precio"]` |
+| `Array.isArray()` | Verificar que el dato recibido sea una lista. | `{{ Array.isArray($json.productos) }}` | `true` |
+| `encodeURIComponent()` | Codificar un valor que irá como componente de una URL. | `{{ encodeURIComponent($json.cliente.trim()) }}` | `"Ana%20Mu%C3%B1oz"` |
+
+`JSON.parse()` genera un error ante JSON mal formado. Entrega un objeto directamente cuando el campo del nodo espera JSON estructurado. Aplica `JSON.stringify()` cuando el destino espera **texto**.
+
+[JSON en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/JSON) · [Texto en n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference/string) · [Componentes de URL en MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+
+## Equivalencias en Python y Java
+
+Los campos **Expression** usan sintaxis de JavaScript y funciones propias de n8n. Python se ejecuta dentro del flujo mediante un nodo **Code → Python (Native)** cuando está disponible. Los ejemplos de Java se ejecutan en un entorno Java.
+
+En la tabla, `texto` vale `" vip "`, `pedido_id` vale `"P-1042"` y `nombres` contiene `["Cuaderno", "Lápiz"]`. En Java, `nombres` puede ser un `String[]` o un `List<String>`.
+
+| Tarea | Expresión n8n | Python | Java |
+|---|---|---|---|
+| Limpiar espacios | `{{ $json.tipo.trim() }}` | `texto.strip()` | `texto.strip()` |
+| Normalizar a mayúsculas | `{{ $json.tipo.trim().toUpperCase() }}` | `texto.strip().upper()` | `texto.strip().toUpperCase(java.util.Locale.ROOT)` |
+| Buscar un fragmento | `{{ $json.pedido_id.includes("1042") }}` | `"1042" in pedido_id` | `pedido_id.contains("1042")` |
+| Separar por un guion | `{{ $json.pedido_id.split("-") }}` | `pedido_id.split("-")` | `pedido_id.split("-")` |
+| Juntar nombres | `{{ $json.productos.map(p => p.nombre).join(", ") }}` | `", ".join(nombres)` | `String.join(", ", nombres)` |
+| Convertir texto a entero | `{{ Number("8500") }}` | `int("8500")` | `Integer.parseInt("8500")` |
+| Redondear al entero más cercano | `{{ Math.round(12.7) }}` | `round(12.7)` | `Math.round(12.7)` |
+| Mostrar dos decimales | `{{ (19.5).toFixed(2) }}` | `f"{19.5:.2f}"` | `String.format(java.util.Locale.ROOT, "%.2f", 19.5)` |
+
+En los empates, JavaScript y Java redondean hacia el entero mayor y Python elige el entero par. `Math.round(12.5)` da `13` y `round(12.5)` da `12`.
+
+### Ejemplo de Python en un nodo Code
+
+Coloca un nodo **Code** después del pedido de ejemplo, selecciona **Python (Native)** y el modo **Run Once for Each Item**. Este código agrega el tipo normalizado y el total al ítem de entrada.
+
+```python
+pedido = _item["json"]
+pedido["tipo_normalizado"] = pedido["tipo"].strip().upper()
+pedido["total_a_pagar"] = round(
+    pedido["monto_con_iva"] * (1 - pedido["descuento"])
+)
+return _item
+```
+
+Con el pedido de ejemplo obtendrás `"VIP"` y `9521`.
+
+[Nodo Code de n8n](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.code#python-native) · [Texto en Python](https://docs.python.org/3/library/stdtypes.html#string-methods) · [Funciones de Python](https://docs.python.org/3/library/functions.html#round) · [Java String](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html) · [Java Math](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Math.html)
+
+## Ejemplo completo con IVA y descuentos
+
+En un **Edit Fields**, conserva los campos originales y crea estos tres campos.
+
+| Campo | Tipo | Expresión |
+|---|---|---|
+| `cliente_limpio` | String | `{{ $json.cliente.trim() }}` |
+| `tipo_normalizado` | String | `{{ $json.tipo.trim().toUpperCase() }}` |
+| `total_a_pagar` | Number | `{{ Math.round($json.monto_con_iva * (1 - $json.descuento)) }}` |
+
+En **otro** Edit Fields, agrega `resumen` como **String**. Ese nodo ya recibe los tres campos calculados.
+
+```text
+{{ $json.cliente_limpio }} ({{ $json.tipo_normalizado }}): paga ${{ $json.total_a_pagar }} con {{ $json.descuento * 100 }}% de descuento
+```
+
+> Ana Muñoz (VIP): paga $9521 con 20% de descuento
+
+**Variante con descuento normal.** Cambia `descuento` a `0.05` y `tipo` a `" normal "`. El resumen debería mostrar `NORMAL`, un total de `11306` y un descuento de `5%`.
+
+## Dónde seguir consultando
+
+- Empieza por la tabla de expresiones de uso común y continúa por el tipo de dato. [Diccionario oficial de n8n](https://docs.n8n.io/build/work-with-data/transform-data/expression-reference)
+- Distingue un ítem de n8n de una lista dentro de ese ítem. [Estructura de los datos en n8n](https://docs.n8n.io/build/work-with-data/understand-n8ns-data-structure)
+- Practica el acceso a objetos, listas y listas de objetos. [Flujo de práctica de expresiones](https://n8n.io/workflows/5271-learn-n8n-expressions-with-an-interactive-step-by-step-tutorial-for-beginners)
+- Prueba referencias con `$json` y transformaciones en campos. [Flujo de práctica de Edit Fields](https://n8n.io/workflows/6292-master-data-transformation-with-the-complete-set-node-guide/)
