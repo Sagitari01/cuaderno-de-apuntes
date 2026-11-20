@@ -96,6 +96,13 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/11-n8n-transformar-encaminar-datos.md",
               "nuevo": true
+            },
+            {
+              "id": "n8n-loops-subworkflows",
+              "titulo": "Loops y subworkflows en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/13-n8n-loops-subworkflows.md",
+              "nuevo": true
             }
           ]
         },
