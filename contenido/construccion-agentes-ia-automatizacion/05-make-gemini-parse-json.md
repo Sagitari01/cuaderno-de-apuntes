@@ -4,7 +4,7 @@ En el primer laboratorio aprendimos a clasificar solicitudes usando **reglas det
 
 El objetivo de esta lectura es comprender qué aporta un modelo de IA y cómo conectarlo a una automatización verificable. Este es el **Módulo 2**, independiente del cuaderno de conexiones y filtros del Módulo 1.
 
-> **Evidencias del laboratorio:** el archivo práctico de Skillnest incluye capturas reales del escenario, configuraciones de Groq, los cinco bloques del prompt, Parse JSON, filtros, mapeos y pruebas. Aquí explicamos la lógica para acompañar ese recorrido. Los ejemplos de salida que aparecen en esta lectura son ilustrativos salvo cuando se indique expresamente que corresponden al registro de pruebas del laboratorio.
+> **Sobre los ejemplos:** los ejemplos de salida que aparecen en esta lectura son ilustrativos.
 
 ## 1. ¿Qué problema resolvemos?
 

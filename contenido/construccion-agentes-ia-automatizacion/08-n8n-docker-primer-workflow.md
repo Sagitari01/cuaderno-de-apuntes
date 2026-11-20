@@ -60,7 +60,7 @@ Cuando n8n corre en tu equipo, necesita que el equipo y el servicio sigan encend
 
 ## 5. Instalar n8n con Docker
 
-Estos pasos quedan como referencia si quieres abrir n8n en tu equipo. Si en la sesión te entregan una carpeta con su propio `compose.yaml`, usa ese archivo. El siguiente ejemplo levanta una instancia local de n8n con SQLite.
+Estos pasos quedan como referencia si quieres abrir n8n en tu equipo. El siguiente ejemplo levanta una instancia local de n8n con SQLite.
 
 1. Instala **Docker Desktop** en Windows o macOS y ábrelo. En Linux también puedes usar **Docker Engine** con el complemento **Compose**. Para comprobar que tu terminal reconoce ambos comandos, ejecuta:
 
