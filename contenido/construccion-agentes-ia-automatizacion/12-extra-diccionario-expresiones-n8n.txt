@@ -1,7 +1,5 @@
 <!-- secciones: desplegables -->
 
-# Diccionario práctico de expresiones en n8n
-
 Busca una tarea en las tablas, copia la expresión en un campo en modo **Expression** y compara el resultado. Los ejemplos se basan en un pedido ficticio y complementan el apunte [Cómo transformar y encaminar datos en n8n](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/n8n-transformar-encaminar-datos).
 
 ## Datos para probar los ejemplos
