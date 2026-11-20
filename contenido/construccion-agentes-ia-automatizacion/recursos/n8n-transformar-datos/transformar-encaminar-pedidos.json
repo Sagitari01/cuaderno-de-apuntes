@@ -1,5 +1,5 @@
 {
-  "name": "Ayudantía n8n - Condiciones y transformación (Set, Filter, IF, Merge, Switch)",
+  "name": "Transformar y encaminar datos: pedidos de una tienda (Set, Filter, IF, Merge, Switch)",
   "nodes": [
     {
       "parameters": {},

@@ -6,23 +6,9 @@ El apunte tiene tres partes. Primero entiendes el loop, luego el subworkflow, y 
 
 Las capturas son de n8n 2.44.6. Si usas otra versión, los nombres de algunos menús pueden variar un poco.
 
-## Antes de empezar: recursos y caso
+## Antes de empezar: el caso
 
-### Descarga los recursos
-
-Los archivos de este apunte están en una carpeta de Drive. Puedes abrirla sin iniciar sesión y descargar lo que necesites.
-
-**[Abrir la carpeta de recursos 6.6](https://drive.google.com/drive/folders/1ZnjLzuOobFr9YqHUL8a-tp3Iq4B5LU9f)**
-
-| Archivo | Para qué sirve |
-| --- | --- |
-| `u21-clase10-subworkflow-vacio.json` | El subworkflow con solo su disparador. El cálculo lo agregas tú. |
-| `u21-clase10-principal-referencia.json` | El flujo principal completo. Solo falta indicarle a qué subworkflow debe llamar. |
-| `documentos/lote-10-documentos.json` | Los diez documentos de prueba. Ya vienen dentro del flujo principal. |
-| `documentos/lote-10-salida-esperada.json` | El resultado correcto por ruta, para comparar al final. |
-| `compose.yaml` | Levanta n8n con Docker. Con este archivo, n8n queda en `http://localhost:5690`. |
-
-Los archivos `.json` se importan desde el menú del editor, como verás en la parte práctica. Descárgalos tal cual: si los abres y los guardas desde un procesador de texto, dejan de importar.
+Los archivos que se importan en la práctica están al final de este apunte, en la sección **Workflows para importar**. Aquí solo necesitas conocer el caso.
 
 ### Los diez documentos
 
@@ -68,7 +54,7 @@ Esta tabla resume qué hace cada nodo del flujo principal con los datos del caso
 | Decidir ruta | Switch | 8 ítems | 2 por Contingencia, 2 por Revisión humana y 4 por Automático. |
 | Ruta contingencia, Ruta revisión y Ruta automática | Edit Fields | 2, 2 y 4 ítems | Los mismos ítems, con el campo `ruta`. |
 
-## 6.4 · Loops en n8n
+## Loops en n8n
 
 Normalmente un nodo de n8n se ejecuta una vez por cada ítem que recibe, así que muchas veces no necesitas un loop. El propio nodo **Loop Over Items** lo recuerda en su panel: «You may not need this node». Sirve cuando quieres **procesar los ítems por grupos**, por ejemplo para llamar a otro flujo o a un servicio con un lote a la vez en lugar de con todos de golpe. Con diez documentos el lote es pequeño, pero sirve para ver el patrón completo.
 
@@ -107,7 +93,7 @@ En la tercera pasada ya no queda ningún documento por entregar. El loop pasa a 
 
 **Dos consecuencias prácticas.** La primera: la cantidad de ejecuciones de «Normalizar documento» es la de lotes, dos en este caso, no la de documentos. La segunda: si falta la conexión de regreso, el loop entrega el primer lote y el flujo se detiene sin llegar nunca a `done`.
 
-## 6.5 · Subworkflows
+## Subworkflows
 
 ### Qué separamos del flujo principal
 
@@ -168,9 +154,9 @@ Para ver el contrato en acción, la Factura 4521 (proveedor P-101, monto 1250000
 
 El resultado se puede comprobar a mano: 1250000 dividido por 1,19 da 1050420,17, que se redondea a **1050420**, y 1250000 menos 1050420 da **199580**. Neto más IVA suman otra vez el monto total.
 
-## 6.6 · Laboratorio Calbuco paso a paso
+## Laboratorio Calbuco paso a paso
 
-Ahora armas todo. Necesitas n8n funcionando (si usas el `compose.yaml` de la carpeta de recursos, está en `http://localhost:5690`) y los archivos descargados. El orden importa: primero el subworkflow, porque el flujo principal necesita elegirlo.
+Ahora armas todo. Necesitas n8n funcionando (si todavía no lo instalas, parte por [Primer vistazo a n8n y Docker](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/n8n-docker-primer-workflow)) y los dos archivos de la sección **Workflows para importar**, al final de este apunte. El orden importa: primero el subworkflow, porque el flujo principal necesita elegirlo.
 
 Antes de ejecutar nada, haz una predicción y anótala. Con diez documentos y lotes de cinco, ¿cuántas veces esperas que se ejecute el subworkflow? ¿Cuántos documentos esperas que se descarten? ¿En qué rutas esperas que caiga cada uno? Las compararás con el resultado al final.
 
@@ -178,7 +164,7 @@ Las notas verdes de las capturas son de apoyo: se agregaron para este apunte y l
 
 ### Parte 1: crear el subworkflow
 
-**Paso 1. Importar el archivo.** Crea un workflow nuevo. Abre el menú de tres puntos junto al nombre, elige **Import** y luego **From file**. Selecciona `u21-clase10-subworkflow-vacio.json`.
+**Paso 1. Importar el archivo.** Crea un workflow nuevo. Abre el menú de tres puntos junto al nombre, elige **Import** y luego **From file**. Selecciona `subworkflow-normalizar-documento-inicial.json`.
 
 <figure class="lamina-apunte" style="position:relative;max-width:700px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/08-menu-import.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="1100" height="721" alt="Menú de tres puntos de un workflow en n8n con la opción Import y su submenú From URL y From file."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/08-menu-import.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar Menú de tres puntos de un workflow en n8n con la opción Impo" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Menú de tres puntos del workflow. <strong>①</strong> <strong>Import</strong> abre un submenú. <strong>②</strong> <strong>From file</strong> abre el selector de archivos.</figcaption></figure>
 
@@ -186,9 +172,9 @@ Las notas verdes de las capturas son de apoyo: se agregaron para este apunte y l
 
 <figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/09-subworkflow-importado.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="1700" height="1057" alt="Subworkflow recién importado: el nodo Cuando lo llaman y una nota amarilla, con el nombre Normalizar documento (vacío)."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/09-subworkflow-importado.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar Subworkflow recién importado: el nodo Cuando lo llaman y una" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Subworkflow recién importado. <strong>①</strong> El nombre dice «Normalizar documento (vacío)»: cámbialo a «Normalizar documento». <strong>②</strong> El disparador «Cuando lo llaman». <strong>③</strong> La nota amarilla viene en el archivo. Todavía no hay ningún nodo de cálculo.</figcaption></figure>
 
-**Paso 3. Revisar el contrato.** Haz doble clic en «Cuando lo llaman». Comprueba que **Input data mode** diga «Define using fields below» y que haya tres campos: `documento`, `proveedor` y `monto_total`, como en la figura de la sección 6.5.
+**Paso 3. Revisar el contrato.** Haz doble clic en «Cuando lo llaman». Comprueba que **Input data mode** diga «Define using fields below» y que haya tres campos: `documento`, `proveedor` y `monto_total`, como en la figura de la sección «Subworkflows».
 
-**Paso 4. Agregar el cálculo.** Cierra el nodo y agrega un **Edit Fields** conectado a la salida del disparador. Ponle el nombre **Normalizar montos** y mantén **Manual Mapping**. Con **Add Field** crea los cinco campos de la tabla de expresiones de la sección 6.5, cada uno con su tipo y su expresión. Deja **Include Other Input Fields** desactivado. Guarda con Ctrl+S (n8n 2.44.6 también guarda los cambios automáticamente).
+**Paso 4. Agregar el cálculo.** Cierra el nodo y agrega un **Edit Fields** conectado a la salida del disparador. Ponle el nombre **Normalizar montos** y mantén **Manual Mapping**. Con **Add Field** crea los cinco campos de la tabla de expresiones de la sección «Subworkflows», cada uno con su tipo y su expresión. Deja **Include Other Input Fields** desactivado. Guarda con Ctrl+S (n8n 2.44.6 también guarda los cambios automáticamente).
 
 **Paso 5. Probar el nodo (opcional).** Para ver el resultado sin esperar al flujo principal, abre «Cuando lo llaman», elige **set mock data** y pega este documento de prueba:
 
@@ -200,9 +186,9 @@ Guárdalo, abre «Normalizar montos» y pulsa **Execute step**. En OUTPUT debes 
 
 ### Parte 2: importar el flujo principal y enlazarlo
 
-**Paso 6. Importar el principal.** Crea otro workflow nuevo, elige **Import** y luego **From file**, y selecciona `u21-clase10-principal-referencia.json`. Se llama «Calbuco 6.6 Flujo principal». Debes ver el flujo completo, con el nodo «Recorrer de a cinco» (el Loop Over Items) y el nodo «Normalizar documento» (un Execute Workflow).
+**Paso 6. Importar el principal.** Crea otro workflow nuevo, elige **Import** y luego **From file**, y selecciona `flujo-principal-calbuco.json`. Se llama «Calbuco Flujo principal». Debes ver el flujo completo, con el nodo «Recorrer de a cinco» (el Loop Over Items) y el nodo «Normalizar documento» (un Execute Workflow).
 
-<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/10-principal-importado.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="1700" height="1057" alt="Flujo principal Calbuco 6.6 recién importado, con trece nodos y notas de apoyo; el nodo Normalizar documento todavía muestra un marcador como subworkflow."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/10-principal-importado.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar Flujo principal Calbuco 6.6 recién importado, con trece nodo" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Flujo principal recién importado (las notas verdes son de apoyo y tu archivo no las trae). <strong>①</strong> «Normalizar documento» todavía dice «Workflow: SUBWORKFLOW_ID»: aún no apunta a tu subworkflow. <strong>②</strong> «Recorrer de a cinco», el Loop Over Items. <strong>③</strong> La nota 3 recuerda qué hacer en el nodo de la llamada.</figcaption></figure>
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/10-principal-importado.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="1700" height="1057" alt="Flujo principal de Calbuco recién importado, con trece nodos y notas de apoyo; el nodo Normalizar documento todavía muestra un marcador como subworkflow."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-loops-subworkflows/10-principal-importado.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar Flujo principal de Calbuco recién importado, con trece nodos" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Flujo principal recién importado (las notas verdes son de apoyo y tu archivo no las trae). <strong>①</strong> «Normalizar documento» todavía dice «Workflow: SUBWORKFLOW_ID»: aún no apunta a tu subworkflow. <strong>②</strong> «Recorrer de a cinco», el Loop Over Items. <strong>③</strong> La nota 3 recuerda qué hacer en el nodo de la llamada.</figcaption></figure>
 
 El nodo «Normalizar documento» aún no apunta a tu subworkflow. Cada instalación de n8n le da su propio identificador a cada workflow, así que el archivo trae un marcador en su lugar.
 
@@ -246,7 +232,7 @@ Los contadores deben decir:
 - **8** ítems después de «Solo con monto».
 - **2**, **2** y **4** en las tres rutas.
 
-Recuerda que sobre las conexiones del loop el lienzo muestra «10 items total»: es la suma de las dos pasadas. Los 5 ítems de cada pasada están en el panel del loop (sección 6.4).
+Recuerda que sobre las conexiones del loop el lienzo muestra «10 items total»: es la suma de las dos pasadas. Los 5 ítems de cada pasada están en el panel del loop (sección «Loops en n8n»).
 
 **Paso 12. Revisar los descartados.** Abre «Solo con monto». El nodo Filter deja pasar 8 ítems por **Kept** y manda 2 a **Discarded**. En el lienzo solo se ve la salida Kept, así que los descartados se revisan en esta pestaña.
 
@@ -262,7 +248,7 @@ Recuerda que sobre las conexiones del loop el lienzo muestra «10 items total»:
 
 En «Ruta automática» fíjate en Factura 4550: las columnas con datos del proveedor aparecen como `undefined`. Su proveedor, P-999, no está en la tabla de proveedores, así que el Merge no le encontró datos. Como no está suspendido y su monto es menor que 1000000, las reglas la mandan a Automático.
 
-**Paso 14. Comparar con el resultado esperado.** Compara lo que viste con esta tabla y con `lote-10-salida-esperada.json`. Si tu predicción difería en algo, anota por qué.
+**Paso 14. Comparar con el resultado esperado.** Compara lo que viste con esta tabla. Si tu predicción difería en algo, anota por qué.
 
 | Documento | Resultado | Por qué |
 | --- | --- | --- |
@@ -289,7 +275,7 @@ El loop tuvo tres pasadas y el subworkflow solo dos ejecuciones, porque la terce
 
 El mismo subworkflow puede usarlo cualquier otro flujo. Para comprobarlo, arma un segundo flujo mínimo que normalice una sola factura.
 
-**Paso 16. Crear el segundo flujo.** Crea un workflow nuevo y llámalo **Calbuco 6.6 Segundo llamador**. Agrega tres nodos y conéctalos en este orden:
+**Paso 16. Crear el segundo flujo.** Crea un workflow nuevo y llámalo **Calbuco Segundo llamador**. Agrega tres nodos y conéctalos en este orden:
 
 1. Un **Manual Trigger**.
 2. Un **Edit Fields** llamado **Un documento**, con tres campos: `documento` (String) con el texto `Factura 9999`, `proveedor` (String) con el texto `P-101` y `monto_total` (Number) con el valor `595000`.
@@ -318,8 +304,8 @@ El segundo flujo no copió ningún cálculo: llamó al mismo subworkflow que usa
 | Salen diez ítems por `loop` y nada por `done`. | «Normalizar documento» no está conectado de vuelta al loop. |
 | El subworkflow devuelve campos vacíos. | Los campos de **Workflow Inputs** deben ser expresiones y llamarse exactamente `documento`, `proveedor` y `monto_total`. |
 | `monto_neto` sale en `null`. | El documento no trae monto. Es lo esperado: «Solo con monto» lo descarta. |
-| El resultado no es 2, 2 y 4. | Compara las expresiones de `monto_neto` e `iva` con las de la sección 6.5: un carácter distinto cambia el monto. |
-| El archivo `.json` no se importa. | Descárgalo de nuevo desde la carpeta de recursos y no lo abras ni lo guardes desde un procesador de texto. |
+| El resultado no es 2, 2 y 4. | Compara las expresiones de `monto_neto` e `iva` con las de la sección «Subworkflows»: un carácter distinto cambia el monto. |
+| El archivo `.json` no se importa. | Descárgalo de nuevo desde la sección «Workflows para importar» y no lo abras ni lo guardes desde un procesador de texto. |
 
 ## Autoevaluación
 
@@ -363,15 +349,15 @@ El segundo flujo no copió ningún cálculo: llamó al mismo subworkflow que usa
 
 ## Workflows para importar
 
-Estos son los dos archivos que se importan en la parte práctica. Son los mismos que están en la carpeta de recursos 6.6; aquí los tienes a mano para descargarlos directamente.
+Estos son los dos archivos que se importan en la parte práctica.
 
 | Archivo | Qué trae | Dónde se usa |
 | --- | --- | --- |
-| `u21-clase10-subworkflow-vacio.json` | El subworkflow con solo el disparador «Cuando lo llaman» y una nota. El cálculo lo agregas tú. | Parte 1, paso 1. |
-| `u21-clase10-principal-referencia.json` | El flujo principal completo, con el loop. Falta elegir el subworkflow en «Normalizar documento». | Parte 2, paso 6. |
+| `subworkflow-normalizar-documento-inicial.json` | El subworkflow con solo el disparador «Cuando lo llaman» y una nota. El cálculo lo agregas tú. | Parte 1, paso 1. |
+| `flujo-principal-calbuco.json` | El flujo principal completo, con el loop. Falta elegir el subworkflow en «Normalizar documento». | Parte 2, paso 6. |
 
-<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/u21-clase10-subworkflow-vacio.json" download="u21-clase10-subworkflow-vacio.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar u21-clase10-subworkflow-vacio.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/subworkflow-normalizar-documento-inicial.json" download="subworkflow-normalizar-documento-inicial.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar subworkflow-normalizar-documento-inicial.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
 
-<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/u21-clase10-principal-referencia.json" download="u21-clase10-principal-referencia.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar u21-clase10-principal-referencia.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-loops-subworkflows/flujo-principal-calbuco.json" download="flujo-principal-calbuco.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar flujo-principal-calbuco.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
 
 Impórtalos en ese orden: primero el subworkflow, que completas y renombras a «Normalizar documento», y después el flujo principal. En los dos casos el menú es **Import** y luego **From file**, como en el paso 1. El segundo flujo de la Parte 4 lo armas tú, así que no tiene archivo. Descarga los archivos tal cual: si los abres y los guardas desde un procesador de texto, dejan de importar.

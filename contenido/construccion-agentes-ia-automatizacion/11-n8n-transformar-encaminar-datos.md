@@ -377,7 +377,7 @@ En el Switch, las pestañas deben mostrar **Bajo (2 items)** con B y F, **Medio 
 
 Si quieres comprobar tu flujo, o probar el caso completo sin armarlo nodo por nodo, descarga el workflow de este apunte e impórtalo en n8n. Trae los trece nodos del flujo, con los seis pedidos ya cargados en **Pedidos de ejemplo**, y ocho notas adhesivas que explican cada paso en el lienzo. No usa credenciales ni llamadas externas, así que funciona sin configurar nada.
 
-<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-transformar-datos/ayudantia-condiciones-n8n.json" download="ayudantia-condiciones-n8n.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar ayudantia-condiciones-n8n.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
+<a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-transformar-datos/transformar-encaminar-pedidos.json" download="transformar-encaminar-pedidos.json" rel="noopener" style="color:var(--color-text);text-decoration:none;margin:12px 0 4px">Descargar transformar-encaminar-pedidos.json <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></a>
 
 Para importarlo:
 

@@ -31,8 +31,8 @@
       }
     },
     {
-      "id": "n-notas-de-la-práctica",
-      "name": "Notas de la práctica",
+      "id": "n-notas-del-subworkflow",
+      "name": "Notas del subworkflow",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -40,7 +40,7 @@
         -200
       ],
       "parameters": {
-        "content": "Práctica 6.6. Aquí va la normalización de montos que hoy está en el flujo principal.",
+        "content": "Aquí va la normalización de montos que hoy está en el flujo principal.",
         "height": 120,
         "width": 520
       }
