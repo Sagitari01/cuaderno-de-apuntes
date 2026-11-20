@@ -74,9 +74,7 @@ El disparador usa **Define using fields below** y declara tres entradas: `titulo
 
 En **Calcular disponibles**, el campo nuevo `disponibles` es de tipo **Number** y usa esta expresión:
 
-```javascript
-&#123;&#123; $json.ejemplares_totales - $json.prestamos_activos &#125;&#125;
-```
+<pre><code>&#123;&#123; $json.ejemplares_totales - $json.prestamos_activos &#125;&#125;</code></pre>
 
 **Include Other Input Fields** está activado para conservar el título, el total y los préstamos junto al resultado. El último nodo devuelve esos cuatro campos al flujo que lo llamó.
 
@@ -86,9 +84,9 @@ En **Consultar disponibilidad**, el origen es **Database** y se elige **Bibliote
 
 | Entrada | Expresión |
 | --- | --- |
-| `titulo` | `&#123;&#123; $json.titulo &#125;&#125;` |
-| `ejemplares_totales` | `&#123;&#123; $json.ejemplares_totales &#125;&#125;` |
-| `prestamos_activos` | `&#123;&#123; $json.prestamos_activos &#125;&#125;` |
+| `titulo` | <code>&#123;&#123; $json.titulo &#125;&#125;</code> |
+| `ejemplares_totales` | <code>&#123;&#123; $json.ejemplares_totales &#125;&#125;</code> |
+| `prestamos_activos` | <code>&#123;&#123; $json.prestamos_activos &#125;&#125;</code> |
 
 El modo **Run once with all items** envía juntos los dos libros de cada lote. **Wait For Sub-Workflow Completion** está activado para recibir los resultados antes de regresar al loop. En n8n 2.44.6, esta opción se agrega desde **Options > Add option** si aún no aparece. Si las entradas no se muestran después de elegir el subworkflow, cierra y vuelve a abrir el nodo.
 
