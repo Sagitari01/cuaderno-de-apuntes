@@ -1,0 +1,418 @@
+{
+  "name": "Biblioteca | Consulta resiliente del catálogo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consulta-disponibilidad",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "390395f1-65e2-58aa-94dd-897802f01865",
+      "name": "Recibir consulta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        340
+      ],
+      "webhookId": "414497bb-1ab7-5b49-9b9f-a2901cd6cd52"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "66c52955-7687-5020-9e35-bb8eeb56c0c2",
+              "name": "solicitud_id",
+              "value": "={{ $json.body.solicitud_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b6d8f101-43ec-55b8-8376-32bbbf5f0c5e",
+              "name": "titulo",
+              "value": "={{ $json.body.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "07c4dc3a-9ce7-5860-be74-5704fcc90696",
+              "name": "tipo_consulta",
+              "value": "={{ $json.body.tipo_consulta }}",
+              "type": "string"
+            },
+            {
+              "id": "d229c8c4-c970-5422-b998-d4b03eabb399",
+              "name": "escenario",
+              "value": "={{ $json.body.escenario }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9dffab9d-4bda-5234-b2c1-3e35ba8f0a97",
+      "name": "Preparar solicitud",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://catalogo:8080/disponibilidad",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "solicitud_id",
+              "value": "={{ $json.solicitud_id }}"
+            },
+            {
+              "name": "titulo",
+              "value": "={{ $json.titulo }}"
+            },
+            {
+              "name": "escenario",
+              "value": "={{ $json.escenario }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a2618b0f-1f08-5c0c-8f5a-e3a51383aa2e",
+      "name": "Consultar catálogo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        340
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "31c418f9-1e75-52f8-b7d5-10c465d0d71e",
+              "name": "solicitud_id",
+              "value": "={{ $('Preparar solicitud').item.json.solicitud_id }}",
+              "type": "string"
+            },
+            {
+              "id": "f97e3dcd-b560-5d60-8549-bf93558c7d88",
+              "name": "estado",
+              "value": "confirmado",
+              "type": "string"
+            },
+            {
+              "id": "c2d8c73b-8db7-50e3-83b9-7bef125fdcfb",
+              "name": "titulo",
+              "value": "={{ $json.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "df1c62b3-ea43-50a9-96cc-cff3d6b21cbf",
+              "name": "disponibles",
+              "value": "={{ $json.disponibles }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "28e4fa08-329b-5c3e-97aa-4fe677f88ed3",
+      "name": "Confirmar disponibilidad",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f29f8dd9-b311-5865-b520-036d8b2c193b",
+              "leftValue": "={{ $('Preparar solicitud').item.json.tipo_consulta }}",
+              "rightValue": "opcional",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ecc1811c-a744-5348-9606-8929cfeb079b",
+      "name": "¿Consulta opcional?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"solicitud_id\": \"{{ $('Preparar solicitud').item.json.solicitud_id }}\",\n  \"estado\": \"degradado\",\n  \"disponibles\": null,\n  \"motivo\": \"catalogo_no_disponible\"\n}",
+        "options": {}
+      },
+      "id": "9a58c5f7-144a-5509-84b8-0d4c5e3f6f9c",
+      "name": "Registrar contingencia",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {}
+      },
+      "id": "6eb1c205-7fdf-5f53-bea8-144f56080197",
+      "name": "Responder consulta",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"solicitud_id\": \"{{ $('Preparar solicitud').item.json.solicitud_id }}\",\n  \"estado\": \"error\",\n  \"motivo\": \"catalogo_no_disponible\",\n  \"mensaje\": \"No se pudo confirmar la disponibilidad\"\n}",
+        "options": {}
+      },
+      "id": "67c18442-58d2-5347-b0ab-353be74500ee",
+      "name": "Preparar error crítico",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1100,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "id": "ded63137-15b8-554d-b0ac-2838a1b3edc8",
+      "name": "Responder con error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1380,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "errorType": "errorMessage",
+        "errorMessage": "=Consulta obligatoria sin respuesta del catálogo. solicitud_id={{ $('Preparar solicitud').item.json.solicitud_id }}"
+      },
+      "id": "639b9950-878b-52e6-a9ff-ddf3060a4927",
+      "name": "Detener ejecución",
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Reintentos\nHTTP Request intenta hasta **3 veces** y espera **1 segundo** entre intentos.",
+        "height": 130,
+        "width": 300,
+        "color": 4
+      },
+      "id": "a0abcda2-648a-55e1-b2d6-4a8e9a2b2951",
+      "name": "Nota Reintentos",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        330,
+        130
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Salida de error\nSi fallan los 3 intentos, el ítem sale por **Error**. Si responde bien, sale por **Success**.",
+        "height": 150,
+        "width": 300,
+        "color": 4
+      },
+      "id": "bb719df0-c078-5854-90fc-e391472c531f",
+      "name": "Nota Salida de error",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        440,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Contingencia\nUna consulta **opcional** continúa con estado degradado.",
+        "height": 110,
+        "width": 260,
+        "color": 4
+      },
+      "id": "3fe3bb80-953b-5688-9491-f4e69d35eccc",
+      "name": "Nota Contingencia",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1270,
+        470
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Falla crítica\nUna consulta **obligatoria** responde 503 y **detiene** la ejecución. Esto activa el workflow de incidentes.",
+        "height": 120,
+        "width": 430,
+        "color": 4
+      },
+      "id": "8c301c90-03af-5443-b45a-a823ec6dc153",
+      "name": "Nota Falla crítica",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        790
+      ]
+    }
+  ],
+  "connections": {
+    "Recibir consulta": {
+      "main": [
+        [
+          {
+            "node": "Preparar solicitud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar solicitud": {
+      "main": [
+        [
+          {
+            "node": "Consultar catálogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar catálogo": {
+      "main": [
+        [
+          {
+            "node": "Confirmar disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "¿Consulta opcional?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Responder consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Consulta opcional?": {
+      "main": [
+        [
+          {
+            "node": "Registrar contingencia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar error crítico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar contingencia": {
+      "main": [
+        [
+          {
+            "node": "Responder consulta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar error crítico": {
+      "main": [
+        [
+          {
+            "node": "Responder con error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder con error": {
+      "main": [
+        [
+          {
+            "node": "Detener ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

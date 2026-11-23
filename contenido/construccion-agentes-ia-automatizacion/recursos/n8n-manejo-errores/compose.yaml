@@ -1,0 +1,38 @@
+# n8n y el simulador del catálogo en la misma red de Docker.
+# Dentro de n8n, el simulador se llama "catalogo" (http://catalogo:8080), no "localhost".
+name: biblioteca-errores
+
+services:
+  catalogo:
+    image: python:3.13-alpine
+    command: python /app/simulador_catalogo.py
+    environment:
+      PUERTO: "8080"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./simulador_catalogo.py:/app/simulador_catalogo.py:ro
+    ports:
+      - "127.0.0.1:${CATALOGO_PUERTO:-8081}:8080"
+
+  n8n:
+    image: n8nio/n8n:2.44.6
+    depends_on:
+      - catalogo
+    ports:
+      - "127.0.0.1:${N8N_PUERTO:-5678}:5678"
+    environment:
+      TZ: America/Santiago
+      GENERIC_TIMEZONE: America/Santiago
+      N8N_HOST: localhost
+      N8N_PROTOCOL: http
+      N8N_SECURE_COOKIE: "false"
+      WEBHOOK_URL: http://localhost:${N8N_PUERTO:-5678}/
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_TEMPLATES_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+    volumes:
+      - n8n_datos:/home/node/.n8n
+
+volumes:
+  n8n_datos:

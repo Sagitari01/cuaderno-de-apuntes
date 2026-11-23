@@ -1,0 +1,146 @@
+{
+  "name": "Biblioteca | Registro de incidentes",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b4a445b9-d243-58db-bc5d-334102457402",
+      "name": "Error del workflow principal",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6e68d700-a585-588d-9bea-d3d6ced7babd",
+              "name": "solicitud_id",
+              "value": "={{ ($json.execution.error.message.match(/solicitud_id=([A-Z0-9-]+)/) || [])[1] || 'sin_dato' }}",
+              "type": "string"
+            },
+            {
+              "id": "38f1bfb1-c19e-520f-8a92-a49a99e7f12e",
+              "name": "workflow",
+              "value": "={{ $json.workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "24d638f6-0c49-5bdc-9469-d388c0ea5c6e",
+              "name": "execution_id",
+              "value": "={{ $json.execution.id }}",
+              "type": "string"
+            },
+            {
+              "id": "1801e5fa-afe0-5616-b425-070941e9b110",
+              "name": "nodo",
+              "value": "={{ $json.execution.lastNodeExecuted }}",
+              "type": "string"
+            },
+            {
+              "id": "3092aaf6-4b72-577a-b147-00e10f207646",
+              "name": "mensaje",
+              "value": "={{ $json.execution.error.message }}",
+              "type": "string"
+            },
+            {
+              "id": "86fe5249-d63b-51ac-9696-0e90f5094c1a",
+              "name": "modo",
+              "value": "={{ $json.execution.mode }}",
+              "type": "string"
+            },
+            {
+              "id": "1166d59a-6075-5df3-a4bc-d1e2d68e9005",
+              "name": "fecha",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "33a7ffae-5632-5e57-a0e5-6fb06ffa952b",
+      "name": "Preparar registro del incidente",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        280,
+        300
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "2b4bd31b-40cb-5311-bb5b-41c2d7880c5a",
+      "name": "Registro final para inspección",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        580,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Qué recibe\n**Error Trigger** entrega el workflow, la ejecución fallida y el mensaje del error.",
+        "height": 130,
+        "width": 330,
+        "color": 4
+      },
+      "id": "cac1e43c-45fa-552c-8208-b0eff4221cdb",
+      "name": "Nota Qué recibe",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Registro\nAbre esta ejecución en **Executions** para leer el incidente.",
+        "height": 130,
+        "width": 300,
+        "color": 4
+      },
+      "id": "a624a170-472e-5a57-9408-d40b201902db",
+      "name": "Nota Registro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        540,
+        90
+      ]
+    }
+  ],
+  "connections": {
+    "Error del workflow principal": {
+      "main": [
+        [
+          {
+            "node": "Preparar registro del incidente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar registro del incidente": {
+      "main": [
+        [
+          {
+            "node": "Registro final para inspección",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
