@@ -57,30 +57,13 @@ También conviene distinguir dos niveles de falla:
 
 ## 4. Arquitectura general
 
-El ejemplo usa dos workflows y un simulador:
+El ejemplo usa dos workflows y un simulador del catálogo:
 
+- **Workflow principal.** Recibe la consulta por un webhook, pregunta al catálogo con un **HTTP Request** y, según lo que responda, sigue por la ruta correcta, por una contingencia (consulta opcional) o por una falla crítica (consulta obligatoria).
+- **Workflow de errores.** Empieza en **Error Trigger** y registra el incidente cuando el principal falla.
+- **Simulador del catálogo.** Un servicio HTTP que puede responder bien o fallar a propósito.
 
-
-<pre><code class="language-text">Webhook (Recibir consulta)
-   |
-Preparar solicitud
-   |
-HTTP Request (Consultar catálogo)
-   |
-   +---- Salida Success ---> Confirmar disponibilidad ---> Responder consulta
-   |
-   +---- Salida Error ---> ¿Consulta opcional?
-                                |
-                +---------------+---------------+
-                | sí                            | no
-        Registrar contingencia          Preparar error crítico
-                |                               |
-        Responder consulta              Responder con error
-                                                |
-                                        Detener ejecución (Stop And Error)
-                                                |
-                                  activa el workflow de errores:
-                    Error Trigger ---> Preparar registro ---> Registro final</code></pre>
+Las dos capturas siguientes muestran los dos workflows terminados.
 
 <figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/01-flujo-principal.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="3200" height="2000" alt="Workflow principal con el webhook, la consulta al catálogo, la ruta correcta, la contingencia y la falla crítica."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/01-flujo-principal.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar captura: Workflow principal con el webhook, la consulta al catálogo, la ruta correcta, la contingencia y la falla crítica." style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>El workflow principal. De la salida <b>Error</b> de <b>Consultar catálogo</b> parten dos caminos: contingencia para consultas opcionales y falla crítica para las obligatorias.</figcaption></figure>
 
