@@ -1,0 +1,29 @@
+{
+  "sitio": {
+    "titulo": "Cuaderno de apuntes",
+    "subtitulo": "Material de apoyo que va creciendo clase a clase: cuando subo algo nuevo, aparece aquí."
+  },
+  "cursos": [
+    {
+      "id": "construccion-agentes-ia-automatizacion",
+      "codigo": "IA-AUTO",
+      "titulo": "Construcción de Agentes con IA y Automatización",
+      "descripcion": "Apuntes de trabajo sobre procesos, agentes de inteligencia artificial y automatización de tareas.",
+      "semanas": [
+        {
+          "titulo": "Semana 3",
+          "tema": "Manejo de errores, reintentos y diagnóstico en n8n",
+          "materiales": [
+            {
+              "id": "n8n-manejo-de-errores",
+              "titulo": "Cómo manejar errores y leer ejecuciones en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/14-n8n-manejo-de-errores.md",
+              "nuevo": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
