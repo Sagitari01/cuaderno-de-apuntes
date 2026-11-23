@@ -1,0 +1,232 @@
+{
+  "name": "Biblioteca | Catálogo por lotes",
+  "nodes": [
+    {
+      "name": "Iniciar",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        360
+      ],
+      "parameters": {},
+      "id": "016d14f6-f08a-4cd8-9025-9b41f9b71ef2"
+    },
+    {
+      "name": "Seis libros",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        360
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\"libros\": [{\"titulo\": \"El faro de papel\", \"ejemplares_totales\": 5, \"prestamos_activos\": 2}, {\"titulo\": \"Jardines de tinta\", \"ejemplares_totales\": 4, \"prestamos_activos\": 4}, {\"titulo\": \"Atlas de las nubes verdes\", \"ejemplares_totales\": 7, \"prestamos_activos\": 1}, {\"titulo\": \"La casa de los mapas\", \"ejemplares_totales\": 3, \"prestamos_activos\": 0}, {\"titulo\": \"Viaje al bosque azul\", \"ejemplares_totales\": 6, \"prestamos_activos\": 4}, {\"titulo\": \"Historias del reloj\", \"ejemplares_totales\": 8, \"prestamos_activos\": 3}]}",
+        "options": {}
+      },
+      "id": "667bc829-45f2-4e07-8914-94f2392e0b69"
+    },
+    {
+      "name": "Separar libros",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        400,
+        360
+      ],
+      "parameters": {
+        "fieldToSplitOut": "libros",
+        "options": {}
+      },
+      "id": "7575b13b-8f6d-46d0-8905-5afeff70ae55"
+    },
+    {
+      "name": "Lotes de dos",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        620,
+        360
+      ],
+      "parameters": {
+        "batchSize": 2,
+        "options": {}
+      },
+      "id": "df9ef09b-a83f-4725-9b19-97bfd1aa4b63"
+    },
+    {
+      "name": "Consultar disponibilidad",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        850,
+        520
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ELEGIR_SUBWORKFLOW",
+          "mode": "list",
+          "cachedResultName": "Biblioteca | Calcular disponibilidad"
+        },
+        "mode": "once",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "titulo": "={{ $json.titulo }}",
+            "ejemplares_totales": "={{ $json.ejemplares_totales }}",
+            "prestamos_activos": "={{ $json.prestamos_activos }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "titulo",
+              "displayName": "titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "ejemplares_totales",
+              "displayName": "ejemplares_totales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "prestamos_activos",
+              "displayName": "prestamos_activos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "10e9234c-ae06-42a8-a9e6-05ae706dc52a"
+    },
+    {
+      "name": "Catálogo disponible",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        260
+      ],
+      "parameters": {},
+      "id": "84fcf298-6213-4e62-8da3-7203213c8bf1"
+    },
+    {
+      "name": "Nota aedc0b",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        170,
+        100
+      ],
+      "parameters": {
+        "content": "## Seis libros ficticios\nSplit Out convierte la lista en seis ítems.",
+        "width": 400,
+        "height": 140,
+        "color": 4
+      },
+      "id": "34f06fd1-0ea5-47d1-acb6-fb4fe345e56b"
+    },
+    {
+      "name": "Nota 840749",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        620,
+        30
+      ],
+      "parameters": {
+        "content": "## Tres lotes de dos\nloop llama al cálculo. El cable de regreso pide el siguiente lote.\ndone reúne los seis resultados.",
+        "width": 540,
+        "height": 180,
+        "color": 4
+      },
+      "id": "528576fb-837b-4e56-b29c-21420fa0f194"
+    }
+  ],
+  "connections": {
+    "Iniciar": {
+      "main": [
+        [
+          {
+            "node": "Seis libros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seis libros": {
+      "main": [
+        [
+          {
+            "node": "Separar libros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar libros": {
+      "main": [
+        [
+          {
+            "node": "Lotes de dos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lotes de dos": {
+      "main": [
+        [
+          {
+            "node": "Catálogo disponible",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Lotes de dos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

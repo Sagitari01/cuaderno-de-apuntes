@@ -1,0 +1,90 @@
+{
+  "name": "Biblioteca | Calcular disponibilidad",
+  "nodes": [
+    {
+      "name": "Recibir libro",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        260,
+        340
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "titulo",
+              "type": "string"
+            },
+            {
+              "name": "ejemplares_totales",
+              "type": "number"
+            },
+            {
+              "name": "prestamos_activos",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "id": "23233783-e37c-49df-aeae-2536600ad6c8"
+    },
+    {
+      "name": "Calcular disponibles",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        540,
+        340
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "964e1601-2631-48cb-95c7-6d1cbf964e12",
+              "name": "disponibles",
+              "type": "number",
+              "value": "={{ $json.ejemplares_totales - $json.prestamos_activos }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "64c7ddba-33c2-40aa-888b-de36ec7deb9a"
+    },
+    {
+      "name": "Nota 88fb64",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        110
+      ],
+      "parameters": {
+        "content": "## Un cálculo reutilizable\nRecibe título, total y préstamos.\nDisponibles = total menos préstamos.",
+        "width": 530,
+        "height": 160,
+        "color": 4
+      },
+      "id": "2a455f05-a4f5-4375-b567-3ce5b4ec023e"
+    }
+  ],
+  "connections": {
+    "Recibir libro": {
+      "main": [
+        [
+          {
+            "node": "Calcular disponibles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

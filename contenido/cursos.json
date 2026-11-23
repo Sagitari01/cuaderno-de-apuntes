@@ -11,6 +11,102 @@
       "descripcion": "Apuntes de trabajo sobre procesos, agentes de inteligencia artificial y automatización de tareas.",
       "semanas": [
         {
+          "titulo": "Semana 1",
+          "tema": "Análisis de procesos, IA generativa, integraciones, lógica condicional y automatizaciones con Make",
+          "materiales": [
+            {
+              "id": "as-is-to-be",
+              "titulo": "Modelamiento de procesos: AS-IS y TO-BE",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/01-as-is-to-be.md",
+              "nuevo": false
+            },
+            {
+              "id": "gestion-cognitiva-prompts",
+              "titulo": "Gestión cognitiva, prompts y calidad de IA",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/02-gestion-cognitiva-prompts.md",
+              "nuevo": false
+            },
+            {
+              "id": "rutas-filtros-sparkflow",
+              "titulo": "Integraciones, APIs, JSON, rutas y calidad de datos",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/03-rutas-filtros-sparkflow.md",
+              "nuevo": false
+            },
+            {
+              "id": "make-flujos-no-code",
+              "titulo": "Make desde cero: conexiones, Router y mapeo",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/04-make-flujos-no-code.md",
+              "nuevo": false
+            },
+            {
+              "id": "make-gemini-parse-json",
+              "titulo": "Automatizaciones con IA: Groq, Parse JSON y Make",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/05-make-gemini-parse-json.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Semana 2",
+          "tema": "Flujos end-to-end con Make, control de errores y primeros workflows con n8n",
+          "materiales": [
+            {
+              "id": "make-end-to-end-resiliencia",
+              "titulo": "De un correo a un registro confiable con Make",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/06-make-end-to-end-resiliencia.md",
+              "nuevo": false
+            },
+            {
+              "id": "presupuestos-make-gmail-sheets",
+              "titulo": "Procesamiento de presupuestos con Make: de Gmail a Google Sheets",
+              "tipo": "ejercicio",
+              "archivo": "construccion-agentes-ia-automatizacion/07-presupuestos-make-gmail-sheets.md",
+              "nuevo": false
+            },
+            {
+              "id": "n8n-docker-primer-workflow",
+              "titulo": "Primer vistazo a n8n y Docker",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/08-n8n-docker-primer-workflow.md",
+              "nuevo": false
+            },
+            {
+              "id": "n8n-api-webhook",
+              "titulo": "APIs y webhooks en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/09-n8n-api-webhook.md",
+              "nuevo": true
+            },
+            {
+              "id": "make-arquitectura-gmail-groq",
+              "titulo": "De Gmail a Google Sheets con Make y Groq",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/10-make-arquitectura-gmail-groq.md",
+              "nuevo": true
+            },
+            {
+              "id": "n8n-transformar-encaminar-datos",
+              "titulo": "Cómo transformar y encaminar datos en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/11-n8n-transformar-encaminar-datos.md",
+              "nuevo": true
+            },
+            {
+              "id": "n8n-loops-subworkflows",
+              "titulo": "Loops y subworkflows en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/13-n8n-loops-subworkflows.md",
+              "nuevo": true
+            }
+          ]
+        },
+        {
           "titulo": "Semana 3",
           "tema": "Manejo de errores, reintentos y diagnóstico en n8n",
           "materiales": [
@@ -19,6 +115,20 @@
               "titulo": "Cómo manejar errores y leer ejecuciones en n8n",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/14-n8n-manejo-de-errores.md",
+              "nuevo": true
+            }
+          ]
+        },
+        {
+          "titulo": "Extra",
+          "tema": "Material complementario",
+          "tipo": "extra",
+          "materiales": [
+            {
+              "id": "extra-diccionario-expresiones-n8n",
+              "titulo": "Diccionario práctico de expresiones en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/12-extra-diccionario-expresiones-n8n.txt",
               "nuevo": true
             }
           ]

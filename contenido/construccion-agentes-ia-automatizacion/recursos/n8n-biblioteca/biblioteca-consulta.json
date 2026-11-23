@@ -1,0 +1,137 @@
+{
+  "name": "Biblioteca | Consulta individual",
+  "nodes": [
+    {
+      "name": "Iniciar",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        180,
+        360
+      ],
+      "parameters": {},
+      "id": "96d936b1-d12a-4c16-8121-774bbe483cfe"
+    },
+    {
+      "name": "Un libro",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        420,
+        360
+      ],
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\"titulo\": \"El faro de papel\", \"ejemplares_totales\": 5, \"prestamos_activos\": 2}",
+        "options": {}
+      },
+      "id": "915fc54f-7d0e-4c4f-9fe0-3549a9526def"
+    },
+    {
+      "name": "Consultar disponibilidad",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        360
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "ELEGIR_SUBWORKFLOW",
+          "mode": "list",
+          "cachedResultName": "Biblioteca | Calcular disponibilidad"
+        },
+        "mode": "once",
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "titulo": "={{ $json.titulo }}",
+            "ejemplares_totales": "={{ $json.ejemplares_totales }}",
+            "prestamos_activos": "={{ $json.prestamos_activos }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "titulo",
+              "displayName": "titulo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "ejemplares_totales",
+              "displayName": "ejemplares_totales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "prestamos_activos",
+              "displayName": "prestamos_activos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "d66a6734-0408-41b3-8d8a-77678f73c330"
+    },
+    {
+      "name": "Nota e0ed08",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        110
+      ],
+      "parameters": {
+        "content": "## La misma regla, otro flujo\nUn libro: 5 ejemplares, 2 préstamos.\nEl subworkflow devuelve 3 disponibles.",
+        "width": 650,
+        "height": 160,
+        "color": 4
+      },
+      "id": "1fcc3c62-1ae5-4992-b304-52b51cf08f06"
+    }
+  ],
+  "connections": {
+    "Iniciar": {
+      "main": [
+        [
+          {
+            "node": "Un libro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Un libro": {
+      "main": [
+        [
+          {
+            "node": "Consultar disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
