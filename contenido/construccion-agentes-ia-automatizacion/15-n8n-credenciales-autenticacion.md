@@ -39,14 +39,6 @@ Al terminar sabrás:
 - leer una ejecución rechazada con `401` dentro de n8n;
 - revisar un workflow con una lista de control de seguridad.
 
-El apunte sigue tres ideas, que corresponden a los temas de la clase:
-
-| Tema | Qué cubre | Dónde |
-| --- | --- | --- |
-| 7.1 | Gestor de credenciales de n8n y buenas prácticas de secretos | Secciones 6, 7 y 11 |
-| 7.2 | Autenticación con API Key, Basic Auth y JWT | Secciones 3, 4 y 8 |
-| 7.3 | Configuración contra la API de práctica y checklist de seguridad | Secciones 8 a 12 |
-
 Necesitas Docker con Docker Compose, Postman y haber usado antes un workflow con **Webhook** y **HTTP Request**. No necesitas Python ni Node.js.
 
 ## 3. Qué es autenticarse
