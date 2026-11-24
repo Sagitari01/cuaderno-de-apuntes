@@ -1,0 +1,479 @@
+{
+  "info": {
+    "_postman_id": "e2aae11f-fec3-5415-aeb1-49a4d6b05e3b",
+    "name": "Biblioteca: manejo de errores en n8n",
+    "description": "Cinco casos de prueba contra el webhook de producción y consultas al simulador para ver qué pasó.\n\nAntes de empezar: n8n y el simulador deben estar en marcha y el workflow principal publicado. Ajusta las variables n8n_url y simulador_url de la colección si cambiaste los puertos.\n\nOrden recomendado: 0) Reiniciar el simulador, 1) los cinco casos, 2) las consultas del simulador, 3) mirar Executions en n8n.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "n8n_url",
+      "value": "http://localhost:5678"
+    },
+    {
+      "key": "simulador_url",
+      "value": "http://localhost:8081"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Preparar",
+      "item": [
+        {
+          "name": "Reiniciar el simulador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/reiniciar",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "reiniciar"
+              ]
+            },
+            "description": "Borra los contadores y el registro. Úsalo antes de repetir las pruebas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Casos de prueba",
+      "item": [
+        {
+          "name": "01 Éxito (LIB-201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('estado confirmado', function () { pm.expect(j.estado).to.eql('confirmado'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(j.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud_id\": \"LIB-201\",\n  \"titulo\": \"El faro de papel\",\n  \"tipo_consulta\": \"obligatoria\",\n  \"escenario\": \"exito\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{n8n_url}}/webhook/consulta-disponibilidad",
+              "host": [
+                "{{n8n_url}}"
+              ],
+              "path": [
+                "webhook",
+                "consulta-disponibilidad"
+              ]
+            },
+            "description": "El catálogo responde 200 en el primer intento. Debe confirmar 3 ejemplares."
+          }
+        },
+        {
+          "name": "02 Falla temporal (LIB-202)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('estado confirmado', function () { pm.expect(j.estado).to.eql('confirmado'); });",
+                  "pm.test('disponibles = 6', function () { pm.expect(j.disponibles).to.eql(6); });",
+                  "pm.test('tardó más de 1 s por la espera entre intentos', function () { pm.expect(pm.response.responseTime > 1000).to.eql(true); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud_id\": \"LIB-202\",\n  \"titulo\": \"Atlas de las nubes verdes\",\n  \"tipo_consulta\": \"obligatoria\",\n  \"escenario\": \"temporal\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{n8n_url}}/webhook/consulta-disponibilidad",
+              "host": [
+                "{{n8n_url}}"
+              ],
+              "path": [
+                "webhook",
+                "consulta-disponibilidad"
+              ]
+            },
+            "description": "El primer intento recibe 503 y el reintento responde 200. Desde afuera solo se nota una respuesta un poco más lenta (cerca de 1,5 s)."
+          }
+        },
+        {
+          "name": "03 Caída en consulta opcional (LIB-203)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('estado degradado', function () { pm.expect(j.estado).to.eql('degradado'); });",
+                  "pm.test('disponibles es null', function () { pm.expect(j.disponibles).to.eql(null); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud_id\": \"LIB-203\",\n  \"titulo\": \"La casa de los mapas\",\n  \"tipo_consulta\": \"opcional\",\n  \"escenario\": \"caida\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{n8n_url}}/webhook/consulta-disponibilidad",
+              "host": [
+                "{{n8n_url}}"
+              ],
+              "path": [
+                "webhook",
+                "consulta-disponibilidad"
+              ]
+            },
+            "description": "Fallan los 3 intentos. La consulta es opcional: continúa con la contingencia (estado degradado, disponibles null)."
+          }
+        },
+        {
+          "name": "04 Caída en consulta obligatoria (LIB-204)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 503', function () { pm.response.to.have.status(503); });",
+                  "var j = pm.response.json();",
+                  "pm.test('estado error', function () { pm.expect(j.estado).to.eql('error'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud_id\": \"LIB-204\",\n  \"titulo\": \"Viaje al bosque azul\",\n  \"tipo_consulta\": \"obligatoria\",\n  \"escenario\": \"caida\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{n8n_url}}/webhook/consulta-disponibilidad",
+              "host": [
+                "{{n8n_url}}"
+              ],
+              "path": [
+                "webhook",
+                "consulta-disponibilidad"
+              ]
+            },
+            "description": "Fallan los 3 intentos. La consulta es obligatoria: responde 503 y la ejecución queda fallida. Revisa luego el workflow de incidentes."
+          }
+        },
+        {
+          "name": "05 Sin ejemplares (LIB-205)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('estado confirmado', function () { pm.expect(j.estado).to.eql('confirmado'); });",
+                  "pm.test('disponibles = 0 (no null)', function () { pm.expect(j.disponibles).to.eql(0); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud_id\": \"LIB-205\",\n  \"titulo\": \"Jardines de tinta\",\n  \"tipo_consulta\": \"obligatoria\",\n  \"escenario\": \"sin_stock\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{n8n_url}}/webhook/consulta-disponibilidad",
+              "host": [
+                "{{n8n_url}}"
+              ],
+              "path": [
+                "webhook",
+                "consulta-disponibilidad"
+              ]
+            },
+            "description": "El catálogo responde 200 con 0 ejemplares. Es un dato válido, no un error."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Qué pasó en el simulador",
+      "item": [
+        {
+          "name": "Peticiones que recibió el simulador: LIB-201",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/intentos?solicitud_id=LIB-201",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "intentos"
+              ],
+              "query": [
+                {
+                  "key": "solicitud_id",
+                  "value": "LIB-201"
+                }
+              ]
+            },
+            "description": "Cuántas veces consultó n8n al catálogo para LIB-201 y qué respondió el catálogo cada vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "pm.test('1 petición(es) al simulador', function () { pm.expect(j.peticiones).to.eql(1); });",
+                  "pm.test('respuestas del catálogo [200]', function () { pm.expect(JSON.stringify(j.detalle.map(function (d) { return d.respuesta; }))).to.eql('[200]'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Peticiones que recibió el simulador: LIB-202",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/intentos?solicitud_id=LIB-202",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "intentos"
+              ],
+              "query": [
+                {
+                  "key": "solicitud_id",
+                  "value": "LIB-202"
+                }
+              ]
+            },
+            "description": "Cuántas veces consultó n8n al catálogo para LIB-202 y qué respondió el catálogo cada vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "pm.test('2 petición(es) al simulador', function () { pm.expect(j.peticiones).to.eql(2); });",
+                  "pm.test('respuestas del catálogo [503, 200]', function () { pm.expect(JSON.stringify(j.detalle.map(function (d) { return d.respuesta; }))).to.eql('[503,200]'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Peticiones que recibió el simulador: LIB-203",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/intentos?solicitud_id=LIB-203",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "intentos"
+              ],
+              "query": [
+                {
+                  "key": "solicitud_id",
+                  "value": "LIB-203"
+                }
+              ]
+            },
+            "description": "Cuántas veces consultó n8n al catálogo para LIB-203 y qué respondió el catálogo cada vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "pm.test('3 petición(es) al simulador', function () { pm.expect(j.peticiones).to.eql(3); });",
+                  "pm.test('respuestas del catálogo [503, 503, 503]', function () { pm.expect(JSON.stringify(j.detalle.map(function (d) { return d.respuesta; }))).to.eql('[503,503,503]'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Peticiones que recibió el simulador: LIB-204",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/intentos?solicitud_id=LIB-204",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "intentos"
+              ],
+              "query": [
+                {
+                  "key": "solicitud_id",
+                  "value": "LIB-204"
+                }
+              ]
+            },
+            "description": "Cuántas veces consultó n8n al catálogo para LIB-204 y qué respondió el catálogo cada vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "pm.test('3 petición(es) al simulador', function () { pm.expect(j.peticiones).to.eql(3); });",
+                  "pm.test('respuestas del catálogo [503, 503, 503]', function () { pm.expect(JSON.stringify(j.detalle.map(function (d) { return d.respuesta; }))).to.eql('[503,503,503]'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Peticiones que recibió el simulador: LIB-205",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/intentos?solicitud_id=LIB-205",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "intentos"
+              ],
+              "query": [
+                {
+                  "key": "solicitud_id",
+                  "value": "LIB-205"
+                }
+              ]
+            },
+            "description": "Cuántas veces consultó n8n al catálogo para LIB-205 y qué respondió el catálogo cada vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var j = pm.response.json();",
+                  "pm.test('1 petición(es) al simulador', function () { pm.expect(j.peticiones).to.eql(1); });",
+                  "pm.test('respuestas del catálogo [200]', function () { pm.expect(JSON.stringify(j.detalle.map(function (d) { return d.respuesta; }))).to.eql('[200]'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registro completo del simulador",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{simulador_url}}/registro",
+              "host": [
+                "{{simulador_url}}"
+              ],
+              "path": [
+                "registro"
+              ]
+            },
+            "description": "Todas las peticiones recibidas, con hora, solicitud, escenario y respuesta."
+          }
+        }
+      ]
+    }
+  ]
+}

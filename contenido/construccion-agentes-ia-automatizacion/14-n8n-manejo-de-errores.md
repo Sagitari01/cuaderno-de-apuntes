@@ -514,6 +514,8 @@ O descarga cada archivo por separado:
 
 <p><a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-manejo-errores/probar_escenarios.py" download="probar_escenarios.py">Script que prueba los cinco escenarios</a></p>
 
+<p><a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-manejo-errores/biblioteca-manejo-errores.postman_collection.json" download="biblioteca-manejo-errores.postman_collection.json">Colección de Postman</a></p>
+
 <p><a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-manejo-errores/README.md" download="README.md">README con instrucciones y solución de problemas</a></p>
 
 ### Importa y prueba desde cero
@@ -535,7 +537,7 @@ O descarga cada archivo por separado:
 
 <figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/14-workflows-importados.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="3200" height="2000" alt="Lista de workflows con el principal y el manejador, ambos publicados."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/14-workflows-importados.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar captura: Lista de workflows con el principal y el manejador, ambos publicados." style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Los dos workflows importados y publicados.</figcaption></figure>
 
-5. Prueba los cinco casos. Si usas el script: `python3 probar_escenarios.py http://localhost:5678/webhook/consulta-disponibilidad http://localhost:8081`. Si cambiaste los puertos, usa los tuyos.
+5. Prueba los cinco casos. Si usas el script: `python3 probar_escenarios.py http://localhost:5678/webhook/consulta-disponibilidad http://localhost:8081`. Si cambiaste los puertos, usa los tuyos. Si no tienes Python, o prefieres probar un caso a la vez, mira la sección final: «Prueba con Postman y conoce el simulador».
 
 <figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/56-prueba-tras-importar.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="3200" height="2000" alt="Salida del script de pruebas con los cinco escenarios marcados como correctos."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/56-prueba-tras-importar.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar captura: Salida del script de pruebas con los cinco escenarios marcados como correctos." style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>El script compara cada respuesta con lo esperado y lee del simulador cuántas peticiones recibió.</figcaption></figure>
 
@@ -550,5 +552,92 @@ O descarga cada archivo por separado:
 - **No aparece ninguna ejecución del manejador:** revisa el vínculo y prueba por la **Production URL**, no desde el editor.
 - **`ECONNREFUSED` en Consultar catálogo:** n8n no encuentra el simulador. Revisa la URL del nodo y que usas el compose del paquete.
 - **El puerto está ocupado:** ejecuta `N8N_PUERTO=5679 CATALOGO_PUERTO=8082 docker compose up -d`.
+- **`python` no se reconoce (Windows):** no tienes Python instalado. Ejecuta el script con Docker, como se explica en la última sección, o usa Postman.
 
 El README del paquete tiene la lista completa, las instrucciones para conectar el simulador a un n8n que ya tengas y cómo limpiar todo con `docker compose down -v`.
+
+## Prueba con Postman y conoce el simulador
+
+Además del script, puedes probar cada caso por separado con **Postman** y ver el resultado de cada uno. El paquete incluye una colección lista para importar.
+
+<p><a class="btn btn-secondary" href="contenido/construccion-agentes-ia-automatizacion/recursos/n8n-manejo-errores/biblioteca-manejo-errores.postman_collection.json" download="biblioteca-manejo-errores.postman_collection.json">Descargar la colección de Postman</a></p>
+
+### Importa y ejecuta la colección
+
+1. En Postman elige **Import**, arrastra el archivo `biblioteca-manejo-errores.postman_collection.json` y confirma.
+2. Abre la colección y revisa sus variables: `n8n_url` (por defecto `http://localhost:5678`) y `simulador_url` (por defecto `http://localhost:8081`). Cambia los puertos si usaste otros. Postman corre en tu computador, por eso usa `localhost` y no los nombres `n8n` ni `catalogo`, que solo existen dentro de Docker.
+3. Ejecuta en orden: **Reiniciar el simulador**, los cinco casos de **1. Casos de prueba** y las consultas de **2. Qué pasó en el simulador**.
+4. En cada respuesta abre la pestaña **Test Results**. Una prueba en verde significa que el resultado coincide con lo esperado.
+
+Para correr todo de una vez usa **Run collection**.
+
+La colección tiene 12 requests, y solo cinco llaman a n8n:
+
+| Carpeta | Request | Destino | Para qué sirve |
+| --- | --- | --- | --- |
+| 0. Preparar | Reiniciar el simulador | `GET` al simulador, ruta `/reiniciar` | Borra los contadores antes de repetir las pruebas. |
+| 1. Casos de prueba | Los cinco casos, de LIB-201 a LIB-205 | `POST` al webhook de n8n, `/webhook/consulta-disponibilidad` | Envía una consulta. Lo que ves es la respuesta que armó n8n. |
+| 2. Qué pasó en el simulador | Peticiones de cada solicitud y registro completo | `GET` al simulador, rutas `/intentos` y `/registro` | Muestra qué recibió el catálogo, sin pasar por n8n. |
+
+Cada request tiene una prueba automática en la pestaña **Scripts** (sección **Post-response**). Comprueba el código HTTP, el `estado` y `disponibles`, y en la falla temporal que la respuesta tarde más de un segundo por la espera entre intentos. Esa prueba solo muestra verde o rojo: no cambia lo que se envía a n8n.
+
+### Qué hace el simulador
+
+El simulador es un servicio HTTP pequeño (`simulador_catalogo.py`) que hace de catálogo de la biblioteca. Responde sobre los seis libros ficticios, puede **fallar a propósito** según el escenario que pidas y **cuenta cuántas peticiones recibió** cada solicitud. El nodo **Consultar catálogo** de n8n lo llama con un `GET` a `/disponibilidad`. Las demás rutas son para que tú mires lo ocurrido.
+
+| Escenario | Qué responde el simulador |
+| --- | --- |
+| `exito` | `200` con los datos del libro. |
+| `temporal` | `503` en las peticiones impares de cada solicitud (la 1.ª, la 3.ª...) y `200` en las pares. Con los reintentos, n8n recibe `503` y luego `200`. |
+| `caida` | `503` siempre. |
+| `sin_stock` | `200` con `disponibles: 0`. |
+
+El contador sigue sumando mientras no lo reinicies. Si repites el mismo `solicitud_id`, el escenario `temporal` puede empezar por una respuesta correcta. Para repetir una prueba desde cero, reinicia el simulador o usa otro identificador.
+
+### Endpoints que puedes llamar
+
+Todos son `GET` y puedes abrirlos en el navegador o crear un request nuevo en Postman. Con los puertos por defecto la dirección base es `http://localhost:8081`.
+
+| Ruta | Qué hace | Ejemplo |
+| --- | --- | --- |
+| `/disponibilidad` | La que usa n8n. Recibe `solicitud_id`, `titulo` y `escenario`. Responde `200` con el libro, `503` en los escenarios de falla, `404` si el título no existe y `400` si faltan datos o el escenario no es válido. | `/disponibilidad?solicitud_id=PRUEBA-1&titulo=El faro de papel&escenario=exito` |
+| `/intentos` | Cuántas peticiones recibió una solicitud y qué respondió el simulador en cada una. | `/intentos?solicitud_id=LIB-202` |
+| `/registro` | Todas las peticiones recibidas, con su hora. | `/registro` |
+| `/reiniciar` | Borra los contadores y el registro. | `/reiniciar` |
+| `/salud` | Comprueba que el simulador está activo. | `/salud` |
+
+Así responde `/disponibilidad` con el escenario `exito`:
+
+<pre><code class="language-text">{
+  "solicitud_id": "PRUEBA-1",
+  "titulo": "El faro de papel",
+  "ejemplares_totales": 5,
+  "prestamos_activos": 2,
+  "disponibles": 3
+}</code></pre>
+
+Y así con el escenario `caida`, que corresponde al error que recibe n8n:
+
+<pre><code class="language-text">{
+  "error": "servicio_no_disponible",
+  "solicitud_id": "PRUEBA-1",
+  "peticion": 1
+}</code></pre>
+
+Usa un `solicitud_id` distinto de LIB-201 a LIB-205, como `PRUEBA-1`, para no alterar los contadores de los cinco casos.
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/35-simulador-intentos-temporal.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="3200" height="2000" alt="Respuesta de la ruta /intentos con las dos peticiones de LIB-202: 503 y 200."><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-manejo-errores/35-simulador-intentos-temporal.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar captura: Respuesta de la ruta /intentos con las dos peticiones de LIB-202: 503 y 200." style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>La ruta <code>/intentos</code> muestra cada petición que recibió el simulador. Aquí se ve el reintento de la falla temporal.</figcaption></figure>
+
+### Mira lo que ocurre en vivo
+
+- **Simulador:** `docker compose logs -f catalogo` muestra una línea por cada petición, por ejemplo `LIB-202 #1 temporal -> 503` y después `LIB-202 #2 temporal -> 200`. Es la forma más clara de ver los reintentos.
+- **n8n:** en **Executions** abre cada ejecución para ver por qué ruta pasó. El incidente de una consulta obligatoria queda en **Executions** del workflow **Biblioteca | Registro de incidentes**.
+- **Registros de n8n:** `docker compose logs -f n8n` muestra el mensaje del error crítico, con el `solicitud_id`.
+
+### Ejecuta el script sin instalar Python
+
+Si el script falla con «Python was not found» (es habitual en Windows), ejecútalo dentro de Docker desde la carpeta del paquete. En PowerShell:
+
+<pre><code class="language-text">docker run --rm --network biblioteca-errores_default -v "${PWD}:/app" -w /app python:3.13-alpine python probar_escenarios.py http://n8n:5678/webhook/consulta-disponibilidad http://catalogo:8080</code></pre>
+
+En `cmd`, cambia `${PWD}` por `%cd%`. Corre en la misma red que n8n y el simulador, así que no depende de los puertos que publicaste. El nombre de la red sale del nombre del proyecto del compose; si fallara, revisa cuál es con `docker network ls`.
