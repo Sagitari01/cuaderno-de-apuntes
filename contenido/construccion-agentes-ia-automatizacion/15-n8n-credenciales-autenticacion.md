@@ -144,7 +144,20 @@ Comprueba que los dos servicios están en marcha:
 
 <figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-credenciales-autenticacion/d2-compose-ps.webp" style="display:block;width:100%;height:auto;border:1px solid #d4d9e1" loading="lazy" width="3200" height="578" alt="Contenedores en ejecución con sus puertos"><a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-credenciales-autenticacion/d2-compose-ps.webp" target="_blank" rel="noopener noreferrer" aria-label="Ampliar captura: Contenedores en ejecución con sus puertos" style="position:absolute;right:8px;top:8px;padding:4px 8px;background:var(--color-bg);border:1px solid var(--color-divider);font-size:13px">Ampliar ↗</a><figcaption>Los puertos publicados por defecto: n8n en <code>5680</code> y el simulador en <code>8091</code>, solo accesibles desde tu computador.</figcaption></figure>
 
-Si uno de esos puertos está ocupado, cámbialo al levantar: `N8N_PUERTO=5681 CATALOGO_PUERTO=8092 docker compose up -d`.
+**¿Usas Windows?** Abre **Docker Desktop** y comprueba que esté funcionando. Descomprime el ZIP, entra a la carpeta `biblioteca-acceso-seguro` y abre **PowerShell** en esa carpeta. El comando para iniciar los servicios es el mismo:
+
+<pre><code class="language-powershell">docker compose up -d</code></pre>
+
+**Si los puertos están ocupados**, en Windows PowerShell no utilices la sintaxis de variables al inicio del comando que se usa en Linux/macOS. Configúralos mediante un archivo `.env`:
+
+1. Crea una copia de `.env.example` como `.env` con `Copy-Item .env.example .env`.
+2. Abre `.env` con `notepad .env` y cambia únicamente `N8N_PUERTO=5681` y `CATALOGO_PUERTO=8092` (o elige otros puertos libres).
+3. Guarda el archivo y ejecuta `docker compose up -d`.
+4. Comprueba con `docker compose ps` que los dos contenedores estén iniciados. Con estos valores, abre n8n en `http://localhost:5681` y el simulador en `http://localhost:8092`.
+
+En **Linux/macOS** también puedes cambiar los puertos directamente al ejecutar `N8N_PUERTO=5681 CATALOGO_PUERTO=8092 docker compose up -d`.
+
+Si cambias los puertos, recuerda actualizar las variables `url_n8n` y `url_simulador` del entorno de Postman antes de probar las solicitudes.
 
 Ahora prueba el simulador con una ruta que no pide credenciales:
 
