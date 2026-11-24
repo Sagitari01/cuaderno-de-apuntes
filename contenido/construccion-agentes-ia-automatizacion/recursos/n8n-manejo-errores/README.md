@@ -35,7 +35,7 @@ El simulador forma parte del paquete: arranca solo con `docker compose up`. No t
 6. Pulsa **Publish** en el workflow principal.
 7. Prueba los escenarios con el script (necesita Python 3) o con Postman:
    `python3 probar_escenarios.py http://localhost:5678/webhook/consulta-disponibilidad http://localhost:8081`
-   Si no tienes Python, mira «Probar sin Python» y «Probar con Postman» más abajo.
+   Si no tienes Python, usa `docker compose --profile pruebas run --rm pruebas` (ver «Probar sin Python») o Postman.
 
 El webhook de producción es el que muestra el nodo **Recibir consulta** en la pestaña **Production URL**.
 La **Test URL** solo funciona mientras el editor escucha un evento y no dispara el Error Workflow.
@@ -88,15 +88,15 @@ y **2. Qué pasó en el simulador** (`GET` a `/intentos` y `/registro`). Cada re
 
 ## Probar sin Python
 
-Si `python3` no existe en tu equipo (es habitual en Windows), ejecuta el script dentro de Docker, desde esta carpeta.
-PowerShell:
+Si `python3` no existe en tu equipo (es habitual en Windows), el `compose.yaml` incluye un servicio `pruebas` que ejecuta
+el script dentro de Docker. Desde esta carpeta, en cualquier terminal:
 
 ```
-docker run --rm --network biblioteca-errores_default -v "${PWD}:/app" -w /app python:3.13-alpine python probar_escenarios.py http://n8n:5678/webhook/consulta-disponibilidad http://catalogo:8080
+docker compose --profile pruebas run --rm pruebas
 ```
 
-En `cmd`, cambia `${PWD}` por `%cd%`. Corre en la red de Docker, así que no depende de los puertos publicados.
-Si el nombre de la red no coincide, revisa cuál es con `docker network ls`.
+Usa la red de Docker, así que no depende de los puertos publicados. Necesita los dos workflows ya importados,
+vinculados y publicados (pasos 4 a 6). Debe terminar con «Todos los escenarios coinciden».
 
 ## El simulador y sus rutas
 

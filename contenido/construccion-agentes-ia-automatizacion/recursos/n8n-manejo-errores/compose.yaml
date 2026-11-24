@@ -34,5 +34,18 @@ services:
     volumes:
       - n8n_datos:/home/node/.n8n
 
+  # Solo se ejecuta cuando lo pides: docker compose --profile pruebas run --rm pruebas
+  pruebas:
+    image: python:3.13-alpine
+    profiles: ["pruebas"]
+    depends_on:
+      - n8n
+      - catalogo
+    working_dir: /app
+    volumes:
+      - ./probar_escenarios.py:/app/probar_escenarios.py:ro
+      - ./datos-prueba:/app/datos-prueba:ro
+    command: ["python", "probar_escenarios.py", "http://n8n:5678/webhook/consulta-disponibilidad", "http://catalogo:8080"]
+
 volumes:
   n8n_datos:
