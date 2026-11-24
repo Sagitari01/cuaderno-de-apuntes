@@ -17,6 +17,7 @@ Probado con **n8n 2.44.6** y Docker Compose. En otras versiones los nombres de l
 | `biblioteca-error-workflow.json` | Workflow **Biblioteca \| Registro de incidentes** (Error Workflow). |
 | `datos-prueba/` | Un JSON de entrada por escenario. |
 | `probar_escenarios.py` | Envía los cinco casos y compara con los resultados esperados. |
+| `biblioteca-manejo-errores.postman_collection.json` | Colección de Postman con los cinco casos, pruebas automáticas y consultas al simulador. |
 
 El simulador forma parte del paquete: arranca solo con `docker compose up`. No tienes que crearlo ni construirlo.
 
@@ -32,8 +33,9 @@ El simulador forma parte del paquete: arranca solo con `docker compose up`. No t
 5. Abre **Biblioteca | Consulta resiliente del catálogo**. En el menú `...` elige **Settings**, en
    **Error Workflow** selecciona **Biblioteca | Registro de incidentes** y pulsa **Save**.
 6. Pulsa **Publish** en el workflow principal.
-7. Prueba los escenarios con el script:
+7. Prueba los escenarios con el script (necesita Python 3) o con Postman:
    `python3 probar_escenarios.py http://localhost:5678/webhook/consulta-disponibilidad http://localhost:8081`
+   Si no tienes Python, mira «Probar sin Python» y «Probar con Postman» más abajo.
 
 El webhook de producción es el que muestra el nodo **Recibir consulta** en la pestaña **Production URL**.
 La **Test URL** solo funciona mientras el editor escucha un evento y no dispara el Error Workflow.
@@ -74,6 +76,43 @@ del `compose.yaml` de este paquete. Elige una de estas opciones:
 
 `localhost` dentro de un contenedor apunta al propio contenedor, no a tu computador.
 
+## Probar con Postman
+
+Importa `biblioteca-manejo-errores.postman_collection.json` con **Import** y revisa las variables de la colección:
+`n8n_url` (por defecto `http://localhost:5678`) y `simulador_url` (por defecto `http://localhost:8081`). Postman corre
+en tu computador, por eso usa `localhost` y los puertos publicados, no los nombres `n8n` ni `catalogo`.
+
+Ejecuta en orden: **0. Preparar** (reinicia el simulador), **1. Casos de prueba** (cinco `POST` al webhook de n8n)
+y **2. Qué pasó en el simulador** (`GET` a `/intentos` y `/registro`). Cada request trae una prueba automática en
+**Scripts > Post-response** que se ve en **Test Results**. Con **Run collection** corres todo de una vez.
+
+## Probar sin Python
+
+Si `python3` no existe en tu equipo (es habitual en Windows), ejecuta el script dentro de Docker, desde esta carpeta.
+PowerShell:
+
+```
+docker run --rm --network biblioteca-errores_default -v "${PWD}:/app" -w /app python:3.13-alpine python probar_escenarios.py http://n8n:5678/webhook/consulta-disponibilidad http://catalogo:8080
+```
+
+En `cmd`, cambia `${PWD}` por `%cd%`. Corre en la red de Docker, así que no depende de los puertos publicados.
+Si el nombre de la red no coincide, revisa cuál es con `docker network ls`.
+
+## El simulador y sus rutas
+
+`simulador_catalogo.py` hace de catálogo: responde sobre los seis libros ficticios, falla a propósito según el campo
+`escenario` y cuenta las peticiones de cada solicitud. Todas las rutas son `GET`:
+
+| Ruta | Qué hace |
+| --- | --- |
+| `/disponibilidad?solicitud_id=...&titulo=...&escenario=...` | La que usa n8n. `200` con el libro, `503` en los escenarios de falla, `404` si el título no existe, `400` si faltan datos. |
+| `/intentos?solicitud_id=LIB-202` | Peticiones recibidas por esa solicitud y qué respondió el simulador en cada una. |
+| `/registro` | Todas las peticiones recibidas, con su hora. |
+| `/reiniciar` | Borra contadores y registro. |
+| `/salud` | Comprueba que está activo. |
+
+Para ver las peticiones en vivo: `docker compose logs -f catalogo`.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Qué hacer |
@@ -82,6 +121,7 @@ del `compose.yaml` de este paquete. Elige una de estas opciones:
 | El manejador aparece en gris en la lista de **Error Workflow** | No está publicado. | Publica **Registro de incidentes** y vuelve a abrir **Settings**. |
 | No aparece ninguna ejecución del manejador | El vínculo no se guardó, o ejecutaste el flujo a mano desde el editor. | Revisa **Settings** del principal y prueba por la Production URL. |
 | `ECONNREFUSED` o `ENOTFOUND` en **Consultar catálogo** | n8n no encuentra el simulador. | Revisa la URL del nodo y la sección anterior. |
+| `python3` no se reconoce | No hay Python instalado. | Usa «Probar sin Python» o Postman. |
 | `probar_escenarios.py` marca `FALLA` en `temporal` | El simulador ya había recibido peticiones con ese identificador. | El script reinicia el simulador al empezar. Si lo ejecutas dos veces seguidas, reinicia a mano con `/reiniciar`. |
 | El puerto ya está ocupado | Otro servicio usa el 5678 o el 8081. | Define `N8N_PUERTO` y `CATALOGO_PUERTO` al ejecutar `docker compose up -d`. |
 
