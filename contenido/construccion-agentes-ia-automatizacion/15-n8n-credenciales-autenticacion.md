@@ -164,7 +164,7 @@ Estas son las rutas del simulador. Las rutas protegidas aceptan `?titulo=El faro
 | `GET /catalogo/basic` | Cabecera `Authorization: Basic ...` |
 | `POST /auth/token` | JSON con `usuario` y `clave`. Entrega un JWT |
 | `GET /catalogo/jwt` | Cabecera `Authorization: Bearer ...` |
-| `GET /salud`, `GET /registro`, `GET /reiniciar` | Ayudas para la clase |
+| `GET /salud`, `GET /registro`, `GET /reiniciar` | Rutas auxiliares para las pruebas |
 
 Si llamas a una ruta protegida sin credencial, el simulador rechaza la solicitud:
 
