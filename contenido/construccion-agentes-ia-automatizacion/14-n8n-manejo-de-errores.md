@@ -585,12 +585,12 @@ Cada request tiene una prueba automática en la pestaña **Scripts** (sección *
 
 El simulador es un servicio HTTP pequeño (`simulador_catalogo.py`) que hace de catálogo de la biblioteca. Responde sobre los seis libros ficticios, puede **fallar a propósito** según el escenario que pidas y **cuenta cuántas peticiones recibió** cada solicitud. El nodo **Consultar catálogo** de n8n lo llama con un `GET` a `/disponibilidad`. Las demás rutas son para que tú mires lo ocurrido.
 
-| Escenario | Qué responde el simulador |
-| --- | --- |
-| `exito` | `200` con los datos del libro. |
-| `temporal` | `503` en las peticiones impares de cada solicitud (la 1.ª, la 3.ª...) y `200` en las pares. Con los reintentos, n8n recibe `503` y luego `200`. |
-| `caida` | `503` siempre. |
-| `sin_stock` | `200` con `disponibles: 0`. |
+Estos son los escenarios:
+
+- **`exito`:** responde `200` con los datos del libro.
+- **`temporal`:** responde `503` en las peticiones impares de cada solicitud (la 1.ª, la 3.ª...) y `200` en las pares. Con los reintentos, n8n recibe `503` y luego `200`.
+- **`caida`:** responde `503` siempre.
+- **`sin_stock`:** responde `200` con `disponibles: 0`.
 
 El contador sigue sumando mientras no lo reinicies. Si repites el mismo `solicitud_id`, el escenario `temporal` puede empezar por una respuesta correcta. Para repetir una prueba desde cero, reinicia el simulador o usa otro identificador.
 
