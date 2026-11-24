@@ -1,0 +1,940 @@
+{
+  "info": {
+    "_postman_id": "87b52a2e-9e10-535b-9494-5769daece78c",
+    "name": "Biblioteca: acceso seguro al catálogo",
+    "description": "Pruebas de API Key, Basic Auth y JWT contra el simulador del catálogo, y consultas al webhook del workflow de n8n.\n\nAntes de empezar: ejecuta `docker compose up -d`, importa el entorno «Biblioteca local (demo)» y selecciónalo. Para la carpeta 5, importa y publica el workflow en n8n.\n\nTodos los valores son ficticios y solo sirven para este ejercicio local.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "token_jwt",
+      "value": ""
+    },
+    {
+      "key": "token_vencido",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Preparar",
+      "item": [
+        {
+          "name": "0.1 Comprobar que el simulador está activo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('estado activo', function () { pm.expect(pm.response.json().estado).to.eql('activo'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/salud",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "salud"
+              ]
+            },
+            "description": "Debe responder 200 con estado activo."
+          }
+        },
+        {
+          "name": "0.2 Reiniciar el registro del simulador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/reiniciar",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "reiniciar"
+              ]
+            },
+            "description": "Borra el registro de peticiones que muestra /registro."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Sin autenticación",
+      "item": [
+        {
+          "name": "1.1 Consultar endpoint público",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: publico', function () { pm.expect(pm.response.json().acceso).to.eql('publico'); });",
+                  "pm.test('no incluye disponibilidad', function () { pm.expect(JSON.stringify(pm.response.json())).to.not.include('disponibles'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/publico",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "publico"
+              ]
+            },
+            "description": "No pide credenciales. Solo entrega títulos y total de ejemplares, sin disponibilidad."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. API Key",
+      "item": [
+        {
+          "name": "2.1 Consultar API Key sin clave",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "No se envía ninguna credencial. Revisa la cabecera WWW-Authenticate de la respuesta."
+          }
+        },
+        {
+          "name": "2.2 Consultar API Key incorrecta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "clave-incorrecta",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Se envía X-API-Key con un valor que el simulador no conoce."
+          }
+        },
+        {
+          "name": "2.3 Consultar API Key válida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: api_key', function () { pm.expect(pm.response.json().acceso).to.eql('api_key'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo API Key, Key = X-API-Key, Value = {{api_key}}, Add to = Header."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Basic Auth",
+      "item": [
+        {
+          "name": "3.1 Consultar Basic Auth sin credenciales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Sin cabecera Authorization."
+          }
+        },
+        {
+          "name": "3.2 Consultar Basic Auth incorrecto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basic_usuario}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "contraseña-incorrecta",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Usuario correcto y contraseña incorrecta."
+          }
+        },
+        {
+          "name": "3.3 Consultar Basic Auth válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: basic', function () { pm.expect(pm.response.json().acceso).to.eql('basic'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basic_usuario}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basic_clave}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo Basic Auth. Postman arma Authorization: Basic <usuario:clave en Base64>."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. JWT (Bearer Token)",
+      "item": [
+        {
+          "name": "4.1 Solicitar JWT con credenciales válidas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('token generado (tres partes separadas por puntos)', function () { pm.expect(j.access_token.split('.').length).to.eql(3); });",
+                  "pm.test('token_type Bearer y vigencia', function () { pm.expect(j.token_type).to.eql('Bearer'); pm.expect(j.expires_in > 0).to.eql(true); });",
+                  "pm.collectionVariables.set('token_jwt', j.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/auth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "auth",
+                "token"
+              ]
+            },
+            "description": "Envía usuario y clave en un JSON. Guarda el token en la variable de colección token_jwt, solo durante la ejecución.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"{{jwt_usuario}}\",\n  \"clave\": \"{{jwt_clave}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "4.2 Solicitar JWT con clave incorrecta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/auth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "auth",
+                "token"
+              ]
+            },
+            "description": "El simulador no entrega token si la clave no coincide.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"{{jwt_usuario}}\",\n  \"clave\": \"clave-incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "4.3 Consultar JWT sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Sin cabecera Authorization."
+          }
+        },
+        {
+          "name": "4.4 Consultar JWT inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_malformado', function () { pm.expect(pm.response.json().motivo).to.eql('token_malformado'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "esto.no-es-un.token",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "El token no tiene una firma válida."
+          }
+        },
+        {
+          "name": "4.5 Obtener un token ya vencido (ayuda de la clase)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.collectionVariables.set('token_vencido', pm.response.json().access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/demo/token-vencido",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "demo",
+                "token-vencido"
+              ]
+            },
+            "description": "Ruta solo para la clase: entrega un token bien firmado pero con fecha de vencimiento pasada."
+          }
+        },
+        {
+          "name": "4.6 Consultar JWT vencido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_vencido', function () { pm.expect(pm.response.json().motivo).to.eql('token_vencido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vencido}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "La firma es correcta, pero el token expiró."
+          }
+        },
+        {
+          "name": "4.7 Consultar JWT válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: jwt', function () { pm.expect(pm.response.json().acceso).to.eql('jwt'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo Bearer Token con {{token_jwt}} (el que guardó 4.1)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Webhook del workflow de n8n",
+      "item": [
+        {
+          "name": "5.1 Workflow: ruta API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: api_key', function () { pm.expect(pm.response.json().autenticacion).to.eql('api_key'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow usa su credencial Header Auth. Aquí no se envía ninguna clave.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"api_key\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.2 Workflow: ruta Basic Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: basic', function () { pm.expect(pm.response.json().autenticacion).to.eql('basic'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow usa su credencial Basic Auth.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"basic\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.3 Workflow: ruta JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: jwt', function () { pm.expect(pm.response.json().autenticacion).to.eql('jwt'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow pide un token y lo usa en la misma ejecución.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"jwt\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.4 Workflow: tipo de autenticación no válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('mensaje de tipo no válido', function () { pm.expect(pm.response.json().error).to.eql('tipo_autenticacion_no_valido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El Switch envía este caso a la salida de respaldo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"oauth\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

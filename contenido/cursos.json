@@ -116,6 +116,13 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/14-n8n-manejo-de-errores.md",
               "nuevo": true
+            },
+            {
+              "id": "n8n-credenciales-autenticacion",
+              "titulo": "Credenciales y autenticación de APIs en n8n: API Key, Basic Auth y JWT",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/15-n8n-credenciales-autenticacion.md",
+              "nuevo": true
             }
           ]
         },
