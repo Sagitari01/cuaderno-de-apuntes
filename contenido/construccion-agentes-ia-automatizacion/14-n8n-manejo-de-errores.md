@@ -552,7 +552,7 @@ O descarga cada archivo por separado:
 - **No aparece ninguna ejecución del manejador:** revisa el vínculo y prueba por la **Production URL**, no desde el editor.
 - **`ECONNREFUSED` en Consultar catálogo:** n8n no encuentra el simulador. Revisa la URL del nodo y que usas el compose del paquete.
 - **El puerto está ocupado:** ejecuta `N8N_PUERTO=5679 CATALOGO_PUERTO=8082 docker compose up -d`.
-- **`python` no se reconoce (Windows):** no tienes Python instalado. Ejecuta el script con Docker, como se explica en la última sección, o usa Postman.
+- **`python` no se reconoce (Windows):** no tienes Python instalado. Ejecuta el script con `docker compose --profile pruebas run --rm pruebas` (última sección) o usa Postman.
 
 El README del paquete tiene la lista completa, las instrucciones para conectar el simulador a un n8n que ya tengas y cómo limpiar todo con `docker compose down -v`.
 
@@ -636,8 +636,8 @@ Usa un `solicitud_id` distinto de LIB-201 a LIB-205, como `PRUEBA-1`, para no al
 
 ### Ejecuta el script sin instalar Python
 
-Si el script falla con «Python was not found» (es habitual en Windows), ejecútalo dentro de Docker desde la carpeta del paquete. En PowerShell:
+Si el script falla con «Python was not found» (es habitual en Windows), el `compose.yaml` del paquete incluye un servicio `pruebas` que lo ejecuta dentro de Docker. Desde la carpeta del paquete, en PowerShell, `cmd` o cualquier terminal:
 
-<pre><code class="language-text">docker run --rm --network biblioteca-errores_default -v "${PWD}:/app" -w /app python:3.13-alpine python probar_escenarios.py http://n8n:5678/webhook/consulta-disponibilidad http://catalogo:8080</code></pre>
+<pre><code class="language-text">docker compose --profile pruebas run --rm pruebas</code></pre>
 
-En `cmd`, cambia `${PWD}` por `%cd%`. Corre en la misma red que n8n y el simulador, así que no depende de los puertos que publicaste. El nombre de la red sale del nombre del proyecto del compose; si fallara, revisa cuál es con `docker network ls`.
+Corre en la misma red que n8n y el simulador, así que no depende de los puertos que publicaste. Necesita los dos workflows importados, vinculados y publicados. Debe terminar con «Todos los escenarios coinciden».
