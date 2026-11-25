@@ -141,6 +141,27 @@
           ]
         }
       ]
+    },
+    {
+      "id": "make",
+      "codigo": "MAKE",
+      "titulo": "Make: Automatización No-Code",
+      "descripcion": "Aprende Make desde cero: qué es una automatización, cómo se construye un escenario, cómo se toman decisiones y cómo viajan los datos entre módulos.",
+      "semanas": [
+        {
+          "titulo": "Módulo 05",
+          "tema": "Mapeo avanzado de datos, colecciones e Iterator",
+          "materiales": [
+            {
+              "id": "make-m05-mapeo-iterator",
+              "titulo": "Mapeo de datos en Make: píldoras, colecciones e Iterator",
+              "tipo": "lectura",
+              "archivo": "make/05-mapeo-datos-colecciones-iterator.md",
+              "nuevo": true
+            }
+          ]
+        }
+      ]
     }
   ]
 }
