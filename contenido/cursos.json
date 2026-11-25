@@ -196,6 +196,19 @@
               "titulo": "Routers, filtros y condiciones: cómo toma decisiones una automatización",
               "tipo": "lectura",
               "archivo": "make/03-routers-filtros-condiciones.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 04",
+          "tema": "Integración con inteligencia artificial",
+          "materiales": [
+            {
+              "id": "make-m04-inteligencia-artificial",
+              "titulo": "Integración con inteligencia artificial: la IA propone, las reglas deciden",
+              "tipo": "lectura",
+              "archivo": "make/04-integracion-inteligencia-artificial.md",
               "nuevo": true
             }
           ]
