@@ -208,7 +208,7 @@ Mira cómo se relacionan los números: cada módulo que se ejecuta cuesta una op
 
 - Prueba con el botón **Run once**, que ejecuta el escenario una sola vez, en vez de activar la programación.
 - Usa pocos datos de prueba.
-- Si activas un escenario, recuerda que se ejecutará cada cierto tiempo aunque no haya datos nuevos, y cada revisión puede gastar créditos.
+- Si activas un escenario, recuerda que se ejecutará cada cierto tiempo aunque no haya datos nuevos. En nuestras pruebas, una revisión sin datos nuevos de Watch New Rows contó como 1 operación y **0 créditos**, pero cada módulo y cada aplicación pueden contar distinto: revisa siempre el consumo de tu cuenta.
 - Apaga los escenarios que ya no necesites.
 
 **Enlaces oficiales para revisar la información vigente:**

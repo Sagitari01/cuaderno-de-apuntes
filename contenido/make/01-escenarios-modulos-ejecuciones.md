@@ -230,7 +230,7 @@ Lo vamos a probar de forma **controlada**: lo encendemos unos segundos y lo apag
 
 ¿Y qué pasó? Mira otra vez el historial de arriba. Hay una fila **Scenario activated** (activado) seguida, un segundo después, de una ejecución con el disparador **Schedule** (programación). Es decir: **al activar un escenario, Make lo ejecuta una vez de inmediato** y después sigue la programación. Esa ejecución también gastó 4 créditos. Después hay una fila **Scenario deactivated**.
 
-Por eso la regla de oro es esta: **no actives un escenario si no quieres que se ejecute**, y **apaga lo que no uses**. Un escenario activo olvidado sigue consumiendo créditos, aunque no haya datos nuevos.
+Por eso la regla de oro es esta: **no actives un escenario si no quieres que se ejecute**, y **apaga lo que no uses**. Un escenario activo olvidado sigue ejecutándose, y en cuanto haya datos nuevos consumirá créditos. Aunque una revisión sin datos puede no costar créditos (lo comprobaremos en el módulo 02), no conviene confiar en eso.
 
 > En el plan gratuito puedes tener como máximo 2 escenarios activos al mismo tiempo (lo vimos en el panel principal).
 
