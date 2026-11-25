@@ -183,6 +183,19 @@
               "titulo": "Nuestra primera automatización: de una hoja de solicitudes a un registro",
               "tipo": "lectura",
               "archivo": "make/02-primera-automatizacion.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 03",
+          "tema": "Routers, filtros y condiciones",
+          "materiales": [
+            {
+              "id": "make-m03-routers-filtros",
+              "titulo": "Routers, filtros y condiciones: cómo toma decisiones una automatización",
+              "tipo": "lectura",
+              "archivo": "make/03-routers-filtros-condiciones.md",
               "nuevo": true
             }
           ]
