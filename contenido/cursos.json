@@ -170,6 +170,19 @@
               "titulo": "Escenarios, módulos y ejecuciones: cómo se arma y cómo se revisa una automatización",
               "tipo": "lectura",
               "archivo": "make/01-escenarios-modulos-ejecuciones.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 02",
+          "tema": "Nuestra primera automatización",
+          "materiales": [
+            {
+              "id": "make-m02-primera-automatizacion",
+              "titulo": "Nuestra primera automatización: de una hoja de solicitudes a un registro",
+              "tipo": "lectura",
+              "archivo": "make/02-primera-automatizacion.md",
               "nuevo": true
             }
           ]
