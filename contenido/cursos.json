@@ -141,6 +141,92 @@
           ]
         }
       ]
+    },
+    {
+      "id": "make",
+      "codigo": "MAKE",
+      "titulo": "Make desde cero",
+      "descripcion": "Aprende a construir automatizaciones visuales con Make, desde tus primeros escenarios hasta el procesamiento avanzado de datos, mediante explicaciones sencillas, ejemplos prácticos y capturas reales.",
+      "semanas": [
+        {
+          "titulo": "Módulo 00",
+          "tema": "Conociendo Make",
+          "materiales": [
+            {
+              "id": "make-m00-conociendo-make",
+              "titulo": "Conociendo Make: qué es, cómo se organiza y cómo se cuenta lo que usas",
+              "tipo": "lectura",
+              "archivo": "make/00-conociendo-make.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 01",
+          "tema": "Escenarios, módulos y ejecuciones",
+          "materiales": [
+            {
+              "id": "make-m01-escenarios-modulos",
+              "titulo": "Escenarios, módulos y ejecuciones: cómo se arma y cómo se revisa una automatización",
+              "tipo": "lectura",
+              "archivo": "make/01-escenarios-modulos-ejecuciones.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 02",
+          "tema": "Nuestra primera automatización",
+          "materiales": [
+            {
+              "id": "make-m02-primera-automatizacion",
+              "titulo": "Nuestra primera automatización: de una hoja de solicitudes a un registro",
+              "tipo": "lectura",
+              "archivo": "make/02-primera-automatizacion.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 03",
+          "tema": "Routers, filtros y condiciones",
+          "materiales": [
+            {
+              "id": "make-m03-routers-filtros",
+              "titulo": "Routers, filtros y condiciones: cómo toma decisiones una automatización",
+              "tipo": "lectura",
+              "archivo": "make/03-routers-filtros-condiciones.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 04",
+          "tema": "Integración con inteligencia artificial",
+          "materiales": [
+            {
+              "id": "make-m04-inteligencia-artificial",
+              "titulo": "Integración con inteligencia artificial: la IA propone, las reglas deciden",
+              "tipo": "lectura",
+              "archivo": "make/04-integracion-inteligencia-artificial.md",
+              "nuevo": true
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 05",
+          "tema": "Mapeo de datos, colecciones e Iterator",
+          "materiales": [
+            {
+              "id": "make-m05-mapeo-iterator",
+              "titulo": "Mapeo de datos en Make: píldoras, colecciones e Iterator",
+              "tipo": "lectura",
+              "archivo": "make/05-mapeo-datos-colecciones-iterator.md",
+              "nuevo": false
+            }
+          ]
+        }
+      ]
     }
   ]
 }
