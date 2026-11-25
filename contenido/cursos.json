@@ -157,6 +157,19 @@
               "titulo": "Conociendo Make: qué es, cómo se organiza y cómo se cuenta lo que usas",
               "tipo": "lectura",
               "archivo": "make/00-conociendo-make.md",
+              "nuevo": false
+            }
+          ]
+        },
+        {
+          "titulo": "Módulo 01",
+          "tema": "Escenarios, módulos y ejecuciones",
+          "materiales": [
+            {
+              "id": "make-m01-escenarios-modulos",
+              "titulo": "Escenarios, módulos y ejecuciones: cómo se arma y cómo se revisa una automatización",
+              "tipo": "lectura",
+              "archivo": "make/01-escenarios-modulos-ejecuciones.md",
               "nuevo": true
             }
           ]
