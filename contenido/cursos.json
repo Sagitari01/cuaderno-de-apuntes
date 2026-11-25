@@ -149,6 +149,19 @@
       "descripcion": "Aprende a construir automatizaciones visuales con Make, desde tus primeros escenarios hasta el procesamiento avanzado de datos, mediante explicaciones sencillas, ejemplos prácticos y capturas reales.",
       "semanas": [
         {
+          "titulo": "Módulo 00",
+          "tema": "Conociendo Make",
+          "materiales": [
+            {
+              "id": "make-m00-conociendo-make",
+              "titulo": "Conociendo Make: qué es, cómo se organiza y cómo se cuenta lo que usas",
+              "tipo": "lectura",
+              "archivo": "make/00-conociendo-make.md",
+              "nuevo": true
+            }
+          ]
+        },
+        {
           "titulo": "Módulo 05",
           "tema": "Mapeo de datos, colecciones e Iterator",
           "materiales": [
@@ -157,7 +170,7 @@
               "titulo": "Mapeo de datos en Make: píldoras, colecciones e Iterator",
               "tipo": "lectura",
               "archivo": "make/05-mapeo-datos-colecciones-iterator.md",
-              "nuevo": true
+              "nuevo": false
             }
           ]
         }
