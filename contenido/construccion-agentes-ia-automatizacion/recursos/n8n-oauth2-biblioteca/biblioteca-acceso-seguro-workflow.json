@@ -1,0 +1,865 @@
+{
+  "name": "Biblioteca | Acceso seguro al catálogo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "acceso-seguro",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "8a28fd91-9840-529a-8ab5-4bc0ae60a49e",
+      "name": "Recibir consulta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        440
+      ],
+      "webhookId": "a0ac874f-9202-558e-a50e-9e85caa2abcf"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccb48993-0bcb-5db4-be5f-23acc06c98fd",
+              "name": "titulo",
+              "value": "={{ $json.body.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "7a985238-1dd9-5ed0-8fce-a3fed34af4b0",
+              "name": "tipo_autenticacion",
+              "value": "={{ $json.body.tipo_autenticacion }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d57d92dc-f39a-5433-a560-52ae3e187fba",
+      "name": "Preparar datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3eb382eb-d523-56e6-9f5b-d434dbf80f30",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "api_key",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "API Key"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b2f6a474-0ed0-52b7-a9aa-a25736523792",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "basic",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Basic Auth"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2b5d1ac2-7a78-52b2-86b8-a301983d9be6",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "jwt",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "JWT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2caad9ae-a12c-57ae-a265-0fae8b709309",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "oauth2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "OAuth 2.0"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ace4ae82-1d51-53f5-b786-c3086cbb47d6",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "oauth2_sin_permiso",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "OAuth 2.0 sin permiso"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Otro"
+        }
+      },
+      "id": "d305128f-2d48-50b9-94b8-dd5d2ba45f8c",
+      "name": "Tipo de autenticación",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        520,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"error\": \"tipo_autenticacion_no_valido\", \"validos\": [\"api_key\", \"basic\", \"jwt\", \"oauth2\", \"oauth2_sin_permiso\"] } }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "35dce65f-7221-5ddd-b54c-deb4bd2a2045",
+      "name": "Responder (tipo no válido)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        860,
+        930
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/api-key",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "29e7805d-718e-5eb9-997f-c5486cbaa831",
+      "name": "Consultar con API Key",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        140
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "name": "Biblioteca | API Key (demo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"api_key\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "bc47ac18-7c71-5ef0-b849-d92c446b96f7",
+      "name": "Responder (API Key)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/basic",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "0615ba59-b4b9-5fe6-8212-cf36afff3542",
+      "name": "Consultar con Basic Auth",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        440
+      ],
+      "credentials": {
+        "httpBasicAuth": {
+          "name": "Biblioteca | Basic Auth (demo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"basic\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "b5745707-1675-54da-98b2-c2ab2a33889f",
+      "name": "Responder (Basic Auth)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://catalogo:8080/auth/token",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "options": {}
+      },
+      "id": "e47b16a4-4e0d-5a57-a880-6fc30994e477",
+      "name": "Obtener token",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        740
+      ],
+      "credentials": {
+        "httpCustomAuth": {
+          "name": "Biblioteca | Login JWT (demo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/jwt",
+        "authentication": "none",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            }
+          ]
+        }
+      },
+      "id": "4decdad7-a3a8-5c98-a109-dbaeb49d6c68",
+      "name": "Consultar con JWT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1160,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"jwt\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "b9af389a-edc1-51ef-b73d-b58938f96c30",
+      "name": "Responder (JWT)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1460,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 1 Entrada\nPostman envía un JSON con **titulo** y **tipo_autenticacion**. El webhook solo recibe la consulta; **aquí no se envía ninguna clave**.",
+        "height": 160,
+        "width": 360,
+        "color": 6
+      },
+      "id": "a63f8eb2-d37f-53c4-8afc-9c9b12f20fec",
+      "name": "Nota 1 Entrada",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        230
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2 Switch\nEl **Switch** lee `tipo_autenticacion` y elige una ruta. Si no coincide, usa la salida **Otro**.",
+        "height": 150,
+        "width": 280,
+        "color": 6
+      },
+      "id": "2ad028f0-7aa1-5100-8ff6-7d3537954108",
+      "name": "Nota 2 Switch",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        170,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3 API Key\n**API Key:** una sola clave en la cabecera `X-API-Key`. Se guarda en la credencial **Header Auth**, no en el workflow. Identifica a la aplicación.",
+        "height": 130,
+        "width": 340,
+        "color": 4
+      },
+      "id": "1e62a42a-5629-5462-a8db-23df44bdd183",
+      "name": "Nota 3 API Key",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        -10
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4 Basic Auth\n**Basic Auth:** usuario y contraseña en `Authorization: Basic ...`. Base64 **no cifra**: en producción se usa HTTPS. Identifica a una cuenta.",
+        "height": 120,
+        "width": 480,
+        "color": 4
+      },
+      "id": "84342484-1ef3-56f7-9573-0bcaeb819d0b",
+      "name": "Nota 4 Basic Auth",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 5 JWT\n**JWT:** primero se pide un token con la credencial de login. El token vence y se envía como `Authorization: Bearer ...`. Se obtiene en cada ejecución. Su salida puede quedar guardada en el historial de n8n; no compartas tokens.",
+        "height": 150,
+        "width": 660,
+        "color": 4
+      },
+      "id": "00b32d06-d241-501d-a6c5-6a236f83dfdf",
+      "name": "Nota 5 JWT",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 6 Rechazo\nSi la API rechaza la solicitud (**401**), el HTTP Request no falla: **Never Error** deja pasar la respuesta y el Responder devuelve el mismo código.",
+        "height": 170,
+        "width": 320,
+        "color": 5
+      },
+      "id": "7f6ee748-be26-5828-88a8-a3b624caeb61",
+      "name": "Nota 6 Rechazo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 7 Otro\nUn tipo desconocido responde **400** sin llamar a la API.",
+        "height": 100,
+        "width": 300,
+        "color": 5
+      },
+      "id": "9eb037f8-627c-5d6c-a62c-192b72876af5",
+      "name": "Nota 7 Otro",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1070,
+        915
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/oauth",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "3119db85-91a9-5019-9e2f-f9337296bbaa",
+      "name": "Consultar con OAuth 2.0",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        1340
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "name": "Biblioteca | OAuth2 (demo)"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "c08cf8fc-207c-548d-9731-fb54c985b35f",
+      "name": "Responder (OAuth 2.0)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/oauth",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8bb366c6-c341-5920-be8d-59138b0db4e6",
+      "name": "Consultar con OAuth 2.0 sin permiso",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        1800
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "name": "Biblioteca | OAuth2 solo perfil (demo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2_sin_permiso\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "5bc296ce-32dc-5d05-960f-2cfe747e61fe",
+      "name": "Responder (OAuth 2.0 sin permiso)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        1800
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2\", \"http\": 401, \"error\": \"autorizacion_no_valida\", \"mensaje\": \"La autorización ya no sirve: la persona la revocó o venció. Vuelve a autorizar la credencial con Connect.\" } }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "6b87fb71-064b-5f76-aed0-06ce04395eea",
+      "name": "Responder (OAuth 2.0 sin autorización)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1560,
+        1470
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 8 OAuth 2.0: autorización\n**La persona autoriza una sola vez**, al crear la credencial **OAuth2 API** y pulsar **Connect**. El simulador muestra la pantalla de consentimiento (Autorizar o Rechazar). Este workflow nunca recibe la contraseña de nadie.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "505e4632-61b0-5c1e-a870-af482ca9190d",
+      "name": "Nota 8 OAuth autorización",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 9 OAuth 2.0: el token\nn8n canjea el código por un **access token** y un **refresh token** y los guarda cifrados en la credencial. El nodo HTTP Request envía `Authorization: Bearer ...` solo. Tú no escribes ningún token.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "7b6af1aa-5030-5574-9f84-a3261c04d7dd",
+      "name": "Nota 9 OAuth token",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 10 OAuth 2.0: cuando vence\nEl access token dura 5 minutos. Si la API responde **401**, n8n usa el **refresh token** para pedir uno nuevo y repite la consulta, sin volver a pedir autorización.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "899ac169-47e2-5f5b-bc9c-d40d439ebfc1",
+      "name": "Nota 10 OAuth vencimiento",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 11 OAuth 2.0: permisos insuficientes\nEsta ruta usa una segunda credencial con solo `perfil.leer`. El token es válido, pero la ruta exige `catalogo.leer`: la API responde **403**. Se arregla autorizando de nuevo con el permiso correcto.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "92063262-d54b-57f3-b254-3da0d6607958",
+      "name": "Nota 11 OAuth permisos",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 12 OAuth 2.0: revocación\nSi la persona revoca la autorización, el refresh token deja de servir: la renovación falla y la **salida de error** del nodo responde 401. Solo se recupera autorizando otra vez (**Connect**).",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "a647b2ec-cd80-5018-bd59-89f7b17fba23",
+      "name": "Nota 12 OAuth revocación",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1560
+      ]
+    }
+  ],
+  "connections": {
+    "Recibir consulta": {
+      "main": [
+        [
+          {
+            "node": "Preparar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar datos": {
+      "main": [
+        [
+          {
+            "node": "Tipo de autenticación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tipo de autenticación": {
+      "main": [
+        [
+          {
+            "node": "Consultar con API Key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar con Basic Auth",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Obtener token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar con OAuth 2.0",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar con OAuth 2.0 sin permiso",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder (tipo no válido)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con API Key": {
+      "main": [
+        [
+          {
+            "node": "Responder (API Key)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con Basic Auth": {
+      "main": [
+        [
+          {
+            "node": "Responder (Basic Auth)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener token": {
+      "main": [
+        [
+          {
+            "node": "Consultar con JWT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con JWT": {
+      "main": [
+        [
+          {
+            "node": "Responder (JWT)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con OAuth 2.0": {
+      "main": [
+        [
+          {
+            "node": "Responder (OAuth 2.0)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder (OAuth 2.0 sin autorización)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con OAuth 2.0 sin permiso": {
+      "main": [
+        [
+          {
+            "node": "Responder (OAuth 2.0 sin permiso)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

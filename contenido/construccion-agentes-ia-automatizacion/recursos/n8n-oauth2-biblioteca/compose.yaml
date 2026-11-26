@@ -1,0 +1,51 @@
+# n8n y la API ficticia del catálogo (con autenticación) en la misma red de Docker.
+# Dentro de n8n, la API se llama "catalogo" (http://catalogo:8080), no "localhost".
+# OAuth 2.0: el navegador usa http://localhost:8091 (pantalla de consentimiento) y n8n usa http://catalogo:8080 (tokens).
+# Todos los valores de las credenciales son de demostración (ver .env.example).
+name: biblioteca-acceso-seguro
+
+services:
+  catalogo:
+    image: python:3.13-alpine
+    command: python /app/simulador_catalogo_seguro.py
+    environment:
+      PUERTO: "8080"
+      PYTHONUNBUFFERED: "1"
+      API_KEY: ${API_KEY:-demo-clave-api-biblioteca}
+      BASIC_USUARIO: ${BASIC_USUARIO:-lector-demo}
+      BASIC_CLAVE: ${BASIC_CLAVE:-demo-clave-basic}
+      JWT_USUARIO: ${JWT_USUARIO:-lector-demo}
+      JWT_CLAVE: ${JWT_CLAVE:-demo-clave-jwt}
+      JWT_SECRETO: ${JWT_SECRETO:-firma-solo-para-practica}
+      JWT_VIGENCIA: ${JWT_VIGENCIA:-300}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID:-biblioteca-n8n}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET:-demo-secreto-oauth-biblioteca}
+      OAUTH_REDIRECT_URIS: ${OAUTH_REDIRECT_URIS:-http://localhost:${N8N_PUERTO:-5680}/rest/oauth2-credential/callback}
+      OAUTH_ACCESO_VIGENCIA: ${OAUTH_ACCESO_VIGENCIA:-300}
+    volumes:
+      - ./simulador_catalogo_seguro.py:/app/simulador_catalogo_seguro.py:ro
+    ports:
+      - "127.0.0.1:${CATALOGO_PUERTO:-8091}:8080"
+
+  n8n:
+    image: n8nio/n8n:2.44.6
+    depends_on:
+      - catalogo
+    ports:
+      - "127.0.0.1:${N8N_PUERTO:-5680}:5678"
+    environment:
+      TZ: America/Santiago
+      GENERIC_TIMEZONE: America/Santiago
+      N8N_HOST: localhost
+      N8N_PROTOCOL: http
+      N8N_SECURE_COOKIE: "false"
+      WEBHOOK_URL: http://localhost:${N8N_PUERTO:-5680}/
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_VERSION_NOTIFICATIONS_ENABLED: "false"
+      N8N_TEMPLATES_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+    volumes:
+      - n8n_datos:/home/node/.n8n
+
+volumes:
+  n8n_datos:
