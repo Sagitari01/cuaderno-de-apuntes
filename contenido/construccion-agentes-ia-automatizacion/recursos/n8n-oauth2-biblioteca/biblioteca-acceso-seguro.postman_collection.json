@@ -1,0 +1,2655 @@
+{
+  "info": {
+    "_postman_id": "87b52a2e-9e10-535b-9494-5769daece78c",
+    "name": "Biblioteca: acceso seguro al catálogo",
+    "description": "Pruebas de API Key, Basic Auth, JWT y OAuth 2.0 contra el simulador del catálogo, y consultas al webhook del workflow de n8n.\n\nAntes de empezar: ejecuta `docker compose up -d`, importa el entorno «Biblioteca local (demo)» y selecciónalo. Para las carpetas 5 y 10, importa y publica el workflow en n8n (la 10 necesita además las credenciales OAuth conectadas). La carpeta 11 es una prueba manual: ejecútala solo después de revocar la autorización de n8n.\n\nTodos los valores son ficticios y solo sirven para este ejercicio local.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "token_jwt",
+      "value": ""
+    },
+    {
+      "key": "token_vencido",
+      "value": ""
+    },
+    {
+      "key": "oauth_state",
+      "value": "estado-postman-123"
+    },
+    {
+      "key": "oauth_solicitud",
+      "value": ""
+    },
+    {
+      "key": "oauth_solicitud_perfil",
+      "value": ""
+    },
+    {
+      "key": "oauth_codigo",
+      "value": ""
+    },
+    {
+      "key": "oauth_codigo_perfil",
+      "value": ""
+    },
+    {
+      "key": "oauth_access",
+      "value": ""
+    },
+    {
+      "key": "oauth_refresh",
+      "value": ""
+    },
+    {
+      "key": "oauth_access_perfil",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Preparar",
+      "item": [
+        {
+          "name": "0.1 Comprobar que el simulador está activo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('estado activo', function () { pm.expect(pm.response.json().estado).to.eql('activo'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/salud",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "salud"
+              ]
+            },
+            "description": "Debe responder 200 con estado activo."
+          }
+        },
+        {
+          "name": "0.2 Reiniciar el registro del simulador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/reiniciar",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "reiniciar"
+              ]
+            },
+            "description": "Borra el registro de peticiones que muestra /registro."
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Sin autenticación",
+      "item": [
+        {
+          "name": "1.1 Consultar endpoint público",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: publico', function () { pm.expect(pm.response.json().acceso).to.eql('publico'); });",
+                  "pm.test('no incluye disponibilidad', function () { pm.expect(JSON.stringify(pm.response.json())).to.not.include('disponibles'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/publico",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "publico"
+              ]
+            },
+            "description": "No pide credenciales. Solo entrega títulos y total de ejemplares, sin disponibilidad."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. API Key",
+      "item": [
+        {
+          "name": "2.1 Consultar API Key sin clave",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "No se envía ninguna credencial. Revisa la cabecera WWW-Authenticate de la respuesta."
+          }
+        },
+        {
+          "name": "2.2 Consultar API Key incorrecta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "clave-incorrecta",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Se envía X-API-Key con un valor que el simulador no conoce."
+          }
+        },
+        {
+          "name": "2.3 Consultar API Key válida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: api_key', function () { pm.expect(pm.response.json().acceso).to.eql('api_key'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "X-API-Key",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "{{api_key}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/api-key?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "api-key"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo API Key, Key = X-API-Key, Value = {{api_key}}, Add to = Header."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Basic Auth",
+      "item": [
+        {
+          "name": "3.1 Consultar Basic Auth sin credenciales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Sin cabecera Authorization."
+          }
+        },
+        {
+          "name": "3.2 Consultar Basic Auth incorrecto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basic_usuario}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "contraseña-incorrecta",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Usuario correcto y contraseña incorrecta."
+          }
+        },
+        {
+          "name": "3.3 Consultar Basic Auth válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: basic', function () { pm.expect(pm.response.json().acceso).to.eql('basic'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basic_usuario}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basic_clave}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/basic?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "basic"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo Basic Auth. Postman arma Authorization: Basic <usuario:clave en Base64>."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. JWT (Bearer Token)",
+      "item": [
+        {
+          "name": "4.1 Solicitar JWT con credenciales válidas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('token generado (tres partes separadas por puntos)', function () { pm.expect(j.access_token.split('.').length).to.eql(3); });",
+                  "pm.test('token_type Bearer y vigencia', function () { pm.expect(j.token_type).to.eql('Bearer'); pm.expect(j.expires_in > 0).to.eql(true); });",
+                  "pm.collectionVariables.set('token_jwt', j.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/auth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "auth",
+                "token"
+              ]
+            },
+            "description": "Envía usuario y clave en un JSON. Guarda el token en la variable de colección token_jwt, solo durante la ejecución.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"{{jwt_usuario}}\",\n  \"clave\": \"{{jwt_clave}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "4.2 Solicitar JWT con clave incorrecta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: credencial_incorrecta', function () { pm.expect(pm.response.json().motivo).to.eql('credencial_incorrecta'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/auth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "auth",
+                "token"
+              ]
+            },
+            "description": "El simulador no entrega token si la clave no coincide.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"{{jwt_usuario}}\",\n  \"clave\": \"clave-incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "4.3 Consultar JWT sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Sin cabecera Authorization."
+          }
+        },
+        {
+          "name": "4.4 Consultar JWT inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_malformado', function () { pm.expect(pm.response.json().motivo).to.eql('token_malformado'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "esto.no-es-un.token",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "El token no tiene una firma válida."
+          }
+        },
+        {
+          "name": "4.5 Obtener un token ya vencido (ayuda de la clase)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.collectionVariables.set('token_vencido', pm.response.json().access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/demo/token-vencido",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "demo",
+                "token-vencido"
+              ]
+            },
+            "description": "Ruta solo para la clase: entrega un token bien firmado pero con fecha de vencimiento pasada."
+          }
+        },
+        {
+          "name": "4.6 Consultar JWT vencido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_vencido', function () { pm.expect(pm.response.json().motivo).to.eql('token_vencido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vencido}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "La firma es correcta, pero el token expiró."
+          }
+        },
+        {
+          "name": "4.7 Consultar JWT válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: jwt', function () { pm.expect(pm.response.json().acceso).to.eql('jwt'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/jwt?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "jwt"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Pestaña Authorization: tipo Bearer Token con {{token_jwt}} (el que guardó 4.1)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Webhook del workflow de n8n",
+      "item": [
+        {
+          "name": "5.1 Workflow: ruta API Key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: api_key', function () { pm.expect(pm.response.json().autenticacion).to.eql('api_key'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow usa su credencial Header Auth. Aquí no se envía ninguna clave.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"api_key\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.2 Workflow: ruta Basic Auth",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: basic', function () { pm.expect(pm.response.json().autenticacion).to.eql('basic'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow usa su credencial Basic Auth.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"basic\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.3 Workflow: ruta JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: jwt', function () { pm.expect(pm.response.json().autenticacion).to.eql('jwt'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El workflow pide un token y lo usa en la misma ejecución.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"jwt\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5.4 Workflow: tipo de autenticación no válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('mensaje de tipo no válido', function () { pm.expect(pm.response.json().error).to.eql('tipo_autenticacion_no_valido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "El Switch envía este caso a la salida de respaldo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"oauth\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. OAuth 2.0: sin autorización y consentimiento",
+      "item": [
+        {
+          "name": "6.1 Consultar con OAuth sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: falta_credencial', function () { pm.expect(pm.response.json().motivo).to.eql('falta_credencial'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "La persona todavía no autorizó nada. Revisa la cabecera WWW-Authenticate."
+          }
+        },
+        {
+          "name": "6.2 Consultar con un token inventado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_desconocido', function () { pm.expect(pm.response.json().motivo).to.eql('token_desconocido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "token-inventado",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "El token no existe en el servidor de autorización."
+          }
+        },
+        {
+          "name": "6.3 Autorizar con una redirect_uri no registrada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('no hay redirección', function () { pm.expect(pm.response.headers.get('Location')).to.eql(undefined); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri=http://sitio-malicioso.example/callback&scope=catalogo.leer&state={{oauth_state}}",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "http://sitio-malicioso.example/callback"
+                },
+                {
+                  "key": "scope",
+                  "value": "catalogo.leer"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauth_state}}"
+                }
+              ]
+            },
+            "description": "Control de seguridad: si la dirección de vuelta no es la registrada, el servidor no redirige a ningún lado y muestra el error en pantalla."
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "6.4 Autorizar sin state",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 302', function () { pm.response.to.have.status(302); });",
+                  "pm.test('error invalid_request', function () { pm.expect(pm.response.headers.get('Location')).to.include('error=invalid_request'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri={{oauth_redirect_uri}}&scope=catalogo.leer",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "catalogo.leer"
+                }
+              ]
+            },
+            "description": "El parámetro state es obligatorio: protege contra solicitudes falsificadas. Vuelve con error=invalid_request."
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "6.5 Pedir autorización (pantalla de consentimiento)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('es la pantalla con Autorizar y Rechazar', function () { var t = pm.response.text(); pm.expect(t).to.include('Autorizar'); pm.expect(t).to.include('Rechazar'); pm.expect(t).to.include('catalogo.leer'); });",
+                  "var m = pm.response.text().match(/name=\"solicitud\" value=\"([^\"]+)\"/);",
+                  "pm.test('la pantalla trae la solicitud de consentimiento', function () { pm.expect(m).to.not.eql(null); });",
+                  "if (m) { pm.collectionVariables.set('oauth_solicitud', m[1]); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri={{oauth_redirect_uri}}&scope=catalogo.leer&state={{oauth_state}}",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "catalogo.leer"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauth_state}}"
+                }
+              ]
+            },
+            "description": "Es lo que abre el navegador cuando pulsas Connect en n8n. La respuesta es la página HTML con Autorizar y Rechazar."
+          }
+        },
+        {
+          "name": "6.6 Rechazar el consentimiento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 302', function () { pm.response.to.have.status(302); });",
+                  "var loc = pm.response.headers.get('Location') || '';",
+                  "pm.test('access_denied con el mismo state', function () { pm.expect(loc).to.include('error=access_denied'); pm.expect(loc).to.include('state=' + pm.collectionVariables.get('oauth_state')); });",
+                  "pm.test('no se entregó ningún código', function () { pm.expect(loc).to.not.include('code='); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/decidir",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "decidir"
+              ]
+            },
+            "description": "La persona pulsa Rechazar. El servidor vuelve con error=access_denied y el mismo state; no hay código ni token.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "solicitud",
+                  "value": "{{oauth_solicitud}}",
+                  "type": "text"
+                },
+                {
+                  "key": "decision",
+                  "value": "rechazar",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "6.7 Pedir autorización otra vez",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('es la pantalla con Autorizar y Rechazar', function () { var t = pm.response.text(); pm.expect(t).to.include('Autorizar'); pm.expect(t).to.include('Rechazar'); pm.expect(t).to.include('catalogo.leer'); });",
+                  "var m = pm.response.text().match(/name=\"solicitud\" value=\"([^\"]+)\"/);",
+                  "pm.test('la pantalla trae la solicitud de consentimiento', function () { pm.expect(m).to.not.eql(null); });",
+                  "if (m) { pm.collectionVariables.set('oauth_solicitud', m[1]); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri={{oauth_redirect_uri}}&scope=catalogo.leer&state={{oauth_state}}",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "catalogo.leer"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauth_state}}"
+                }
+              ]
+            },
+            "description": "Cada solicitud de consentimiento se usa una sola vez; por eso hay que pedir una nueva."
+          }
+        },
+        {
+          "name": "6.8 Aceptar el consentimiento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 302', function () { pm.response.to.have.status(302); });",
+                  "var loc = pm.response.headers.get('Location') || '';",
+                  "pm.test('vuelve a la dirección registrada con code y el mismo state', function () { pm.expect(loc.indexOf(pm.environment.get('oauth_redirect_uri'))).to.eql(0); pm.expect(loc).to.include('state=' + pm.collectionVariables.get('oauth_state')); pm.expect(loc).to.include('code='); });",
+                  "var c = loc.match(/[?&]code=([^&]+)/);",
+                  "if (c) { pm.collectionVariables.set('oauth_codigo', decodeURIComponent(c[1])); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/decidir",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "decidir"
+              ]
+            },
+            "description": "La persona pulsa Autorizar. El servidor vuelve con un código temporal de un solo uso y el mismo state. Postman guarda el código en una variable.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "solicitud",
+                  "value": "{{oauth_solicitud}}",
+                  "type": "text"
+                },
+                {
+                  "key": "decision",
+                  "value": "autorizar",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "6.9 Canjear el código con un Client Secret incorrecto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('error OAuth: invalid_client', function () { pm.expect(pm.response.json().error).to.eql('invalid_client'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "secreto-incorrecto",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "Sin el Client Secret correcto el código no sirve. No se consume el código.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "{{oauth_codigo}}",
+                  "type": "text"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "6.10 Canjear el código por tokens",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('entrega access token y refresh token', function () { pm.expect(j.access_token).to.be.a('string'); pm.expect(j.refresh_token).to.be.a('string'); pm.expect(j.token_type).to.eql('Bearer'); });",
+                  "pm.test('scope concedido: catalogo.leer', function () { pm.expect(j.scope).to.eql('catalogo.leer'); });",
+                  "pm.test('el access token vence (expires_in)', function () { pm.expect(j.expires_in > 0).to.eql(true); });",
+                  "pm.collectionVariables.set('oauth_access', j.access_token);",
+                  "pm.collectionVariables.set('oauth_refresh', j.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "Esto lo hace n8n por detrás, de servidor a servidor, con el Client Secret. Guarda access token y refresh token en variables de colección.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "{{oauth_codigo}}",
+                  "type": "text"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. OAuth 2.0: uso del token y permisos (scopes)",
+      "item": [
+        {
+          "name": "7.1 Consultar con scope catalogo.leer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: oauth2', function () { pm.expect(pm.response.json().acceso).to.eql('oauth2'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Token válido con el permiso que exige la ruta."
+          }
+        },
+        {
+          "name": "7.2 Pedir autorización solo con perfil.leer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('es la pantalla con Autorizar y Rechazar', function () { var t = pm.response.text(); pm.expect(t).to.include('Autorizar'); pm.expect(t).to.include('Rechazar'); pm.expect(t).to.include('perfil.leer'); });",
+                  "var m = pm.response.text().match(/name=\"solicitud\" value=\"([^\"]+)\"/);",
+                  "pm.test('la pantalla trae la solicitud de consentimiento', function () { pm.expect(m).to.not.eql(null); });",
+                  "if (m) { pm.collectionVariables.set('oauth_solicitud_perfil', m[1]); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri={{oauth_redirect_uri}}&scope=perfil.leer&state={{oauth_state}}",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "perfil.leer"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauth_state}}"
+                }
+              ]
+            },
+            "description": "Una segunda autorización, esta vez con un permiso que no incluye el catálogo."
+          }
+        },
+        {
+          "name": "7.3 Aceptar (perfil.leer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 302', function () { pm.response.to.have.status(302); });",
+                  "var loc = pm.response.headers.get('Location') || '';",
+                  "pm.test('vuelve a la dirección registrada con code y el mismo state', function () { pm.expect(loc.indexOf(pm.environment.get('oauth_redirect_uri'))).to.eql(0); pm.expect(loc).to.include('state=' + pm.collectionVariables.get('oauth_state')); pm.expect(loc).to.include('code='); });",
+                  "var c = loc.match(/[?&]code=([^&]+)/);",
+                  "if (c) { pm.collectionVariables.set('oauth_codigo_perfil', decodeURIComponent(c[1])); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/decidir",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "decidir"
+              ]
+            },
+            "description": "La persona autoriza solo ver el nombre de la cuenta.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "solicitud",
+                  "value": "{{oauth_solicitud_perfil}}",
+                  "type": "text"
+                },
+                {
+                  "key": "decision",
+                  "value": "autorizar",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "7.4 Canjear el código de perfil.leer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('entrega access token y refresh token', function () { pm.expect(j.access_token).to.be.a('string'); pm.expect(j.refresh_token).to.be.a('string'); pm.expect(j.token_type).to.eql('Bearer'); });",
+                  "pm.test('scope concedido: perfil.leer', function () { pm.expect(j.scope).to.eql('perfil.leer'); });",
+                  "pm.test('el access token vence (expires_in)', function () { pm.expect(j.expires_in > 0).to.eql(true); });",
+                  "pm.collectionVariables.set('oauth_access_perfil', j.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "El token es válido, pero solo trae el scope perfil.leer.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "{{oauth_codigo_perfil}}",
+                  "type": "text"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "7.5 Consultar el catálogo con un token sin permiso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 403', function () { pm.response.to.have.status(403); });",
+                  "pm.test('motivo: insufficient_scope', function () { pm.expect(pm.response.json().motivo).to.eql('insufficient_scope'); });",
+                  "pm.test('indica el permiso requerido', function () { pm.expect(pm.response.json().requerido).to.eql('catalogo.leer'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access_perfil}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "El servidor sabe quién eres (token válido) pero la ruta exige catalogo.leer: 403, no 401."
+          }
+        },
+        {
+          "name": "7.6 El mismo token sí sirve en su ruta (perfil)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: oauth2', function () { pm.expect(pm.response.json().acceso).to.eql('oauth2'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access_perfil}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/perfil",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "perfil"
+              ]
+            },
+            "description": "Con perfil.leer la ruta de perfil responde 200."
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. OAuth 2.0: vencimiento, renovación y revocación",
+      "item": [
+        {
+          "name": "8.1 Vencer los access tokens (ayuda para practicar)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/demo/oauth/vencer-tokens",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "demo",
+                "oauth",
+                "vencer-tokens"
+              ]
+            },
+            "description": "Ruta solo para practicar: adelanta el vencimiento sin esperar 5 minutos. Los refresh tokens siguen vigentes."
+          }
+        },
+        {
+          "name": "8.2 Consultar con el access token vencido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: token_vencido', function () { pm.expect(pm.response.json().motivo).to.eql('token_vencido'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "401 con motivo token_vencido: es la señal para renovar."
+          }
+        },
+        {
+          "name": "8.3 Renovar con el refresh token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('entrega un access token nuevo', function () { pm.expect(j.access_token).to.not.eql(pm.collectionVariables.get('oauth_access')); });",
+                  "pm.collectionVariables.set('oauth_access', j.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "n8n hace esto solo, sin pedir otra autorización a la persona. Guarda el access token nuevo.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "refresh_token",
+                  "type": "text"
+                },
+                {
+                  "key": "refresh_token",
+                  "value": "{{oauth_refresh}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "8.4 Consultar con el access token renovado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: oauth2', function () { pm.expect(pm.response.json().acceso).to.eql('oauth2'); });",
+                  "pm.test('disponibles = 3', function () { pm.expect(pm.response.json().disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Funciona otra vez sin que la persona haya hecho nada."
+          }
+        },
+        {
+          "name": "8.5 Revocar la autorización",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/revocar",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "revocar"
+              ]
+            },
+            "description": "La aplicación (o la persona, desde la página de autorizaciones) quita el permiso. Se revoca todo: refresh token y access tokens.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_refresh}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "8.6 Intentar renovar después de revocar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('error OAuth: invalid_grant', function () { pm.expect(pm.response.json().error).to.eql('invalid_grant'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "El refresh token ya no sirve: hay que volver a pedir autorización.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "refresh_token",
+                  "type": "text"
+                },
+                {
+                  "key": "refresh_token",
+                  "value": "{{oauth_refresh}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "8.7 Consultar después de revocar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: autorizacion_revocada', function () { pm.expect(pm.response.json().motivo).to.eql('autorizacion_revocada'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Acceso denegado: el access token también quedó sin efecto."
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. OAuth 2.0: el código de autorización es de un solo uso",
+      "item": [
+        {
+          "name": "9.1 Pedir autorización",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('es la pantalla con Autorizar y Rechazar', function () { var t = pm.response.text(); pm.expect(t).to.include('Autorizar'); pm.expect(t).to.include('Rechazar'); pm.expect(t).to.include('catalogo.leer'); });",
+                  "var m = pm.response.text().match(/name=\"solicitud\" value=\"([^\"]+)\"/);",
+                  "pm.test('la pantalla trae la solicitud de consentimiento', function () { pm.expect(m).to.not.eql(null); });",
+                  "if (m) { pm.collectionVariables.set('oauth_solicitud', m[1]); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/autorizar?response_type=code&client_id={{oauth_client_id}}&redirect_uri={{oauth_redirect_uri}}&scope=catalogo.leer&state={{oauth_state}}",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "autorizar"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{oauth_client_id}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "catalogo.leer"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauth_state}}"
+                }
+              ]
+            },
+            "description": "Se repite el inicio del flujo con una autorización nueva."
+          }
+        },
+        {
+          "name": "9.2 Aceptar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 302', function () { pm.response.to.have.status(302); });",
+                  "var loc = pm.response.headers.get('Location') || '';",
+                  "pm.test('vuelve a la dirección registrada con code y el mismo state', function () { pm.expect(loc.indexOf(pm.environment.get('oauth_redirect_uri'))).to.eql(0); pm.expect(loc).to.include('state=' + pm.collectionVariables.get('oauth_state')); pm.expect(loc).to.include('code='); });",
+                  "var c = loc.match(/[?&]code=([^&]+)/);",
+                  "if (c) { pm.collectionVariables.set('oauth_codigo', decodeURIComponent(c[1])); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/decidir",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "decidir"
+              ]
+            },
+            "description": "Se obtiene un código nuevo.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "solicitud",
+                  "value": "{{oauth_solicitud}}",
+                  "type": "text"
+                },
+                {
+                  "key": "decision",
+                  "value": "autorizar",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          }
+        },
+        {
+          "name": "9.3 Canjear el código (primera vez)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "var j = pm.response.json();",
+                  "pm.test('entrega access token y refresh token', function () { pm.expect(j.access_token).to.be.a('string'); pm.expect(j.refresh_token).to.be.a('string'); pm.expect(j.token_type).to.eql('Bearer'); });",
+                  "pm.test('scope concedido: catalogo.leer', function () { pm.expect(j.scope).to.eql('catalogo.leer'); });",
+                  "pm.test('el access token vence (expires_in)', function () { pm.expect(j.expires_in > 0).to.eql(true); });",
+                  "pm.collectionVariables.set('oauth_access', j.access_token);",
+                  "pm.collectionVariables.set('oauth_refresh', j.refresh_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "La primera vez funciona.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "{{oauth_codigo}}",
+                  "type": "text"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "9.4 Canjear el mismo código otra vez",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 400', function () { pm.response.to.have.status(400); });",
+                  "pm.test('error OAuth: invalid_grant', function () { pm.expect(pm.response.json().error).to.eql('invalid_grant'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{oauth_client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{oauth_client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/oauth/token",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "Reutilizar un código es señal de robo: se rechaza.",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "text"
+                },
+                {
+                  "key": "code",
+                  "value": "{{oauth_codigo}}",
+                  "type": "text"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{oauth_redirect_uri}}",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "9.5 Consultar con el token del primer canje",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('motivo: autorizacion_revocada', function () { pm.expect(pm.response.json().motivo).to.eql('autorizacion_revocada'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauth_access}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{url_simulador}}/catalogo/oauth?titulo=El faro de papel",
+              "host": [
+                "{{url_simulador}}"
+              ],
+              "path": [
+                "catalogo",
+                "oauth"
+              ],
+              "query": [
+                {
+                  "key": "titulo",
+                  "value": "El faro de papel"
+                }
+              ]
+            },
+            "description": "Como defensa, el simulador revoca lo que se había emitido con ese código."
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Webhook del workflow de n8n: OAuth 2.0",
+      "item": [
+        {
+          "name": "10.1 Workflow: ruta OAuth 2.0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('acceso: oauth2', function () { pm.expect(pm.response.json().autenticacion).to.eql('oauth2'); });",
+                  "pm.test('el catálogo respondió 200', function () { pm.expect(pm.response.json().resultado.disponibles).to.eql(3); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "Requiere la credencial «Biblioteca | OAuth2 (demo)» conectada en n8n. Aquí no se envía ningún token: lo pone n8n.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"oauth2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "10.2 Workflow: ruta OAuth 2.0 sin permiso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 403', function () { pm.response.to.have.status(403); });",
+                  "pm.test('insufficient_scope', function () { pm.expect(pm.response.json().resultado.motivo).to.eql('insufficient_scope'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "Usa la credencial «Biblioteca | OAuth2 solo perfil (demo)», conectada solo con perfil.leer.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"oauth2_sin_permiso\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Después de revocar la autorización de n8n (prueba manual)",
+      "item": [
+        {
+          "name": "11.1 Workflow: ruta OAuth 2.0 con la autorización revocada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', function () { pm.response.to.have.status(401); });",
+                  "pm.test('autorizacion_no_valida', function () { pm.expect(pm.response.json().error).to.eql('autorizacion_no_valida'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": {
+              "raw": "{{url_n8n}}/webhook/acceso-seguro",
+              "host": [
+                "{{url_n8n}}"
+              ],
+              "path": [
+                "webhook",
+                "acceso-seguro"
+              ]
+            },
+            "description": "NO se ejecuta con toda la colección. Primero revoca la autorización de n8n en http://localhost:8091/oauth/autorizaciones y luego ejecuta solo esta solicitud: n8n no puede renovar y el workflow responde 401.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"El faro de papel\",\n  \"tipo_autenticacion\": \"oauth2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
