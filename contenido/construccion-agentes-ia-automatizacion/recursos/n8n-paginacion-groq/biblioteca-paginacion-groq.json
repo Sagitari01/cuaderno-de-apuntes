@@ -1,0 +1,262 @@
+{
+  "name": "Biblioteca - paginacion y Groq nativo",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "88a74040-9e8a-4131-ab81-bc5bd0895969",
+      "name": "Inicio",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://catalogo:8080/catalogo/publico",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "limite",
+              "value": "2"
+            }
+          ]
+        },
+        "options": {
+          "pagination": {
+            "pagination": {
+              "parameters": {
+                "parameters": [
+                  {
+                    "name": "pagina",
+                    "value": "={{ $pageCount + 1 }}"
+                  }
+                ]
+              },
+              "paginationCompleteWhen": "other",
+              "completeExpression": "={{ $response.body.hay_mas === false }}",
+              "limitPagesFetched": true,
+              "maxRequests": 10,
+              "requestInterval": 500
+            }
+          }
+        }
+      },
+      "id": "96516ad7-d21e-4661-9f34-396a6c90dfe1",
+      "name": "Consultar catalogo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        272,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "libros",
+        "options": {
+          "destinationFieldName": "libro"
+        }
+      },
+      "id": "4a71f67c-118b-41a6-a5ef-f92778a5076b",
+      "name": "Separar libros",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        528,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un bibliotecario digital. Clasifica el titulo ficticio en Fantasía, Ciencia ficción, Aventura, Misterio, Historia, Poesía, Literatura general u Otro. No inventes autores ni sinopsis. Devuelve exclusivamente un objeto JSON válido, sin Markdown, con categoria (texto), justificacion (texto breve) y requiere_revision (booleano true). Libro: {{ JSON.stringify($json.libro ?? $json) }}",
+        "batching": {
+          "batchSize": 1,
+          "delayBetweenBatches": 2000
+        }
+      },
+      "id": "321da437-ca48-4491-98bd-7b1af41190d6",
+      "name": "Clasificar con Groq",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        784,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ JSON.stringify({titulo: $('Separar libros').item.json.libro?.titulo ?? $('Separar libros').item.json.titulo, ejemplares_totales: $('Separar libros').item.json.libro?.ejemplares_totales ?? $('Separar libros').item.json.ejemplares_totales, categoria: JSON.parse($json.text.trim().replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```$/, '')).categoria, justificacion: JSON.parse($json.text.trim().replace(/^```(?:json)?\\s*/i, '').replace(/\\s*```$/, '')).justificacion, requiere_revision: true}) }}",
+        "options": {}
+      },
+      "id": "af240bcb-81e1-4050-8130-c0180b8a8b00",
+      "name": "Resultado JSON",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "id": "f03cf7af-c036-4b55-ba4c-3f80f65be0bd",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        784,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 01. Biblioteca inteligente\n\nClasificación automatizada de libros mediante inteligencia artificial.\n\n**Objetivos:**\n- Consumir una API paginada.\n- Procesar registros por lotes.\n- Controlar las solicitudes y los reintentos.\n- Obtener resultados estructurados en JSON.",
+        "height": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -320
+      ],
+      "id": "ff78b040-f049-4270-90ee-35cc9ad53f87",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 02. Consumo de API paginada\n\nRecuperamos el catálogo de la biblioteca en múltiples solicitudes HTTP.\n\n**Configuración:**\n- 2 libros por página.\n- Máximo de 10 páginas.\n- Intervalo de 500 ms entre solicitudes.\n\nLa API implementa la paginación. n8n automatiza su consumo hasta que `hay_mas` sea falso.\n\n**Resultado: 3 páginas con 6 libros.**",
+        "height": 704,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -432
+      ],
+      "id": "91bc6824-e903-4f3a-bab7-cc4e4204ac47",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 03. Preparación de los datos\n\nUtilizamos Split Out para separar el arreglo `libros` en registros individuales.\n\n- Campo de origen: `libros`.\n- Campo de destino: `libro`.\n\nCada libro se convierte en un item independiente para su posterior clasificación.\n\n**Entrada: 3 items.**\n\n**Salida: 6 items.**",
+        "height": 608,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -336
+      ],
+      "id": "c9942914-888f-4030-875f-96a348c87573",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 04. Clasificación con IA\n\nGroq clasifica cada libro según su título y devuelve una respuesta con estructura JSON.\n\n**Modelo:** `openai/gpt-oss-20b`\n**Temperatura:** 0.0\n\n### Procesamiento por lotes\n- Batch Size: 1.\n- Delay Between Batches: 2000 ms.\n\n### Control de errores\n- Retry On Fail: activado.\n- Máximo de 3 intentos.\n- Espera de 5000 ms entre intentos.\n\nLos lotes ayudan a prevenir la saturación de la API. Los reintentos permiten recuperarse de fallas temporales.",
+        "height": 784,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -432
+      ],
+      "id": "5b4cf09c-3ad4-461d-8b98-136948230500",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 05. Resultado estructurado\n\nConvertimos la respuesta textual de Groq en un objeto JSON mediante `JSON.parse()`.\n\nConservamos los datos originales y agregamos:\n- Categoría.\n- Justificación.\n- Requiere revisión.\n\nLa clasificación es orientativa porque solo conocemos el título del libro.\n\n**Resultado final: 6 libros clasificados en JSON.**\n\nNo se utiliza almacenamiento adicional.",
+        "height": 640,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        -432
+      ],
+      "id": "770d19c9-617d-4e29-a863-823e80960f84",
+      "name": "Sticky Note4"
+    }
+  ],
+  "connections": {
+    "Inicio": {
+      "main": [
+        [
+          {
+            "node": "Consultar catalogo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar catalogo": {
+      "main": [
+        [
+          {
+            "node": "Separar libros",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separar libros": {
+      "main": [
+        [
+          {
+            "node": "Clasificar con Groq",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar con Groq": {
+      "main": [
+        [
+          {
+            "node": "Resultado JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Clasificar con Groq",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  }
+}
