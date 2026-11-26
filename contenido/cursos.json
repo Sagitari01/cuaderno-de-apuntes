@@ -108,7 +108,7 @@
         },
         {
           "titulo": "Semana 3",
-          "tema": "Manejo de errores, reintentos y diagnóstico en n8n",
+          "tema": "Manejo de errores, autenticación, paginación e integración con IA en n8n",
           "materiales": [
             {
               "id": "n8n-manejo-de-errores",
@@ -129,6 +129,13 @@
               "titulo": "OAuth 2.0 en n8n: consentimiento, permisos y tokens",
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/16-n8n-oauth2-biblioteca.md",
+              "nuevo": true
+            },
+            {
+              "id": "n8n-paginacion-groq",
+              "titulo": "Paginación, procesamiento por lotes y clasificación con Groq en n8n",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/17-n8n-paginacion-groq.md",
               "nuevo": true
             }
           ]
