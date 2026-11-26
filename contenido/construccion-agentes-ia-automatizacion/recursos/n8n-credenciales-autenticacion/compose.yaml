@@ -1,5 +1,6 @@
 # n8n y la API ficticia del catálogo (con autenticación) en la misma red de Docker.
 # Dentro de n8n, la API se llama "catalogo" (http://catalogo:8080), no "localhost".
+# OAuth 2.0: el navegador usa http://localhost:8091 (pantalla de consentimiento) y n8n usa http://catalogo:8080 (tokens).
 # Todos los valores de las credenciales son de demostración (ver .env.example).
 name: biblioteca-acceso-seguro
 
@@ -17,6 +18,10 @@ services:
       JWT_CLAVE: ${JWT_CLAVE:-demo-clave-jwt}
       JWT_SECRETO: ${JWT_SECRETO:-firma-solo-para-practica}
       JWT_VIGENCIA: ${JWT_VIGENCIA:-300}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID:-biblioteca-n8n}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET:-demo-secreto-oauth-biblioteca}
+      OAUTH_REDIRECT_URIS: ${OAUTH_REDIRECT_URIS:-http://localhost:${N8N_PUERTO:-5680}/rest/oauth2-credential/callback}
+      OAUTH_ACCESO_VIGENCIA: ${OAUTH_ACCESO_VIGENCIA:-300}
     volumes:
       - ./simulador_catalogo_seguro.py:/app/simulador_catalogo_seguro.py:ro
     ports:

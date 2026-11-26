@@ -122,6 +122,54 @@
               },
               "renameOutput": true,
               "outputKey": "JWT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2caad9ae-a12c-57ae-a265-0fae8b709309",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "oauth2",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "OAuth 2.0"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ace4ae82-1d51-53f5-b786-c3086cbb47d6",
+                    "leftValue": "={{ $json.tipo_autenticacion }}",
+                    "rightValue": "oauth2_sin_permiso",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "OAuth 2.0 sin permiso"
             }
           ]
         },
@@ -142,7 +190,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { \"error\": \"tipo_autenticacion_no_valido\", \"validos\": [\"api_key\", \"basic\", \"jwt\"] } }}",
+        "responseBody": "={{ { \"error\": \"tipo_autenticacion_no_valido\", \"validos\": [\"api_key\", \"basic\", \"jwt\", \"oauth2\", \"oauth2_sin_permiso\"] } }}",
         "options": {
           "responseCode": 400
         }
@@ -457,6 +505,214 @@
         1070,
         915
       ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/oauth",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "3119db85-91a9-5019-9e2f-f9337296bbaa",
+      "name": "Consultar con OAuth 2.0",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        1340
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "name": "Biblioteca | OAuth2 (demo)"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "c08cf8fc-207c-548d-9731-fb54c985b35f",
+      "name": "Responder (OAuth 2.0)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://catalogo:8080/catalogo/oauth",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "titulo",
+              "value": "={{ $('Preparar datos').item.json.titulo }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "8bb366c6-c341-5920-be8d-59138b0db4e6",
+      "name": "Consultar con OAuth 2.0 sin permiso",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        860,
+        1800
+      ],
+      "credentials": {
+        "oAuth2Api": {
+          "name": "Biblioteca | OAuth2 solo perfil (demo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2_sin_permiso\", \"http\": $json.statusCode, \"resultado\": $json.body } }}",
+        "options": {
+          "responseCode": "={{ $json.statusCode }}"
+        }
+      },
+      "id": "5bc296ce-32dc-5d05-960f-2cfe747e61fe",
+      "name": "Responder (OAuth 2.0 sin permiso)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1160,
+        1800
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"autenticacion\": \"oauth2\", \"http\": 401, \"error\": \"autorizacion_no_valida\", \"mensaje\": \"La autorización ya no sirve: la persona la revocó o venció. Vuelve a autorizar la credencial con Connect.\" } }}",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "6b87fb71-064b-5f76-aed0-06ce04395eea",
+      "name": "Responder (OAuth 2.0 sin autorización)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1560,
+        1470
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 8 OAuth 2.0: autorización\n**La persona autoriza una sola vez**, al crear la credencial **OAuth2 API** y pulsar **Connect**. El simulador muestra la pantalla de consentimiento (Autorizar o Rechazar). Este workflow nunca recibe la contraseña de nadie.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "505e4632-61b0-5c1e-a870-af482ca9190d",
+      "name": "Nota 8 OAuth autorización",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 9 OAuth 2.0: el token\nn8n canjea el código por un **access token** y un **refresh token** y los guarda cifrados en la credencial. El nodo HTTP Request envía `Authorization: Bearer ...` solo. Tú no escribes ningún token.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "7b6af1aa-5030-5574-9f84-a3261c04d7dd",
+      "name": "Nota 9 OAuth token",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 10 OAuth 2.0: cuando vence\nEl access token dura 5 minutos. Si la API responde **401**, n8n usa el **refresh token** para pedir uno nuevo y repite la consulta, sin volver a pedir autorización.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "899ac169-47e2-5f5b-bc9c-d40d439ebfc1",
+      "name": "Nota 10 OAuth vencimiento",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 11 OAuth 2.0: permisos insuficientes\nEsta ruta usa una segunda credencial con solo `perfil.leer`. El token es válido, pero la ruta exige `catalogo.leer`: la API responde **403**. Se arregla autorizando de nuevo con el permiso correcto.",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "92063262-d54b-57f3-b254-3da0d6607958",
+      "name": "Nota 11 OAuth permisos",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        1560
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 12 OAuth 2.0: revocación\nSi la persona revoca la autorización, el refresh token deja de servir: la renovación falla y la **salida de error** del nodo responde 401. Solo se recupera autorizando otra vez (**Connect**).",
+        "height": 200,
+        "width": 330,
+        "color": 4
+      },
+      "id": "a647b2ec-cd80-5018-bd59-89f7b17fba23",
+      "name": "Nota 12 OAuth revocación",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1150,
+        1560
+      ]
     }
   ],
   "connections": {
@@ -501,6 +757,20 @@
         [
           {
             "node": "Obtener token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar con OAuth 2.0",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar con OAuth 2.0 sin permiso",
             "type": "main",
             "index": 0
           }
@@ -552,6 +822,35 @@
         [
           {
             "node": "Responder (JWT)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con OAuth 2.0": {
+      "main": [
+        [
+          {
+            "node": "Responder (OAuth 2.0)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder (OAuth 2.0 sin autorización)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar con OAuth 2.0 sin permiso": {
+      "main": [
+        [
+          {
+            "node": "Responder (OAuth 2.0 sin permiso)",
             "type": "main",
             "index": 0
           }
