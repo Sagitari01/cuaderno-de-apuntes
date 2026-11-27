@@ -9,7 +9,7 @@ En este laboratorio usaremos un evento de biblioteca ficticia, Postman y un webh
 - Diferenciar evento, endpoint, webhook y polling.
 - Distinguir las URL de prueba y producción.
 - Configurar Header Auth en un Webhook y demostrar los rechazos.
-- Exponer solo el receptor mediante ngrok o Cloudflare Quick Tunnel.
+- Exponer solo el receptor mediante Cloudflare Quick Tunnel; comparar ngrok como alternativa.
 - Revisar el código HTTP, los datos de la ejecución y las limitaciones del ejercicio.
 
 Necesitas Docker Desktop o Docker con Compose, Postman, un navegador y permiso para usar un túnel. No necesitas una API de IA, Google Drive, una tarjeta de crédito ni una base de datos para este ejercicio. Repasa [APIs y webhooks en n8n](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/n8n-api-webhook) y [Credenciales y autenticación](Guias.dc.html#/c/construccion-agentes-ia-automatizacion/n8n-credenciales-autenticacion).
@@ -50,7 +50,7 @@ docker compose up -d
 docker compose ps
 ```
 
-Ambos servicios deben estar en ejecución. Abre `http://localhost:5682` y crea el usuario propietario de **esta instancia de laboratorio** si se solicita. Utiliza una contraseña única y privada. No reutilices tus credenciales corporativas.
+Los servicios n8n y proxy deben estar en ejecución. El servicio `tunnel` no debe aparecer todavía: es opcional y está en el perfil `publico`. Abre `http://localhost:5682` y crea el usuario propietario de **esta instancia de laboratorio** si se solicita. Utiliza una contraseña única y privada. No reutilices tus credenciales corporativas.
 
 Importa `biblioteca-webhook-semicompletado.json` desde el menú de tres puntos de un workflow nuevo, y guarda. El workflow contiene:
 
@@ -130,7 +130,7 @@ Cambia `baseUrl` a `http://localhost:8092` (proxy local). Repite la carpeta 2: l
 
 **No continúes si el editor carga por el puerto 8092 o si una llamada sin token obtiene 200.** Revisa primero la credencial, la publicación y el archivo `nginx.conf`. No apuntes el túnel al puerto 5682 ni al 5678.
 
-## 7. Elige una herramienta de túnel
+## 7. Abre el túnel con Cloudflare Quick Tunnel
 
 | Característica | ngrok | Cloudflare Quick Tunnel |
 | --- | --- | --- |
@@ -139,28 +139,37 @@ Cambia `baseUrl` a `http://localhost:8092` (proxy local). Repite la carpeta 2: l
 | Uso en esta práctica | Alternativa para demos con URL de desarrollo | Alternativa rápida para una prueba temporal |
 | Límites | Dependen del plan; consulta el panel | Sin garantía de disponibilidad; límite documentado de solicitudes simultáneas, sin SSE |
 
-El authtoken de ngrok identifica tu agente ante ngrok. El token `X-Biblioteca-Token` protege el webhook. **Son dos secretos distintos.** No necesitas ejecutar ambas herramientas a la vez.
+El authtoken de ngrok identifica tu agente ante ngrok. El token `X-Biblioteca-Token` protege el webhook. **Son dos secretos distintos.** **Cloudflare Quick Tunnel será el camino principal:** no exige cuenta, dominio ni authtoken. Es temporal, no tiene garantía de disponibilidad y admite hasta 200 solicitudes en curso, sin SSE. ngrok queda como comparación o alternativa si la red lo permite.
 
-### 7.1 Opción A: ngrok
+### 7.1 Cloudflare en Docker — camino recomendado
 
-Instala ngrok desde [su página oficial para Windows](https://ngrok.com/download/windows), inicia sesión en su sitio y obtén el authtoken. En PowerShell comprueba `ngrok version`. Configura el agente siguiendo su documentación; sustituye el marcador por el valor privado sin compartir la pantalla:
+El Compose incluye `cloudflared` como servicio opcional: **no necesitas instalar otro programa en Windows**. El agente solo comparte la red de entrada del proxy, no la red backend de n8n. No habilites el túnel hasta superar las pruebas locales de la sección 6.
+
+En una segunda terminal, dentro de la carpeta del laboratorio, ejecuta:
 
 ```powershell
-ngrok config add-authtoken "TU_AUTHTOKEN_PRIVADO"
-ngrok http 8092
+docker compose run --rm --no-deps tunnel
 ```
 
-Copia la URL **HTTPS** que muestra el agente y deja la terminal abierta. No copies capturas que contengan el authtoken, la URL activa o cabeceras secretas. Si un aviso intermedio aparece, comprueba que envías una solicitud de API con Postman y no una navegación al editor.
+El comando descarga la imagen oficial de cloudflared si hace falta y muestra una URL temporal `https://...trycloudflare.com`. Mantén la terminal abierta. No requiere cuenta ni authtoken de Cloudflare. El agente apunta a `http://proxy:8080`, no a n8n ni a localhost, porque corre dentro de Docker.
 
-### 7.2 Opción B: Cloudflare Quick Tunnel
+La imagen del agente usa `latest`; registra la versión durante la validación con `docker compose run --rm --no-deps tunnel --version` y fija la imagen que hayas probado. n8n mantiene su versión fija 2.44.6.
 
-Instala `cloudflared` según las [instrucciones oficiales](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/). Comprueba `cloudflared --version` y ejecuta:
+Si no conecta, revisa los logs y los permisos de red. No desactives controles corporativos ni intentes eludir restricciones. Si la red bloquea los túneles, completa la parte local y deja la prueba pública pendiente.
+
+### 7.2 Alternativa: cloudflared instalado en el equipo
+
+Si ya tienes cloudflared desde [las descargas oficiales](https://developers.cloudflare.com/tunnel/downloads/), también puedes usar PowerShell:
 
 ```powershell
 cloudflared tunnel --url http://localhost:8092
 ```
 
-Si el ejecutable no está en PATH, entra a su carpeta y usa `.\cloudflared.exe tunnel --url http://localhost:8092`. Copia la URL HTTPS `trycloudflare.com` que aparece. No uses la opción de acceso interactivo por correo para esta prueba automatizada con Postman. Quick Tunnel es temporal, no para producción.
+Elige un solo método. Copia la URL HTTPS generada y mantenla privada. No actives la autenticación interactiva por correo: esta prueba usa Postman y Header Auth. El hostname cambia al iniciar otro Quick Tunnel.
+
+### 7.3 ngrok — referencia opcional
+
+ngrok requiere cuenta y authtoken privado. Si ya lo tienes configurado según [la documentación oficial](https://ngrok.com/docs/start), la alternativa es `ngrok http 8092`. Su authtoken no es `X-Biblioteca-Token`. No se exige implementar los dos proveedores.
 
 ## 8. Prueba el evento a través de Internet
 
@@ -213,7 +222,7 @@ Prueba enviar dos veces el mismo `id_evento`. Habrá dos ejecuciones: esta demos
 
 ## 10. Actividad práctica y evidencias
 
-Construye y explica el receptor con **una** herramienta de túnel. Registra los casos de prueba esperados y observados, diferenciando local, proxy local y HTTPS.
+Construye y explica el receptor con **Cloudflare Quick Tunnel** como recorrido principal. ngrok queda como alternativa, no como segundo requisito. Registra los casos de prueba esperados y observados, diferenciando local, proxy local y HTTPS.
 
 | Evidencia | Qué debe mostrar |
 | --- | --- |
@@ -228,7 +237,7 @@ En la comparación incluye requisitos, persistencia de URL y límites; indica cu
 
 ### Al terminar
 
-1. Detén el agente del túnel con Ctrl+C y confirma que la dirección pública dejó de reenviar tráfico.
+1. Detén el agente del túnel con Ctrl+C en su terminal y confirma que la dirección pública dejó de reenviar tráfico. Si sigue apareciendo un contenedor del servicio, identifícalo con `docker compose ps -a` y detenlo.
 2. Despublica el workflow de laboratorio, elimina ejecuciones de prueba que contengan cabeceras y cambia o elimina el token de la credencial.
 3. Si configuraste `URL_PUBLICA`, vuelve al valor local en `.env` y ejecuta `docker compose up -d --force-recreate n8n proxy`.
 4. Para detener el laboratorio: `docker compose down`. **No agregues `-v` si quieres conservar tus workflows y credenciales.**
@@ -262,4 +271,4 @@ Documentación técnica:
 - [Primeros pasos con ngrok](https://ngrok.com/docs/start)
 - [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/)
 
-**Estado de validación:** procedimiento y parámetros revisados contra la documentación y los recursos de referencia. Los resultados de las tablas son esperados, no capturas de una ejecución propia. Queda pendiente probar el paquete completo en Docker, Postman y un túnel real antes de considerar el laboratorio validado de extremo a extremo.
+**Estado de validación:** revisión documental y estática. Las tablas muestran resultados esperados y el diagrama es conceptual. Faltan pruebas reales de Docker, Postman y Quick Tunnel, capturas completas sin secretos, validación visual del visor y registro de versión del agente.

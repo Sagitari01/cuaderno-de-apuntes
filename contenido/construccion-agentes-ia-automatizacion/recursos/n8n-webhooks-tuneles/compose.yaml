@@ -16,6 +16,8 @@ services:
       TZ: America/Santiago
     volumes:
       - n8n_datos:/home/node/.n8n
+    networks:
+      - backend
   proxy:
     image: nginx:1.28-alpine
     depends_on:
@@ -24,5 +26,20 @@ services:
       - "127.0.0.1:8092:8080"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - backend
+      - entrada
+  tunnel:
+    # Solo se inicia explícitamente, después de proteger el webhook.
+    image: cloudflare/cloudflared:latest
+    profiles: [publico]
+    command: ["tunnel", "--no-autoupdate", "--url", "http://proxy:8080"]
+    networks:
+      - entrada
+    depends_on:
+      - proxy
+networks:
+  backend:
+  entrada:
 volumes:
   n8n_datos:
