@@ -1,16 +1,18 @@
 # Biblioteca: webhook protegido y túneles
 
-**Versión de referencia:** n8n 2.44.6. Instancia nueva, puerto local 5682; proxy local 8092. No hay credenciales reales.
+**Propósito:** recibir un evento externo de devolución de un libro, proteger el receptor mediante Header Auth, limitar las rutas expuestas mediante Nginx y utilizar un túnel HTTPS temporal. El workflow confirma la recepción, no modifica inventarios reales.
+
+**Entorno:** n8n 2.44.6, editor local 5682, proxy 8092. Elige Postman o PowerShell como cliente HTTP. Los dos caminos están desarrollados paso a paso en la Guía 18.
 
 1. Guarda compose.yaml y nginx.conf juntos. Ejecuta `docker compose config --quiet` y `docker compose up -d`.
 2. Abre http://localhost:5682, configura el propietario e importa el workflow semicompletado.
-3. Usa carpeta 1 de la colección solo en localhost. Configura Header Auth con `X-Biblioteca-Token`, guarda y publica.
-4. Prueba carpeta 2 en 5682 y luego 8092. Ejecuta carpeta 3 en 8092: solo el POST al receptor de producción debe pasar a n8n.
-5. Solo entonces ejecuta **`docker compose run --rm --no-deps tunnel`** en otra terminal. No necesitas instalar cloudflared en el equipo ni crear una cuenta. El agente apunta al proxy `http://proxy:8080` dentro de Docker; el servicio es opcional y no arranca con `docker compose up -d`. Si ya tienes cloudflared instalado, la alternativa es `cloudflared tunnel --url http://localhost:8092`. ngrok queda como referencia opcional.
-6. Cambia baseUrl en Postman por la URL HTTPS y repite carpetas 2 y 3. Configura el valor local de tokenBiblioteca, no exportes el secreto.
-7. Opcional: copia env.example a .env con URL_PUBLICA y recrea n8n y proxy juntos. Repite todas las verificaciones.
-8. Al cerrar: Ctrl+C en el túnel y comprueba `docker compose ps -a`. Si el contenedor del túnel sigue Up, usa `docker stop NOMBRE_DEL_CONTENEDOR` con el nombre que muestra el listado. Verifica el fallo del acceso público y la continuidad local antes de despublicar el workflow, limpiar datos de prueba y detener con `docker compose down`. No uses -v si necesitas el volumen.
+3. Prueba la Test URL local con la escucha activada. En Postman importa `biblioteca-webhooks.postman_collection.json`, entra a Variables y deja baseUrl en http://localhost:5682. Abre la primera solicitud de carpeta 1. En PowerShell carga evento-biblioteca.json y ejecuta el POST de la sección 4 de la guía.
+4. Configura Header Auth con `X-Biblioteca-Token`, guarda y publica. Configura el token local de Postman o la variable $token de PowerShell. Comprueba los tres casos: sin token (403), incorrecto (403) y correcto (200).
+5. Cambia la base a http://localhost:8092. Repite los tres casos y comprueba los bloqueos de raíz, ruta de prueba, otro webhook y GET (carpeta 3 en Postman o comandos de la sección 6). No abras el túnel si falla un control.
+6. Ejecuta `docker compose run --rm --no-deps tunnel` en otra terminal. Cloudflare Quick Tunnel no requiere cuenta; ngrok es opcional. El agente apunta a http://proxy:8080, no al editor.
+7. Cambia baseUrl o $base por la URL HTTPS. Repite carpetas 2 y 3 en Postman o los bloques equivalentes en PowerShell. En Postman no ejecutes la colección completa: carpeta 1 solo se usa en local antes de proteger.
+8. Pulsa Ctrl+C para cerrar el túnel y confirma `docker compose ps -a`. Si sigue Up, ejecuta `docker stop NOMBRE_DEL_CONTENEDOR` con el nombre del listado. Comprueba el fallo del acceso público y la continuidad local mediante una solicitud válida por 8092. Despublica el workflow y limpia los datos de prueba. `docker compose down` detiene el laboratorio sin borrar sus volúmenes.
 
-**Advertencia:** el workflow inicialmente no tiene autenticación. Nunca abras el túnel antes de protegerlo y comprobar el proxy local. El flujo no persiste préstamos, no deduplica eventos y no valida firmas. El editor queda fuera de la ruta del túnel por diseño. No publiques datos reales.
+**Seguridad:** nunca abras el túnel antes de configurar y probar Header Auth. Usa datos ficticios, no secretos reales, y respeta los permisos de red. No compartas el token en exports. La guía incluye resultados del recorrido de referencia del 27/11/2026 con PowerShell y curl.exe; la colección describe las mismas pruebas.
 
-**Estado:** recorrido principal probado el 27/11/2026 en Windows, con PowerShell y curl.exe, n8n 2.44.6 y cloudflared 2026.11.2 (imagen latest). Se verificaron confirmaciones válidas, rechazos 403, bloqueo 404/405 y cierre del túnel con continuidad local. Consulta la guía para los comandos alternativos y el registro completo. Pendientes: Postman, capturas anonimizadas, visor y fijación de la imagen del agente. No se probaron ngrok ni la configuración opcional URL_PUBLICA.
+**Documentación:** consulta la Guía 18 para los dos caminos, explicaciones, pruebas, comparación y diagnóstico.
