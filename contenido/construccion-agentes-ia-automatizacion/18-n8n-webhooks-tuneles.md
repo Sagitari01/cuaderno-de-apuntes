@@ -153,7 +153,7 @@ docker compose run --rm --no-deps tunnel
 
 El comando descarga la imagen oficial de cloudflared si hace falta y muestra una URL temporal `https://...trycloudflare.com`. Mantén la terminal abierta. No requiere cuenta ni authtoken de Cloudflare. El agente apunta a `http://proxy:8080`, no a n8n ni a localhost, porque corre dentro de Docker.
 
-La imagen del agente usa `latest`; registra la versión durante la validación con `docker compose run --rm --no-deps tunnel --version` y fija la imagen que hayas probado. n8n mantiene su versión fija 2.44.6.
+En la prueba real del 27/11/2026 la imagen `latest` ejecutó cloudflared **2026.11.2**. Para repetir en otro equipo, consulta la versión con `docker compose run --rm --no-deps tunnel --version`. El tag `latest` puede cambiar; queda pendiente verificar y fijar un tag o digest inmutable del agente. n8n mantiene su versión fija 2.44.6.
 
 Si no conecta, revisa los logs y los permisos de red. No desactives controles corporativos ni intentes eludir restricciones. Si la red bloquea los túneles, completa la parte local y deja la prueba pública pendiente.
 
@@ -205,6 +205,36 @@ El volumen persistente conserva la configuración de la instancia. Verifica que 
 
 **Nota:** para una integración real, configura correctamente la cadena de proxies y cabeceras de reenvío según la arquitectura del proveedor. En este ejemplo no tomamos decisiones de seguridad a partir de la IP del cliente o de cabeceras de reenvío; usamos Header Auth y una ruta permitida explícitamente.
 
+### 8.2 Alternativa sin instalar Postman: PowerShell
+
+En Windows puedes reproducir las pruebas con PowerShell y curl.exe. Abre una terminal en la carpeta de descargas. Primero usa la URL de prueba local y activa la escucha en el editor (botón Execute); después publica y protege el workflow antes de utilizar la dirección de producción.
+
+```powershell
+$body = Get-Content ".\evento-biblioteca.json" -Raw
+Invoke-RestMethod -Uri "http://localhost:5682/webhook-test/biblioteca-evento-protegido" -Method POST -ContentType "application/json" -Body $body
+```
+
+Tras configurar Header Auth y publicar, carga tu token sin mostrarlo en la consola y prueba primero n8n local (`5682`) y el proxy (`8092`).
+
+```powershell
+$token = [System.Net.NetworkCredential]::new("", (Read-Host "Token del laboratorio" -AsSecureString)).Password
+$base = "http://localhost:8092"
+Invoke-RestMethod -Uri "$base/webhook/biblioteca-evento-protegido" -Method POST -ContentType "application/json" -Headers @{"X-Biblioteca-Token"=$token} -Body $body
+```
+
+Para los rechazos, conserva `$base` en el proxy local. Una vez verificados, inicia Quick Tunnel según la sección 7.1, reemplaza `$base` por tu URL HTTPS real (sin barra final), y repite tanto la solicitud válida anterior como este bloque:
+
+```powershell
+curl.exe -s -o NUL -w "Sin token: %{http_code}\n" -X POST "$base/webhook/biblioteca-evento-protegido"
+curl.exe -s -o NUL -w "Token incorrecto: %{http_code}\n" -X POST "$base/webhook/biblioteca-evento-protegido" -H "X-Biblioteca-Token: incorrecto"
+curl.exe -s -o NUL -w "Editor: %{http_code}\n" "$base/"
+curl.exe -s -o NUL -w "Ruta de prueba: %{http_code}\n" -X POST "$base/webhook-test/biblioteca-evento-protegido"
+curl.exe -s -o NUL -w "Otro webhook: %{http_code}\n" -X POST "$base/webhook/no-publicar"
+curl.exe -s -o NUL -w "Metodo GET: %{http_code}\n" "$base/webhook/biblioteca-evento-protegido"
+```
+
+Estos comandos se utilizaron en una instalación limpia real. La colección Postman se conserva para la actividad práctica que solicita esa herramienta.
+
 ## 9. Diagnóstico y control de errores
 
 | Resultado | Qué revisar |
@@ -237,12 +267,38 @@ En la comparación incluye requisitos, persistencia de URL y límites; indica cu
 
 ### Al terminar
 
-1. Detén el agente del túnel con Ctrl+C en su terminal y confirma que la dirección pública dejó de reenviar tráfico. Si sigue apareciendo un contenedor del servicio, identifícalo con `docker compose ps -a` y detenlo.
+1. Pulsa Ctrl+C en la terminal del túnel y ejecuta `docker compose ps -a`. En la prueba real, Ctrl+C no bastó: el contenedor seguía Up y el endpoint devolvía 403 sin token. Si el contenedor `biblioteca-webhooks-tunnel-run-...` continúa en ejecución, ejecuta `docker stop NOMBRE_DEL_CONTENEDOR`, sustituyendo el marcador por el nombre mostrado. No detengas n8n ni Nginx. Repite `docker compose ps -a` y verifica la URL pública con `curl.exe -sS --max-time 15 -o NUL -w "HTTP: %{http_code}\n" -X POST "$base/webhook/biblioteca-evento-protegido"`. En la prueba se obtuvo 000 (sin respuesta HTTP), no un código HTTP real. Vuelve a probar con token válido por `http://localhost:8092` para comprobar continuidad local.
 2. Despublica el workflow de laboratorio, elimina ejecuciones de prueba que contengan cabeceras y cambia o elimina el token de la credencial.
 3. Si configuraste `URL_PUBLICA`, vuelve al valor local en `.env` y ejecuta `docker compose up -d --force-recreate n8n proxy`.
 4. Para detener el laboratorio: `docker compose down`. **No agregues `-v` si quieres conservar tus workflows y credenciales.**
 
-## 11. Comprueba lo que entendiste
+## 11. Resultados de validación práctica
+
+Prueba del **27/11/2026** en Windows 10 (compilación 19045), con WSL 3.0.5.0 (WSL 2 predeterminado), Docker Desktop 4.100.1, Docker Engine 29.9.3, Compose 5.7.1, n8n 2.44.6, Nginx 1.28-alpine y cloudflared 2026.11.2. El entorno se instaló desde cero. Las solicitudes se realizaron con PowerShell y curl.exe, no con Postman.
+
+| Prueba | Resultado observado |
+| --- | --- |
+| Docker hello-world e inicio de n8n y proxy | Correctos |
+| Test URL sin escucha | 404 de n8n |
+| Test URL con escucha, sin protección | Confirmación del evento con fecha y hora |
+| Producción local sin token y token incorrecto | 403 en ambos casos |
+| Producción local con token válido | Confirmación del evento |
+| Proxy local: token válido | Confirmación del evento |
+| Proxy local: sin token o token incorrecto | 403 en ambos casos |
+| Proxy local: raíz, ruta de prueba y otro webhook | 404 en los tres casos |
+| Proxy local: GET en el endpoint | 405 |
+| Quick Tunnel por Docker | URL HTTPS generada; precomprobaciones DNS, UDP y TCP correctas |
+| HTTPS: token válido | Confirmación del evento |
+| HTTPS: sin token o token incorrecto | 403 en ambos casos |
+| HTTPS: raíz, ruta de prueba y otro webhook | 404 en los tres casos |
+| HTTPS: GET en el endpoint | 405 |
+| Ctrl+C sin detener el contenedor | Contenedor seguía Up; petición sin token devolvió 403 |
+| Tras detener el contenedor del túnel | Desapareció del listado; curl mostró 000, sin respuesta HTTP |
+| Proxy local después del cierre | Confirmación del evento con token válido |
+
+Las confirmaciones JSON se observaron en `Invoke-RestMethod`, que completó las solicitudes sin excepción. Los códigos 403, 404, 405 y 000 se observaron explícitamente. El 000 no es un código de estado HTTP. No se comprobó el acceso desde otra red, la recreación opcional con URL_PUBLICA, ngrok ni la importación de la colección en Postman. Las capturas reales están pendientes de selección y anonimización antes de incorporarlas al repositorio.
+
+## 12. Comprueba lo que entendiste
 
 - ¿Por qué un servicio remoto no puede usar tu localhost?
 - ¿HTTPS reemplaza a Header Auth?
@@ -251,7 +307,7 @@ En la comparación incluye requisitos, persistencia de URL y límites; indica cu
 - ¿Por qué el túnel se dirige al 8092 y no al editor de n8n?
 - ¿Qué control faltaría si un emisor repitiera un evento con consecuencias reales?
 
-## 12. Descargas y documentación
+## 13. Descargas y documentación
 
 Guarda `compose.yaml` y `nginx.conf` juntos. Los otros archivos sirven para importar el workflow, probar en Postman y configurar opcionalmente la dirección pública. Todos los datos son ficticios; ninguna descarga contiene un token real. El workflow se entrega semicompletado para observar la diferencia entre una entrada abierta y una protegida; no lo publiques por Internet sin completar la autenticación.
 
@@ -271,4 +327,4 @@ Documentación técnica:
 - [Primeros pasos con ngrok](https://ngrok.com/docs/start)
 - [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/)
 
-**Estado de validación:** revisión documental y estática. Las tablas muestran resultados esperados y el diagrama es conceptual. Faltan pruebas reales de Docker, Postman y Quick Tunnel, capturas completas sin secretos, validación visual del visor y registro de versión del agente.
+**Estado de validación:** recorrido principal validado en Windows mediante PowerShell, curl.exe, Docker, n8n, Nginx y Quick Tunnel, con resultados registrados en la sección 11. Pendientes: Postman real, capturas anonimizadas, validación visual del visor y fijación de un tag o digest verificado de cloudflared. El diagrama es conceptual.
