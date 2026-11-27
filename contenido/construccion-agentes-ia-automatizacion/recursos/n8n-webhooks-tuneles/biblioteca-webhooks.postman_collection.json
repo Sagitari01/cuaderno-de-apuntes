@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "Biblioteca | Webhooks y túneles HTTPS",
+    "description": "Laboratorio de biblioteca ficticia. Configura las variables locales baseUrl y tokenBiblioteca. Carpeta 1 únicamente en localhost:5682 y antes de proteger. Configura Header Auth, publica y ejecuta carpeta 2 en 5682. Cambia baseUrl a localhost:8092 y ejecuta carpetas 2 y 3. Tras comprobar los rechazos y bloqueos, inicia el túnel y cambia baseUrl a la URL HTTPS; repite carpetas 2 y 3. No ejecutes la colección completa de una vez. Al cerrar el túnel, comprueba la continuidad local. El token debe coincidir con el valor de la credencial de n8n; nunca compartas un secreto real.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5682"
+    },
+    {
+      "key": "tokenBiblioteca",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Demostración abierta (solo local)",
+      "item": [
+        {
+          "name": "Test URL — evento sin token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook-test/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Solo localhost, puerto 5682. Pulsa Execute o Listen for test event antes de Send. No abras el túnel en esta etapa. Si obtienes 404, activa de nuevo la escucha.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Evento confirmado\", () => pm.expect(pm.response.json().id_evento).to.eql(\"DEV-0001\"));",
+                  "pm.test(\"Sin cabeceras ni token en respuesta\", () => {const j=pm.response.json(); pm.expect(j).not.to.have.property(\"headers\"); pm.expect(j).not.to.have.property(\"token\");});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Production URL abierta — opcional, solo local",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Demostración opcional en localhost, puerto 5682, antes de configurar Header Auth. Requiere workflow publicado. No ejecutar por el túnel.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Evento confirmado\", () => pm.expect(pm.response.json().id_evento).to.eql(\"DEV-0001\"));",
+                  "pm.test(\"Sin cabeceras ni token en respuesta\", () => {const j=pm.response.json(); pm.expect(j).not.to.have.property(\"headers\"); pm.expect(j).not.to.have.property(\"token\");});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Antes de proteger. Solo local. La primera solicitud requiere escucha de prueba; la segunda es opcional y requiere publicación."
+    },
+    {
+      "name": "2. Receptor protegido",
+      "item": [
+        {
+          "name": "Sin cabecera",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Compara la cabecera X-Biblioteca-Token y el código esperado en Test Results. El cuerpo del evento es el mismo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Acceso denegado (401 o 403)\", () => pm.expect([401,403]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Token incorrecto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Biblioteca-Token",
+                "value": "valor-incorrecto-demo"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Compara la cabecera X-Biblioteca-Token y el código esperado en Test Results. El cuerpo del evento es el mismo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Acceso denegado (401 o 403)\", () => pm.expect([401,403]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Token válido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Biblioteca-Token",
+                "value": "{{tokenBiblioteca}}"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Compara la cabecera X-Biblioteca-Token y el código esperado en Test Results. El cuerpo del evento es el mismo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Evento confirmado\", () => pm.expect(pm.response.json().id_evento).to.eql(\"DEV-0001\"));",
+                  "pm.test(\"Sin cabeceras ni token en respuesta\", () => {const j=pm.response.json(); pm.expect(j).not.to.have.property(\"headers\"); pm.expect(j).not.to.have.property(\"token\");});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Después de configurar Header Auth y publicar. Ejecuta estas tres solicitudes en cada dirección base: n8n local, proxy local y HTTPS. La única válida lleva {{tokenBiblioteca}}."
+    },
+    {
+      "name": "3. Frontera del proxy (puerto 8092 o HTTPS)",
+      "item": [
+        {
+          "name": "Editor bloqueado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Control de acceso del proxy. Ejecuta solo por 8092 o HTTPS."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ruta de prueba bloqueada",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook-test/biblioteca-evento-protegido",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Control de acceso del proxy. Ejecuta solo por 8092 o HTTPS."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Otro webhook bloqueado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/webhook/no-publicar",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento\": \"libro.devuelto\",\n  \"id_evento\": \"DEV-0001\",\n  \"titulo\": \"El faro de papel\",\n  \"sucursal\": \"Centro\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Control de acceso del proxy. Ejecuta solo por 8092 o HTTPS."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Método GET bloqueado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/webhook/biblioteca-evento-protegido",
+            "auth": {
+              "type": "noauth"
+            },
+            "description": "Control de acceso del proxy. Ejecuta solo por 8092 o HTTPS."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 405\", () => pm.response.to.have.status(405));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Solo contra el proxy local (8092) o el túnel HTTPS. Comprueba que no se exponen el editor, las rutas no autorizadas ni el método GET."
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  }
+}

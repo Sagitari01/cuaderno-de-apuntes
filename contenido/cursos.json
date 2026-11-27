@@ -137,6 +137,13 @@
               "tipo": "lectura",
               "archivo": "construccion-agentes-ia-automatizacion/17-n8n-paginacion-groq.md",
               "nuevo": true
+            },
+            {
+              "id": "n8n-webhooks-tuneles",
+              "titulo": "Webhooks seguros en n8n: túneles HTTPS y eventos externos",
+              "tipo": "lectura",
+              "archivo": "construccion-agentes-ia-automatizacion/18-n8n-webhooks-tuneles.md",
+              "nuevo": true
             }
           ]
         },
