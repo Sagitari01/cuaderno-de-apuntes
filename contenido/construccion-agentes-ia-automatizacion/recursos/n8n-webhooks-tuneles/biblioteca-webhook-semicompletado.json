@@ -1,0 +1,164 @@
+{
+  "name": "Biblioteca | Evento externo protegido (completar)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "biblioteca-evento-protegido",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "71b83a10-2700-4000-8000-000000000001",
+      "name": "Recibir evento",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        80
+      ],
+      "webhookId": "71b83a10-2700-4000-8000-000000000020"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "71b83a10-2700-4000-8000-000000000030",
+              "name": "evento",
+              "value": "={{ $json.body.evento }}",
+              "type": "string"
+            },
+            {
+              "id": "71b83a10-2700-4000-8000-000000000031",
+              "name": "id_evento",
+              "value": "={{ $json.body.id_evento }}",
+              "type": "string"
+            },
+            {
+              "id": "71b83a10-2700-4000-8000-000000000032",
+              "name": "titulo",
+              "value": "={{ $json.body.titulo }}",
+              "type": "string"
+            },
+            {
+              "id": "71b83a10-2700-4000-8000-000000000033",
+              "name": "sucursal",
+              "value": "={{ $json.body.sucursal }}",
+              "type": "string"
+            },
+            {
+              "id": "71b83a10-2700-4000-8000-000000000034",
+              "name": "recibido_en",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "71b83a10-2700-4000-8000-000000000002",
+      "name": "Preparar evento",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { recibido: true, evento: $json.evento, id_evento: $json.id_evento, titulo: $json.titulo, sucursal: $json.sucursal, recibido_en: $json.recibido_en } }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "71b83a10-2700-4000-8000-000000000003",
+      "name": "Confirmar recepción",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        240,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 1. Entrada\nPOST /webhook/biblioteca-evento-protegido\nPrueba sin autenticación solo en localhost. Antes de abrir cualquier túnel, selecciona Header Auth y vincula tu credencial.",
+        "height": 230,
+        "width": 300,
+        "color": 5
+      },
+      "id": "71b83a10-2700-4000-8000-000000000004",
+      "name": "Nota: entrada",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -250
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2. Preparar evento\nExtrae únicamente campos ficticios del cuerpo. No devuelve las cabeceras ni escribe en una base de datos.",
+        "height": 230,
+        "width": 300,
+        "color": 4
+      },
+      "id": "71b83a10-2700-4000-8000-000000000005",
+      "name": "Nota: tratamiento",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -250
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3. Confirmación\nEl 200 confirma la respuesta del flujo. Verifica la ejecución; no prueba que se haya creado un préstamo real.",
+        "height": 230,
+        "width": 300,
+        "color": 6
+      },
+      "id": "71b83a10-2700-4000-8000-000000000006",
+      "name": "Nota: respuesta",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -250
+      ]
+    }
+  ],
+  "connections": {
+    "Recibir evento": {
+      "main": [
+        [
+          {
+            "node": "Preparar evento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar evento": {
+      "main": [
+        [
+          {
+            "node": "Confirmar recepción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

@@ -1,0 +1,28 @@
+name: biblioteca-webhooks
+services:
+  n8n:
+    image: n8nio/n8n:2.44.6
+    ports:
+      - "127.0.0.1:5682:5678"
+    environment:
+      N8N_HOST: localhost
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: http
+      N8N_EDITOR_BASE_URL: http://localhost:5682/
+      N8N_WEBHOOK_URL: ${URL_PUBLICA:-http://localhost:5682/}
+      N8N_PROXY_HOPS: "1"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      GENERIC_TIMEZONE: America/Santiago
+      TZ: America/Santiago
+    volumes:
+      - n8n_datos:/home/node/.n8n
+  proxy:
+    image: nginx:1.28-alpine
+    depends_on:
+      - n8n
+    ports:
+      - "127.0.0.1:8092:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+volumes:
+  n8n_datos:
