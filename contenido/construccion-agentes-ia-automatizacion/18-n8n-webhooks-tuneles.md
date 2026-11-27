@@ -64,9 +64,68 @@ La conexión pública usa HTTPS; en las redes locales de Docker, el laboratorio 
 
 **Decisión de seguridad:** si un túnel se dirige a todo n8n, también podría hacer accesibles el editor, las API administrativas y otros webhooks. Usaremos un pequeño proxy Nginx que admite únicamente el método POST en la ruta de producción de este ejercicio. Es un ejemplo local de mínimo privilegio, no una configuración de producción auditada.
 
+### 2.3 Preparación desde un equipo Windows
+
+Si ya tienes Docker funcionando, pasa directamente a la sección 3. En un equipo Windows compatible, comprueba WSL y los requisitos de [Docker Desktop para Windows](https://docs.docker.com/desktop/setup/install/windows-install/). Usa una cuenta con permisos de instalación y una red autorizada para el laboratorio.
+
+Abre PowerShell como administrador y ejecuta:
+
+```powershell
+wsl --install --no-distribution
+```
+
+Reinicia Windows si la instalación lo solicita. No necesitas instalar una distribución Ubuntu por separado para utilizar el backend WSL de Docker Desktop.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/01-wsl-instalado.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Instalación de WSL completada; Windows solicita reiniciar para aplicar los cambios."><figcaption>Figura 1. Instalación de WSL completada; Windows solicita reiniciar para aplicar los cambios. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/01-wsl-instalado.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+Después del reinicio, comprueba la versión:
+
+```powershell
+wsl --version
+wsl --status
+```
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/02-wsl-version.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Verificación posterior al reinicio: WSL 3.0.5.0 y versión predeterminada 2."><figcaption>Figura 2. Verificación posterior al reinicio: WSL 3.0.5.0 y versión predeterminada 2. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/02-wsl-version.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+Instala Docker Desktop siguiendo la documentación oficial. En la pantalla de configuración de la versión utilizada en esta prueba se seleccionó la instalación por usuario y WSL 2; las opciones pueden variar según la versión del instalador.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/03-docker-instalador.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Configuración del instalador de Docker Desktop: instalación por usuario y WSL 2."><figcaption>Figura 3. Configuración del instalador de Docker Desktop: instalación por usuario y WSL 2. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/03-docker-instalador.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+Abre Docker Desktop y comprueba el estado del motor.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/04-docker-motor.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Docker Desktop iniciado; Engine running confirma que el motor está disponible."><figcaption>Figura 4. Docker Desktop iniciado; Engine running confirma que el motor está disponible. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/04-docker-motor.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+En una nueva terminal, valida Docker y Compose:
+
+```powershell
+docker --version
+docker compose version
+docker run --rm hello-world
+```
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/05-docker-hello-world.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Comprobación de Docker y Compose; hello-world se descarga y se ejecuta correctamente."><figcaption>Figura 5. Comprobación de Docker y Compose; hello-world se descarga y se ejecuta correctamente. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/05-docker-hello-world.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+El mensaje Hello from Docker confirma que el motor puede descargar y ejecutar un contenedor. Si falla, revisa los requisitos del equipo y los permisos antes de continuar.
+
+**Sobre las imágenes:** las capturas de esta guía proceden de la ejecución real del laboratorio. Se han recortado o cubierto datos personales, credenciales y detalles de conexión cuando fue necesario. Conservan su resolución disponible; los elementos cubiertos no representan comandos que debas introducir. Postman dispone de instrucciones escritas y su propia colección descargable.
+
 ## 3. Prepara Docker sin modificar tus otros laboratorios
 
 Descarga los archivos al final de esta guía y guárdalos juntos en una carpeta nueva `biblioteca-webhooks`. La instancia es independiente de las prácticas anteriores: usa n8n 2.44.6, un volumen propio y otros puertos.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/06-archivos-laboratorio.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Archivos descargados del laboratorio: Compose, proxy, workflow, colección y evento de ejemplo."><figcaption>Figura 6. Archivos descargados del laboratorio: Compose, proxy, workflow, colección y evento de ejemplo. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/06-archivos-laboratorio.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 | Servicio | Puerto del equipo | Puerto del contenedor | Uso |
 | --- | --- | --- | --- |
@@ -83,6 +142,10 @@ docker compose ps
 
 Los servicios n8n y proxy deben estar en ejecución. El servicio `tunnel` no debe aparecer todavía: es opcional y está en el perfil `publico`. Abre `http://localhost:5682` y crea el usuario propietario de **esta instancia de laboratorio** si se solicita. Utiliza una contraseña única y privada. No reutilices tus credenciales corporativas.
 
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/07-contenedores.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Docker Compose crea redes y volumen; n8n y Nginx quedan en ejecución, sin el túnel."><figcaption>Figura 7. Docker Compose crea redes y volumen; n8n y Nginx quedan en ejecución, sin el túnel. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/07-contenedores.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
 Importa `biblioteca-webhook-semicompletado.json` desde el menú de tres puntos de un workflow nuevo, y guarda. El workflow contiene:
 
 | Nodo | Responsabilidad |
@@ -90,6 +153,10 @@ Importa `biblioteca-webhook-semicompletado.json` desde el menú de tres puntos d
 | Recibir evento (Webhook) | Recibe el POST; al principio la autenticación está desactivada para observar el problema |
 | Preparar evento (Edit Fields) | Extrae evento, id_evento, título, sucursal y hora |
 | Confirmar recepción (Respond to Webhook) | Devuelve solo esos datos como JSON con código 200 |
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/08-workflow-importado.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Workflow importado con tres nodos funcionales y tres notas adhesivas."><figcaption>Figura 8. Workflow importado con tres nodos funcionales y tres notas adhesivas. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/08-workflow-importado.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 Este laboratorio prepara información en memoria de la ejecución. **No guarda préstamos ni modifica un catálogo.** Las tres notas adhesivas explican la entrada, el tratamiento y la respuesta.
 
@@ -150,6 +217,14 @@ Invoke-RestMethod -Uri "$base/webhook-test/biblioteca-evento-protegido" -Method 
 
 Observa la confirmación y el paso de datos por los tres nodos. Si recibes 404, activa la escucha y repite. La prueba no necesita publicar el workflow abierto.
 
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/09-test-url-404.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Una petición a la URL de prueba sin escucha activa devuelve 404: la ruta no está registrada."><figcaption>Figura 9. Una petición a la URL de prueba sin escucha activa devuelve 404: la ruta no está registrada. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/09-test-url-404.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/10-evento-local.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="La URL de prueba con escucha activa recibe el evento y devuelve la confirmación JSON."><figcaption>Figura 10. La URL de prueba con escucha activa recibe el evento y devuelve la confirmación JSON. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/10-evento-local.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
 ### 4.1 Qué estamos observando
 
 El Webhook recibe el objeto en `$json.body`; por ejemplo, `{{ $json.body.titulo }}` recupera el título del libro. Edit Fields selecciona las propiedades que necesitamos y agrega la hora de recepción. Respond to Webhook devuelve un JSON con `recibido: true`. Un 200 indica que el flujo respondió correctamente, no que haya actualizado un inventario real.
@@ -172,6 +247,10 @@ Genera un token aleatorio largo en tu gestor de contraseñas. No uses `1234`, el
 | Value | Tu token aleatorio privado |
 
 En el nodo **Recibir evento**, cambia **Authentication** a **Header Auth** y selecciona la credencial. Guarda y publica la versión protegida. No coloques el secreto en el nombre, el JSON, las notas, un nodo IF, la URL ni el repositorio.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/11-header-auth.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Configuración real de la credencial Header Auth con X-Biblioteca-Token. El valor permanece oculto."><figcaption>Figura 11. Configuración real de la credencial Header Auth con X-Biblioteca-Token. El valor permanece oculto. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/11-header-auth.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 Guarda la credencial, comprueba que el nodo la tiene seleccionada y pulsa **Publish** para registrar la ruta de producción protegida. Si el flujo estaba escuchando una prueba, detén la escucha primero. Ahora haremos tres solicitudes iguales, cambiando únicamente la cabecera de autenticación:
 
@@ -201,6 +280,18 @@ Las peticiones de rechazo de este bloque omiten el cuerpo porque Header Auth deb
 
 En n8n 2.44.6 el material de referencia de la práctica documenta 403 para Header Auth ausente o incorrecto. La colección admite 401 o 403 porque la implementación puede cambiar entre versiones. Un rechazo de Header Auth no equivale necesariamente a un scope insuficiente de OAuth.
 
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/12-rechazo-sin-token.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="La URL de producción local rechaza una solicitud sin token con HTTP 403."><figcaption>Figura 12. La URL de producción local rechaza una solicitud sin token con HTTP 403. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/12-rechazo-sin-token.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/13-rechazo-token-incorrecto.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="La misma ruta rechaza una solicitud con token incorrecto, HTTP 403."><figcaption>Figura 13. La misma ruta rechaza una solicitud con token incorrecto, HTTP 403. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/13-rechazo-token-incorrecto.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/14-token-valido.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="La URL de producción local acepta el token correcto y devuelve los datos del evento."><figcaption>Figura 14. La URL de producción local acepta el token correcto y devuelve los datos del evento. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/14-token-valido.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
 ## 6. Verifica la frontera antes de abrir el túnel
 
 El puerto 5682 es la entrada local a n8n. El 8092 es el punto de entrada del proxy. Antes de utilizar Cloudflare, debemos demostrar que Nginx reenvía únicamente la solicitud permitida y que la autenticación de n8n sigue funcionando.
@@ -226,6 +317,18 @@ La raíz del proxy debe devolver 404, mientras que el editor continúa disponibl
 | GET `/webhook/biblioteca-evento-protegido` | 405, método no permitido |
 
 **No continúes si el editor carga por el puerto 8092 o si una llamada sin token obtiene 200.** Revisa primero la credencial, la publicación y el archivo `nginx.conf`. No apuntes el túnel al puerto 5682 ni al 5678.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/15-proxy-evento.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="El proxy local, puerto 8092, reenvía la solicitud autorizada a n8n y devuelve la confirmación."><figcaption>Figura 15. El proxy local, puerto 8092, reenvía la solicitud autorizada a n8n y devuelve la confirmación. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/15-proxy-evento.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/16-proxy-editor-bloqueado.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Al abrir la raíz del proxy en el navegador, Nginx responde 404; no se accede al editor."><figcaption>Figura 16. Al abrir la raíz del proxy en el navegador, Nginx responde 404; no se accede al editor. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/16-proxy-editor-bloqueado.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/17-proxy-rechazos.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Controles del proxy local: 403 para token incorrecto, 404 para rutas no permitidas y 405 para GET."><figcaption>Figura 17. Controles del proxy local: 403 para token incorrecto, 404 para rutas no permitidas y 405 para GET. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/17-proxy-rechazos.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 ## 7. Abre el túnel con Cloudflare Quick Tunnel
 
@@ -253,6 +356,10 @@ El comando descarga la imagen oficial de cloudflared si hace falta y muestra una
 En la prueba real del 27/11/2026 la imagen `latest` ejecutó cloudflared **2026.11.2**. Para repetir en otro equipo, consulta la versión con `docker compose run --rm --no-deps tunnel --version`. El tag `latest` puede cambiar; queda pendiente verificar y fijar un tag o digest inmutable del agente. n8n mantiene su versión fija 2.44.6.
 
 Si no conecta, revisa los logs y los permisos de red. No desactives controles corporativos ni intentes eludir restricciones. Si la red bloquea los túneles, completa la parte local y deja la prueba pública pendiente.
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/18-quick-tunnel.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Inicio real de Cloudflare Quick Tunnel desde Docker; versión 2026.11.2 y comprobaciones de conectividad PASS. La URL temporal y datos de conexión están ocultos."><figcaption>Figura 18. Inicio real de Cloudflare Quick Tunnel desde Docker; versión 2026.11.2 y comprobaciones de conectividad PASS. La URL temporal y datos de conexión están ocultos. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/18-quick-tunnel.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 ### 7.2 Alternativa: cloudflared instalado en el equipo
 
@@ -292,6 +399,14 @@ Una respuesta válida esperada (la hora será distinta):
   "recibido_en": "2026-01-01T12:00:00.000-03:00"
 }
 ```
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/19-https-evento.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Petición autorizada a través del túnel HTTPS: el mismo evento llega al workflow y devuelve su confirmación."><figcaption>Figura 19. Petición autorizada a través del túnel HTTPS: el mismo evento llega al workflow y devuelve su confirmación. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/19-https-evento.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/20-https-controles.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Pruebas por HTTPS: 403 sin token o con token incorrecto, 404 para rutas bloqueadas y 405 para método GET."><figcaption>Figura 20. Pruebas por HTTPS: 403 sin token o con token incorrecto, 404 para rutas bloqueadas y 405 para método GET. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/20-https-controles.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 ### 8.1 Cómo hacer que n8n anuncie la URL pública
 
@@ -355,6 +470,18 @@ En la comparación incluye requisitos, persistencia de URL y límites; indica cu
 2. Despublica el workflow de laboratorio, elimina ejecuciones de prueba que contengan cabeceras y cambia o elimina el token de la credencial.
 3. Si configuraste `URL_PUBLICA`, vuelve al valor local en `.env` y ejecuta `docker compose up -d --force-recreate n8n proxy`.
 4. Para detener el laboratorio: `docker compose down`. **No agregues `-v` si quieres conservar tus workflows y credenciales.**
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/21-tunel-aun-activo.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Comprobación del incidente de cierre: el contenedor de Cloudflare aún figuraba Up."><figcaption>Figura 21. Comprobación del incidente de cierre: el contenedor de Cloudflare aún figuraba Up. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/21-tunel-aun-activo.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/22-tunel-detenido.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Tras detener el contenedor del túnel, solo n8n y Nginx permanecen en ejecución."><figcaption>Figura 22. Tras detener el contenedor del túnel, solo n8n y Nginx permanecen en ejecución. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/22-tunel-detenido.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
+
+
+
+<figure class="lamina-apunte" style="position:relative;max-width:1000px;margin:18px auto 24px"><img src="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/23-cierre-continuidad.webp" style="display:block;max-width:100%;height:auto;margin:0 auto;border:1px solid #d4d9e1" loading="lazy" alt="Cierre comprobado: curl no recibe respuesta HTTP (000) por la URL pública; el proxy local continúa devolviendo el evento."><figcaption>Figura 23. Cierre comprobado: curl no recibe respuesta HTTP (000) por la URL pública; el proxy local continúa devolviendo el evento. <a href="contenido/construccion-agentes-ia-automatizacion/imagenes/n8n-webhooks-tuneles/23-cierre-continuidad.webp" target="_blank" rel="noopener noreferrer">Ampliar captura</a></figcaption></figure>
 
 ## 11. Resultados de validación práctica
 
